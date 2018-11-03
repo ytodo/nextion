@@ -4,7 +4,7 @@
 
 # Program Name and object files
 PROGRAM	= nextion
-OBJECTS = main.o function.o
+OBJECTS = main.o functions.o
 
 # Redefine MACRO
 CC	= gcc
@@ -26,5 +26,4 @@ clean	:
 	$(RM)  $(PROGRAM) $(OBJECTS)
 
 # Dependency of Header Files
-main.o		: main.h NextionDriver.h
-function.o	: main.h NextionDriver.h
+$(OBJECTS)	: main.h
