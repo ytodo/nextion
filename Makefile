@@ -4,7 +4,7 @@
 
 # Program Name and object files
 PROGRAM	= nextion
-OBJECTS = main.o functions.o
+OBJECTS = main.o functions.o getlinkdata.o dmonitor.o
 
 # Redefine MACRO
 CC	= gcc
@@ -26,4 +26,4 @@ clean	:
 	$(RM)  $(PROGRAM) $(OBJECTS)
 
 # Dependency of Header Files
-$(OBJECTS)	: main.h
+$(OBJECTS)	: dmonitor.h

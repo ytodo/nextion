@@ -1,11 +1,12 @@
-#include "main.h"
+#include "dmonitor.h"
+
+int	fd;
 
 /*********************************************
  * シリアルポートのオープン
  *********************************************/
 int openport(char *devicename, long baudrate)
 {
-	int	fd;
 	struct	termios newtio;
 
 	fd = open(devicename, O_RDWR | O_NOCTTY | O_NONBLOCK);
@@ -46,7 +47,6 @@ int openport(char *devicename, long baudrate)
  *********************************************/
 void sendcmd(char *cmd)
 {
-	int	fd;
 	char	endofcmd[3] = {0xff, 0xff, 0xff};
 
 	if (strlen(cmd) > 0) {
