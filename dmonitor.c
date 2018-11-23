@@ -1,3 +1,5 @@
 #include "dmonitor.h"
 
-repeater_t	linkdata[512] = {'\0'};
+repeater_t	linkdata[LISTSIZE] 	= {'\0'};
+char		status[CHARSIZE] 	= {'\0'};
+char		rptcall[CHARSIZE]	= {'\0'};

@@ -20,21 +20,32 @@
 #include <unistd.h>
 #include <signal.h>
 
+//test open port
+#include <sys/ioctl.h>
+
+
+
 /* Macros */
 #define	BAUDRATE	9600
+#define LISTSIZE	256
+#define CHARSIZE	30
 
 /* Variables */
-typedef struct {        		// 構造体の宣言
+typedef struct {        			// 構造体の宣言
 	char	name[20];
 	char	call[9];
 	char	addr[16];
 	char 	port[6];
 } repeater_t;
-extern	repeater_t	linkdata[512];	// 構造体配列の宣言
+extern	repeater_t	linkdata[LISTSIZE];	// 構造体配列の宣言
+extern	char	status[CHARSIZE];
+extern	char	rptcall[CHARSIZE];
 
 /* Functions */
 int	getlinkdata();
+int	getstatus();
 int	openport(char *devicename, long baudrate);
+void	recvdata(char *rptcon);
 void	sendcmd(char *cmd);
 
 #endif // __DMONITOR_H__
