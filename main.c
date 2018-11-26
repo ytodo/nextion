@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 			switch (flag) {
 			case 1:
 				sprintf(command, "systemctl restart nextion.service");
-				sendcmd("page MAIN");
+//				sendcmd("page MAIN");
 				system(command);
 				break;
 			case 2:
