@@ -60,7 +60,6 @@ int main(int argc, char *argv[])
 			switch (flag) {
 			case 1:
 				sprintf(command, "systemctl restart nextion.service");
-//				sendcmd("page MAIN");
 				system(command);
 				break;
 			case 2:
@@ -118,6 +117,8 @@ int main(int argc, char *argv[])
 			sendcmd("t2.txt=MAIN.stat1.txt");
 			sendcmd("t3.txt=MAIN.stat2.txt");
 		}
+
+	sleep (1);
 	}
 
 	/* GPIO シリアルポートのクローズ*/
