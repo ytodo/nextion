@@ -1,13 +1,14 @@
 #include "dmonitor.h"
 
 
-int	fd;
-int	i = 0;
-int	len = 0;
+int	    fd;
+int	    i = 0;
+int	    len = 0;
 char	buf[32] = {'\0'};
 
 /*********************************************
  * シリアルポートのオープン
+ *   This is from ON7LDS's NextionDriver
  *********************************************/
 int openport(char *devicename, long baudrate)
 {
@@ -23,47 +24,28 @@ int openport(char *devicename, long baudrate)
 
 	tcgetattr(fd, &newtio);
 
-/* test 1 */
-cfsetispeed(&newtio,baudrate);
-cfsetospeed(&newtio,baudrate);
+    cfsetispeed(&newtio,baudrate);
+    cfsetospeed(&newtio,baudrate);
 
-newtio.c_cflag &= ~PARENB;   // geen pariteit
-newtio.c_cflag &= ~CSTOPB;   // 1 stopbit
-newtio.c_cflag &= ~CSIZE;    // wis databitsize
-newtio.c_cflag |=  CS8;      // 8 databits
+    newtio.c_cflag &= ~PARENB;
+    newtio.c_cflag &= ~CSTOPB;          // ストップビット   : 1bit
+    newtio.c_cflag &= ~CSIZE;           // データビットサイズ
+    newtio.c_cflag |=  CS8;             // データビット     : 8bits
 
-newtio.c_cflag &= ~CRTSCTS;  // geen HW flow Control
-newtio.c_cflag |= CREAD | CLOCAL;
+    newtio.c_cflag &= ~CRTSCTS;
+    newtio.c_cflag |= CREAD | CLOCAL;   // 受信有効｜ローカルライン（モデム制御無し）
 
-newtio.c_iflag = 0;
-newtio.c_oflag = 0;
-newtio.c_lflag = 0;
+    newtio.c_iflag = 0;
+    newtio.c_oflag = 0;
+    newtio.c_lflag = 0;
 
-
-tcflush(fd, TCIOFLUSH);
-
-/* test1 end */
-
-/* test2 
-	newtio.c_cflag += CREAD; 		// 受信有効
-	newtio.c_cflag += CLOCAL; 		// ローカルライン（モデム制御なし）
-	newtio.c_cflag += CS8; 			// データビット  : 8bit
-	newtio.c_cflag += 0; 			// ストップビット: 1bit
-	newtio.c_cflag += 0; 			// パリティ      : None
-
-	cfsetispeed(&newtio, baudrate);
-	cfsetospeed(&newtio, baudrate);
-	cfmakeraw(&newtio); 			// RAWモード
-
-	tcflush(fd, TCIOFLUSH);
- test 2 end */
+    tcflush(fd, TCIOFLUSH);
 
 	if ((tcsetattr(fd, TCSANOW, &newtio)) != 0) {
 		exit(EXIT_FAILURE);
 	}
 
-// test1
-//	ioctl(fd, TCSETS, &newtio); 		//ポートの設定を有効にする
+	ioctl(fd, TCSETS, &newtio); 		//ポートの設定を有効にする
 
 	return (fd);
 }
@@ -102,3 +84,31 @@ void recvdata(char *rptcon)
 }
 
 
+
+/*********************************************
+ * 環境設定ファイルnextion.ini の内容を読む
+ *********************************************/
+int getconfig(char *station)
+{
+    char        *INIFILE = "/etc/nextion.ini";
+    char        line[64] = {'\0'};
+    int         i = 0;
+    FILE        *fp;
+    char        *ret;
+
+    /* テーブルをオープンする */
+    if ((fp = fopen(INIFILE, "r")) == NULL) {
+        printf("File open error!\n");
+
+        return (EXIT_FAILURE);
+    }
+
+    /* テーブルを読み込み変数に格納する */
+    while ((fgets(line, sizeof(line), fp)) != NULL) {
+        if ((ret = strstr(line, "STATION")) != NULL ) strncpy(station, ret + 8, 8);
+    }
+
+    fclose(fp);
+
+    return (0);
+}

@@ -1,20 +1,46 @@
+/*
+ *  Copyright (C) 2018-2019 by Yosh Todo JE3HCZ
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ *  本プログラムはD-STAR Network の一部の機能を実現するための物で、
+ *  アマチュア無線の技術習得とその本来の用途以外では使用しないでください。
+ *
+ */
+
+
 #include "dmonitor.h"
 
 
 int main(int argc, char *argv[])
 {
 	int 	num;				// 返り値のi を受ける（件数）
-	int	arraycount;
-	int	fd;
-	int	i;
-	int	flag;
+	int	    arraycount;
+	int	    fd;
+	int	    i;
+	int	    flag;
 	char	command[32] 	= {'\0'};
 	char	statpre[32] 	= {'\0'};
 	char	rptcallpre[32] 	= {'\0'};
 	char    *SERIALPORT 	= "/dev/ttyAMA0";
-	char	concall[8]	= {'\0'};
+	char	concall[8]	    = {'\0'};
 	char	concallpre[8]	= {'\0'};
+    char    station[8]      = {'\0'};
 
+    /* 環境設定ファイルの読み取り */
+    getconfig(station);
 
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
@@ -25,6 +51,10 @@ int main(int argc, char *argv[])
 	/* メインスクリーンの初期設定 */
 	sendcmd("dim=50");
 	sendcmd("page MAIN");
+    sprintf(command, "MAIN.station.txt=\"STATION : %s\"", station);
+    sendcmd(command);
+    sprintf(command, "t0.txt=\"STATION : %s\"", station);
+    sendcmd(command);
 	sendcmd("t1.txt=\"LINK TO : NONE\"");
 	sendcmd("link.txt=\"LINK TO : NONE\"");
 
@@ -34,6 +64,7 @@ int main(int argc, char *argv[])
 	sendcmd("t2.txt=MAIN.stat1.txt");
 
 	/* リピータ数分の文字配列にコールサインを格納 */
+    if (num > 229) num = 229;
 	for (i = 0; i < num; i++) {
 		sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
 		sendcmd(command);
@@ -59,19 +90,20 @@ int main(int argc, char *argv[])
 			if (strncmp(concall, "Shutdown",8) == 0) flag = 3;
 			switch (flag) {
 			case 1:
-				sprintf(command, "systemctl restart nextion.service");
-				system(command);
+                sendcmd("page MAIN");
+				system("systemctl restart nextion.service");
 				break;
+
 			case 2:
-				sprintf(command, "reboot");
 				sendcmd("page MAIN");
-				system(command);
+				system("reboot");
 				break;
+
 			case 3:
-				sprintf(command, "shutdown -h now");
 				sendcmd("page MAIN");
-				system(command);
+				system("shutdown -h now");
 				break;
+
 			default:
 				/* 指定リピータに接続する */
 				i = 0;
@@ -82,7 +114,7 @@ int main(int argc, char *argv[])
 						system("killall -q -s 9 dmonitor");
 
 						/* 接続コマンドの実行 */
-						sprintf(command, "dmonitor %s %s '%s'", linkdata[i].addr, linkdata[i].port, linkdata[i].call);
+						sprintf(command, "dmonitor %s %s '%s' '%s'", linkdata[i].addr, linkdata[i].port, linkdata[i].call, station);
 						sendcmd("page MAIN");
 						system(command);
 						break;
@@ -111,14 +143,18 @@ int main(int argc, char *argv[])
 		if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0)) {
 			strcpy(statpre, status);
 			sendcmd("dim=50");
-			sendcmd("stat2.txt=MAIN.stat1.txt");
+
+            /* STATUS1 => STATUS2 */
+			sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
+
+            /* 取得ステイタス=> STATUS1 */
 			sprintf(command, "MAIN.stat1.txt=\"%s\"", status);
 			sendcmd(command);
 			sendcmd("t2.txt=MAIN.stat1.txt");
 			sendcmd("t3.txt=MAIN.stat2.txt");
 		}
 
-	sleep (1);
+	sleep (0);
 	}
 
 	/* GPIO シリアルポートのクローズ*/

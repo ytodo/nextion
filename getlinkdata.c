@@ -15,14 +15,14 @@ int getlinkdata()
 	char		*strport;
 	char		*RPTLISTTBL = "/tmp/repeaters.tbl";
 	char		line[128] = {'\0'};
-	int		i = 0;
+	int		    i = 0;
 	FILE		*fp;
 
-	/* Command string for getting gateway list */
+	/* d-star.info からリピータリストを取得してテーブルを作成する */
 	char *getrptlist = "cd /tmp && wget -q http://hole-punch.d-star.info:30011 && mv index.html repeaters.tbl";
 	system(getrptlist);
 
-	/* File open check */
+	/* テーブルをオープンする */
 	if ((fp = fopen(RPTLISTTBL, "r")) == NULL) {
 		printf("File open error!\n");
 
@@ -38,26 +38,28 @@ int getlinkdata()
 {"callsign":"JP1YEM  ","ip_address":"119.173.54.159","port":51000},
 */
 
-	/* Read file to listup Callsign, Addresses and Port */
+	/* テーブルを読み込み構造体に格納する */
 	while ((fgets(line, sizeof(line), fp)) != NULL) {
 
 		/* Find out Callsing, IP Address and Port number */
-		if ((   strcall = strstr(line, "callsign")) != NULL ) {
-			straddr = strstr(line, "ip_address");
-			strport = strstr(line, "port");
+		if ((strcall = strstr(line, "callsign")) != NULL ) {
+			 straddr = strstr(line, "ip_address");
+			 strport = strstr(line, "port");
 
-			/* Store Callsing */
+			/* コールサインの保存 */
 			strncpy(linkdata[i].call, strcall + 11, 8);
+
+			/* 第八番目もじ（拡張子）が空白だったら「Ａ」とする */
 			if (strncmp(" ", &linkdata[i].call[7], 1) == 0) {
 				strncpy(&linkdata[i].call[7], "A", 1);
 			}
 			linkdata[i].call[8] = '\0';
 
-			/* Store IP Address */
+			/* ＩＰアドレスの保存 */
 			strncpy(linkdata[i].addr, straddr + 13, strlen(straddr) - strlen(strport) - 16);
 			linkdata[i].addr[strlen(straddr) - strlen(strport) - 16] = '\0';
 
-			/* Store Port Number */
+			/* ポート番号の保存*/
 			strncpy(linkdata[i].port, strport + 6, 5);
 			linkdata[i].port[5] = '\0';
 

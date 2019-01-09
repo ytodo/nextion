@@ -54,8 +54,7 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
 		strncat(status, tmpstr - 9, 8);
 	}
 	if ((tmpstr = strstr(line, "rig not")) != NULL) {
-		strncpy(status, tmpstr, 8);
-		strcat(status, "connected/in mode.");
+		strcpy(status, "Check rig not connected.");
 	}
 
 
