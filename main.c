@@ -1,3 +1,4 @@
+
 /*
  *  Copyright (C) 2018-2019 by Yosh Todo JE3HCZ
  *
@@ -65,10 +66,51 @@ int main(int argc, char *argv[])
 
 	/* リピータ数分の文字配列にコールサインを格納 */
     if (num > 229) num = 229;
-	for (i = 0; i < num; i++) {
-		sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
-		sendcmd(command);
-	}
+
+    if (num >= 200)             flag = 1;
+    if (num >= 100 && num <200) flag = 2;
+    if (num < 100)              flag = 3;
+
+    switch (num) {
+    case 1:
+        for (i = 200; i < num; i++) {
+    		sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
+	    	sendcmd(command);
+        }
+        sleep(10);
+
+    case 2:
+        if (flag = 1) {
+            for (i = 100; i < 200; i++) {
+	        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
+		        sendcmd(command);
+    	    }
+            sleep(10);
+        } else {
+            for (i = 100; i < num; i++) {
+	        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
+		        sendcmd(command);
+        	}
+            sleep(10);
+        }
+
+    case 3:
+        if ((flag = 1) || (flag = 2)) {
+        	for (i = 0; i < 100; i++) {
+	        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
+		        sendcmd(command);
+        	}
+        } else {
+        	for (i = 0; i < num; i++) {
+	        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
+		        sendcmd(command);
+        	}
+        }
+    }
+
+
+
+
 
 	/* 送・受信ループ */
 	while (1) {
@@ -96,7 +138,7 @@ int main(int argc, char *argv[])
 
 			case 2:
 				sendcmd("page MAIN");
-				system("reboot");
+				system("shutdown -r now");
 				break;
 
 			case 3:
@@ -114,7 +156,7 @@ int main(int argc, char *argv[])
 						system("killall -q -s 9 dmonitor");
 
 						/* 接続コマンドの実行 */
-						sprintf(command, "dmonitor %s %s '%s' '%s'", linkdata[i].addr, linkdata[i].port, linkdata[i].call, station);
+						sprintf(command, "dmonitor %s %s '%s'", linkdata[i].addr, linkdata[i].port, linkdata[i].call);
 						sendcmd("page MAIN");
 						system(command);
 						break;
