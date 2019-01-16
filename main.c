@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     if (num >= 100 && num <200) flag = 2;
     if (num < 100)              flag = 3;
 
-    switch (num) {
+    switch (flag) {
     case 1:
         for (i = 200; i < num; i++) {
     		sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
