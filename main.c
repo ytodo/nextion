@@ -66,51 +66,11 @@ int main(int argc, char *argv[])
 
 	/* リピータ数分の文字配列にコールサインを格納 */
     if (num > 229) num = 229;
-
-    if (num >= 200)             flag = 1;
-    if (num >= 100 && num <200) flag = 2;
-    if (num < 100)              flag = 3;
-
-    switch (flag) {
-    case 1:
-        for (i = 200; i < num; i++) {
-    		sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
-	    	sendcmd(command);
-        }
-        sleep(10);
-
-    case 2:
-        if (flag = 1) {
-            for (i = 100; i < 200; i++) {
-	        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
-		        sendcmd(command);
-    	    }
-            sleep(10);
-        } else {
-            for (i = 100; i < num; i++) {
-	        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
-		        sendcmd(command);
-        	}
-            sleep(10);
-        }
-
-    case 3:
-        if ((flag = 1) || (flag = 2)) {
-        	for (i = 0; i < 100; i++) {
-	        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
-		        sendcmd(command);
-        	}
-        } else {
-        	for (i = 0; i < num; i++) {
-	        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
-		        sendcmd(command);
-        	}
-        }
-    }
-
-
-
-
+  	for (i = 0; i < num; i++) {
+       	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
+        sendcmd(command);
+        usleep(10000);
+   	}
 
 	/* 送・受信ループ */
 	while (1) {
