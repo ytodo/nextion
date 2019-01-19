@@ -88,7 +88,7 @@ void recvdata(char *rptcon)
 /*********************************************
  * 環境設定ファイルnextion.ini の内容を読む
  *********************************************/
-int getconfig(char *station)
+int getconfig(void)
 {
     char        *INIFILE = "/etc/nextion.ini";
     char        line[64] = {'\0'};
@@ -105,7 +105,9 @@ int getconfig(char *station)
 
     /* テーブルを読み込み変数に格納する */
     while ((fgets(line, sizeof(line), fp)) != NULL) {
-        if ((ret = strstr(line, "STATION")) != NULL ) strncpy(station, ret + 8, 8);
+        if ((ret = strstr(line, "STATION"))     != NULL) sscanf(line, "STATION=%[^\n]", station);
+        if ((ret = strstr(line, "DEFAULT_RPT")) != NULL) sscanf(line, "DEFAULT_RPT=%[^\n]", default_rpt);
+        if ((ret = strstr(line, "SLEEPTIME"))   != NULL) sscanf(line, "SLEEPTIME=%d"  , &microsec);
     }
 
     fclose(fp);

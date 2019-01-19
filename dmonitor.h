@@ -60,9 +60,12 @@ typedef struct {        			// 構造体の宣言
 	char 	port[6];
 } repeater_t;
 extern	repeater_t	linkdata[LISTSIZE];	// 構造体配列の宣言
-extern	char    status[CHARSIZE];
-extern	char	rptcall[CHARSIZE];
-extern  char    station[CHARSIZE];
+extern	char        status[CHARSIZE];
+extern	char	    rptcall[CHARSIZE];
+extern  char        station[CHARSIZE];
+extern  char        default_rpt[CHARSIZE];
+extern  unsigned int microsec;
+
 
 /* Functions */
 int	    getlinkdata();

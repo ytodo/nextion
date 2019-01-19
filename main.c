@@ -38,10 +38,9 @@ int main(int argc, char *argv[])
 	char    *SERIALPORT 	= "/dev/ttyAMA0";
 	char	concall[8]	    = {'\0'};
 	char	concallpre[8]	= {'\0'};
-    char    station[8]      = {'\0'};
 
     /* 環境設定ファイルの読み取り */
-    getconfig(station);
+    getconfig();
 
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
@@ -56,8 +55,8 @@ int main(int argc, char *argv[])
     sendcmd(command);
     sprintf(command, "t0.txt=\"STATION : %s\"", station);
     sendcmd(command);
-	sendcmd("t1.txt=\"LINK TO : NONE\"");
-	sendcmd("link.txt=\"LINK TO : NONE\"");
+  	sendcmd("t1.txt=\"LINK TO : NONE\"");
+    sendcmd("link.txt=\"LINK TO : NONE\"");
 
 	/* 読み込んだリピータの総数を表示 */
 	sprintf(command, "MAIN.stat1.txt=\"Read %d Repeaters\"", num);
@@ -69,7 +68,7 @@ int main(int argc, char *argv[])
   	for (i = 0; i < num; i++) {
        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
         sendcmd(command);
-        usleep(10000);
+        usleep(microsec);
    	}
 
 	/* 送・受信ループ */
@@ -81,6 +80,14 @@ int main(int argc, char *argv[])
 
 		/* タッチパネルのデータを読み込む */
 		recvdata(concall);
+
+        /* もしタッチデータが選択されていない場合、初回のみデフォルトリピータをセットする */
+        if ((strlen(concall) == 0) && (strlen(default_rpt) != 0)) {
+            strcpy(concall, default_rpt);
+            default_rpt[0] = '\0';
+        }
+
+        /* タッチデータが選択されている場合、前回と同じかチェック（同じならパス） */
 		if ((strlen(concall) > 3) && (strncmp(concall, concallpre, 8) != 0))  {
 
 			/* 現在の返り値を保存 */
