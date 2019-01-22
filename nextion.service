@@ -1,0 +1,11 @@
+﻿[Unit]
+Description = Nextion Service for "dmonitor" by Yosh Todo/JE3HCZ
+After = network.target
+
+[Service]
+Type = simple
+ExecStart = /usr/local/bin/nextion &
+ExecStop = /usr/bin/killall -q -s 9 nextion
+
+[Install]
+WantedBy = multi-user.target
