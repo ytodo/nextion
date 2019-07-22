@@ -35,10 +35,8 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
 	memset(&rptcall[0],'\0', sizeof(rptcall));
 
 	/* 標準出力を配列に取得 */
-//	fgets(line, sizeof(line), fp);
-
-
 	while ((fgets(line, sizeof(line), fp)) != NULL) {
+
 
 		if ((tmpstr = strstr(line, "Connected")) != NULL) {
 			strncpy(rptcall, tmpstr + 13, 8);
@@ -46,10 +44,15 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
 		if ((tmpstr = strstr(line, "dmonitor start")) != NULL) {
 			strncpy(status, tmpstr, 21);
 		}
+        if ((tmpstr = strstr(line, "New FiFo buffer")) != NULL) {
+            strcpy(status, tmpstr + 9);
+            status[strlen(status) - 1] = '\0';
+        }
 	}
 
 	/* status に関する文字列があったら */
 	if ((tmpstr = strstr(line, "from")) != NULL) {
+    	memset(&status[0], '\0', sizeof(status));
 		strncpy(status, line, 16);
 		strncat(status, tmpstr - 9, 8);
 	}

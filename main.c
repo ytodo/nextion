@@ -1,4 +1,3 @@
-
 /*
  *  Copyright (C) 2018-2019 by Yosh Todo JE3HCZ
  *
@@ -27,17 +26,18 @@
 
 int main(int argc, char *argv[])
 {
-	int 	num;				// 返り値のi を受ける（件数）
-	int	    arraycount;
-	int	    fd;
-	int	    i;
-	int	    flag;
-	char	command[32] 	= {'\0'};
-	char	statpre[32] 	= {'\0'};
-	char	rptcallpre[32] 	= {'\0'};
-	char    *SERIALPORT 	= "/dev/ttyAMA0";
-	char	concall[8]	    = {'\0'};
-	char	concallpre[8]	= {'\0'};
+    int     num;                // 返り値のi を受ける（件数）
+    int     arraycount;
+    int     fd;
+    int     i;
+    int     flag;
+    int     bufcnt;
+    char    command[32]     = {'\0'};
+    char    statpre[32]     = {'\0'};
+    char    rptcallpre[32]  = {'\0'};
+    char    *SERIALPORT     = "/dev/ttyAMA0";
+    char    concall[8]      = {'\0'};
+    char    concallpre[8]   = {'\0'};
 
     /* 環境設定ファイルの読み取り */
     getconfig();
@@ -63,7 +63,10 @@ int main(int argc, char *argv[])
 	sendcmd(command);
 	sendcmd("t2.txt=MAIN.stat1.txt");
 
-	/* リピータ数分の文字配列にコールサインを格納 */
+	/* 全リストを空にした後リピータ数分の文字配列にコールサインを格納 */
+    for (i = 0; i < 229; i++) {
+        sprintf(command, "VALUE.va%d.txt=\"\"", i);
+    }
     if (num > 229) num = 229;
   	for (i = 0; i < num; i++) {
        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
@@ -88,15 +91,19 @@ int main(int argc, char *argv[])
         }
 
         /* タッチデータが選択されている場合、前回と同じかチェック（同じならパス） */
-		if ((strlen(concall) > 3) && (strncmp(concall, concallpre, 8) != 0))  {
+		if ((strlen(concall) > 1) && (strncmp(concall, concallpre, 8) != 0))  {
 
 			/* 現在の返り値を保存 */
-			strncpy(concallpre, concall, 8);
+            strncpy(concallpre, concall, 8);
 
 			/* コマンドをスイッチに振り分ける */
 			if (strncmp(concall, "Restart", 7) == 0) flag = 1;
 			if (strncmp(concall, "Reboot",  6) == 0) flag = 2;
 			if (strncmp(concall, "Shutdown",8) == 0) flag = 3;
+            if (strncmp(concall, "Update",  6) == 0) flag = 4;
+            if (strncmp(concall, "UP",      2) == 0) flag = 5;
+            if (strncmp(concall, "DWN",     3) == 0) flag = 6;
+
 			switch (flag) {
 			case 1:
                 sendcmd("page MAIN");
@@ -112,6 +119,28 @@ int main(int argc, char *argv[])
 				sendcmd("page MAIN");
 				system("shutdown -h now");
 				break;
+
+            case 4:
+                sendcmd("SYSTEM.b4.bco=63488");
+                sendcmd("SYSTEM.b4.pco=65535");
+                sendcmd("SYSTEM.b4.txt=\"WAIT\"");
+                system("apt update && apt upgrade -y && apt autoremove -y");
+                sendcmd("SYSTEM.b4.bco=64512");
+                sendcmd("SYSTEM.b4.txt=\"REBOOT\"");
+                system("reboot");
+                break;
+
+            case 5:
+                if (strncmp(concall, "up", 2) == 0) break;
+                strcpy(concall, "up");
+                system("killall -q -s SIGUSR1 dmonitor");
+                break;
+
+            case 6:
+                if (strncmp(concall, "dwn", 3) == 0) break;
+                strcpy(concall, "dwn");
+                system("killall -q -s SIGUSR2 dmonitor");
+                break;
 
 			default:
 				/* 指定リピータに接続する */
@@ -130,7 +159,10 @@ int main(int argc, char *argv[])
 					}
 				}
 			}
+            flag = 0;
+
 		}
+
 
 		/*
 		 * 送信処理
@@ -148,6 +180,7 @@ int main(int argc, char *argv[])
 			sendcmd(command);
 		}
 
+
 		/* ステータス・ラストハードの表示 */
 		if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0)) {
 			strcpy(statpre, status);
@@ -161,6 +194,9 @@ int main(int argc, char *argv[])
 			sendcmd(command);
 			sendcmd("t2.txt=MAIN.stat1.txt");
 			sendcmd("t3.txt=MAIN.stat2.txt");
+
+            /* statusをクリアする */
+            status[0] = '\0';
 		}
 
 	sleep (0);
