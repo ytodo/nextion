@@ -66,13 +66,13 @@ printf("%d\n", num);
 	sendcmd("t2.txt=MAIN.stat1.txt");
 
 	/* 全リストを空にした後リピータ数分の文字配列にコールサインを格納 */
-    for (i = 0; i < 229; i++) {
+    for (i = 0; i < 230; i++) {
         sprintf(command, "VALUE.va%d.txt=\"\"", i);
         sendcmd(command);
         usleep(microsec);
     }
     usleep(microsec * 300);
-    if (num > 229) num = 229;
+    if (num > 230) num = 230;
   	for (i = 0; i < num; i++) {
        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
         sendcmd(command);
