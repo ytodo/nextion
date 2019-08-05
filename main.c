@@ -45,8 +45,6 @@ int main(int argc, char *argv[])
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
 
-printf("%d\n", num);
-
 	/* GPIO シリアルポートのオープン*/
 	fd = openport(SERIALPORT, BAUDRATE);
 

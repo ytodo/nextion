@@ -10,7 +10,7 @@ int getstatus()
 {
 	FILE	*fp;
 	char	line[128] 	= {'\0'};
-	char	*getstatus 	= "tail -n3 /var/log/messages | egrep dmonitor";
+	char	*getstatus 	= "tail -n3 /var/log/dmonitor.log";
 	char	*tmpstr;
 
 	/* コマンドの標準出力オープン */
