@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
                 sendcmd("SYSTEM.b4.bco=63488");
                 sendcmd("SYSTEM.b4.pco=65535");
                 sendcmd("SYSTEM.b4.txt=\"WAIT\"");
-                system("apt update && apt upgrade -y && apt autoremove -y");
+                system("apt clean && apt update && apt upgrade -y && apt autoremove -y");
                 sendcmd("SYSTEM.b4.bco=64512");
                 sendcmd("SYSTEM.b4.txt=\"REBOOT\"");
                 system("reboot");

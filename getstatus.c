@@ -48,6 +48,9 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
             strcpy(status, tmpstr + 9);
             status[strlen(status) - 1] = '\0';
         }
+        if ((tmpstr = strstr(line, "dmonitor end")) != NULL) {
+            strcpy(status, "Disconnected");
+        }
 	}
 
 	/* status に関する文字列があったら */
