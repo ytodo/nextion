@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018 by Yosh Todo JE3HCZ
+ *  Copyright (C) 2018-2019 by Yosh Todo JE3HCZ
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@
  */
 
 /**************************************************
- * D-STAR Repeater Nextion display for dmonitor   *
- *      main.h version 00.01                      *
- *      2018.11.01 - 2019.01.02                   *
+ *  D-STAR Repeater Nextion display for dmonitor  *
+ *           D*MONITOR version 1.3.0              *
+ *           2018.11.01 - 2019.08.17              *
  *                                                *
  *  Multi_Forwardが搭載されているリピータリストを *
  *  取得して「接続可能リピータ」としてdmonitor用  *
@@ -41,36 +41,33 @@
 #include <termios.h>
 #include <unistd.h>
 #include <signal.h>
-
-//test open port
 #include <sys/ioctl.h>
-
-
 
 /* Macros */
 #define BAUDRATE	9600
 #define LISTSIZE	256
-#define CHARSIZE	30
+#define CHARSIZE	32
 
 /* Variables */
-typedef struct {        			// 構造体の宣言
+typedef struct {                  			// 構造体の宣言
 	char	name[20];
 	char	call[9];
 	char	addr[16];
 	char 	port[6];
 } repeater_t;
-extern	repeater_t	linkdata[LISTSIZE];	// 構造体配列の宣言
-extern	char        status[CHARSIZE];
-extern	char	    rptcall[CHARSIZE];
-extern  char        station[CHARSIZE];
-extern  char        default_rpt[CHARSIZE];
+extern	repeater_t	 linkdata[LISTSIZE];	// 構造体配列の宣言
+extern	char         status[CHARSIZE];
+extern	char	     rptcall[CHARSIZE];
+extern  char         station[CHARSIZE];
+extern  char         ipaddress[CHARSIZE];
+extern  char         default_rpt[CHARSIZE];
 extern  unsigned int microsec;
-
 
 /* Functions */
 int	    getlinkdata();
 int	    getstatus();
 int     getconfig();
+int     getipaddr();
 int	    openport(char *devicename, long baudrate);
 void	recvdata(char *rptcon);
 void	sendcmd(char *cmd);

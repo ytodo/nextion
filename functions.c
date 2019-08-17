@@ -1,3 +1,11 @@
+/********************************************************
+ * 基本的なファンクション・コマンドのツールボックス     *
+ *      openport                                        *
+ *      sendcmd                                         *
+ *      recvdata                                        *
+ *      getconfig                                       *
+ ********************************************************/
+
 #include "dmonitor.h"
 
 
@@ -51,7 +59,6 @@ int openport(char *devicename, long baudrate)
 }
 
 
-
 /*********************************************
  * コマンドの送信
  *********************************************/
@@ -62,7 +69,7 @@ void sendcmd(char *cmd)
 
 	/* コマンド文字列と終了文字列を書き込む */
 	if (strlen(cmd) > 0) {
-	        write(fd, cmd ,strlen(cmd));
+	        write(fd, cmd, strlen(cmd));
         	write(fd, endofcmd, 3);
 	}
 }
@@ -82,7 +89,6 @@ void recvdata(char *rptcon)
 		rptcon[i] = '\0';
 	}
 }
-
 
 
 /*********************************************

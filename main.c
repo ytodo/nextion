@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
 
     /* 環境設定ファイルの読み取り */
     getconfig();
+    getipaddr();
 
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
@@ -64,18 +65,24 @@ int main(int argc, char *argv[])
 	sendcmd("t2.txt=MAIN.stat1.txt");
 
 	/* 全リストを空にした後リピータ数分の文字配列にコールサインを格納 */
-    for (i = 0; i < 230; i++) {
+    for (i = 0; i < 228; i++) {
         sprintf(command, "VALUE.va%d.txt=\"\"", i);
         sendcmd(command);
         usleep(microsec);
     }
     usleep(microsec * 300);
-    if (num > 230) num = 230;
+    if (num > 228) num = 228;
   	for (i = 0; i < num; i++) {
        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
         sendcmd(command);
         usleep(microsec);
    	}
+
+    /* チェックしたIPアドレスをSYSTEM pageに表示 */
+    sprintf(command, "SYSTEM.va0.txt=\"%s\"", ipaddress);
+    sendcmd(command);
+
+
 
 	/* 送・受信ループ */
 	while (1) {
@@ -177,7 +184,7 @@ int main(int argc, char *argv[])
 		/* 接続先の表示*/
 		if ((strncmp(rptcall, "", 1) != 0) && (strncmp(rptcall, rptcallpre, 8) !=0)) {
 			strcpy(rptcallpre, rptcall);
-			sprintf(command, "t1.txt=\"LINK TO : %s\"", rptcall);
+			sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
 			sendcmd(command);
 			sprintf(command, "MAIN.link.txt=\"LINK TO : %s\"", rptcall);
 			sendcmd(command);
@@ -195,8 +202,8 @@ int main(int argc, char *argv[])
             /* 取得ステイタス=> STATUS1 */
 			sprintf(command, "MAIN.stat1.txt=\"%s\"", status);
 			sendcmd(command);
-			sendcmd("t2.txt=MAIN.stat1.txt");
-			sendcmd("t3.txt=MAIN.stat2.txt");
+			sendcmd("MAIN.t2.txt=MAIN.stat1.txt");
+			sendcmd("MAIN.t3.txt=MAIN.stat2.txt");
 
             /* statusをクリアする */
             status[0] = '\0';

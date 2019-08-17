@@ -1,6 +1,8 @@
 /********************************************************
- * dmonitor のログファイルよりラストハード及び
- * 状況を取得し変数status に入れる
+ *                                                      *
+ *      dmonitor のログファイルよりラストハード及び     *
+ *      状況を取得し変数status に入れる                 *
+ *                                                      *
  ********************************************************/
 
 #include "dmonitor.h"
@@ -37,17 +39,20 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
 	/* 標準出力を配列に取得 */
 	while ((fgets(line, sizeof(line), fp)) != NULL) {
 
-
+        /* どこに接続したかを取得 */
 		if ((tmpstr = strstr(line, "Connected")) != NULL) {
 			strncpy(rptcall, tmpstr + 13, 8);
 		}
+        /* dmonitorの開始とバージョンを取得 */
 		if ((tmpstr = strstr(line, "dmonitor start")) != NULL) {
 			strncpy(status, tmpstr, 21);
 		}
+        /* バッファの拡張のサイズを取得 */
         if ((tmpstr = strstr(line, "New FiFo buffer")) != NULL) {
             strcpy(status, tmpstr + 9);
             status[strlen(status) - 1] = '\0';
         }
+        /* 接続解除を取得 */
         if ((tmpstr = strstr(line, "dmonitor end")) != NULL) {
             strcpy(status, "Disconnected");
         }
@@ -59,6 +64,8 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
 		strncpy(status, line, 16);
 		strncat(status, tmpstr - 9, 8);
 	}
+
+    /* 無線機のUSB接続状況を取得 */
 	if ((tmpstr = strstr(line, "rig not")) != NULL) {
 		strcpy(status, "Check rig not connected.");
 	}
