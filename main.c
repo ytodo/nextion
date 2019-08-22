@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 						system("killall -q -s 9 dmonitor");
 
 						/* 接続コマンドの実行 */
-						sprintf(command, "dmonitor %s %s '%s'", linkdata[i].addr, linkdata[i].port, linkdata[i].call);
+						sprintf(command, "dmonitor '%s' %s %s '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call);
 						sendcmd("page MAIN");
 						system(command);
 						break;

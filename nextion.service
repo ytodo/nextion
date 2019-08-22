@@ -4,7 +4,7 @@ After = network.target
 
 [Service]
 Type = simple
-ExecStart = /usr/local/bin/nextion &
+ExecStart = /usr/local/bin/nextion
 ExecStop = /usr/bin/killall -q -s 9 nextion
 
 [Install]
