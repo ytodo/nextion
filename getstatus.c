@@ -14,6 +14,7 @@ int getstatus()
 	char	line[128] 	= {'\0'};
 	char	*getstatus 	= "tail -n3 /var/log/dmonitor.log";
 	char	*tmpstr;
+    char    ret[2]      = {'\0'};
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL) {
@@ -42,36 +43,41 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
         /* どこに接続したかを取得 */
 		if ((tmpstr = strstr(line, "Connected")) != NULL) {
 			strncpy(rptcall, tmpstr + 13, 8);
-		}
-        /* dmonitorの開始とバージョンを取得 */
-		if ((tmpstr = strstr(line, "dmonitor start")) != NULL) {
-			strncpy(status, tmpstr, 21);
-		}
-        /* バッファの拡張のサイズを取得 */
-        if ((tmpstr = strstr(line, "New FiFo buffer")) != NULL) {
-            strcpy(status, tmpstr + 9);
-            status[strlen(status) - 1] = '\0';
-        }
-        /* 接続解除を取得 */
-        if ((tmpstr = strstr(line, "dmonitor end")) != NULL) {
-            strcpy(status, "Disconnected");
-        }
-	}
+        } else {
 
-    	/* status に関する文字列があったら */
-		if  ((tmpstr = strstr(line, "Connected")) == NULL) {
-        	if ((tmpstr = strstr(line, "from")) != NULL) {
+           	/* status に関する文字列があったら */
+           	if ((tmpstr = strstr(line, "from")) != NULL) {
+
+                /* 日付時間とコールサインをログとして出力 */
                 memset(&status[0], '\0', sizeof(status));
                 strncpy(status, line, 16);
                 strncat(status, tmpstr - 9, 8);
             }
 		}
+        /* dmonitorの開始とバージョンを取得 */
+		if ((tmpstr = strstr(line, "dmonitor start")) != NULL) {
+            memset(&status[0], '\0', sizeof(status));
+			strncpy(status, tmpstr, 21);
+        }
 
-        /* 無線機のUSB接続状況を取得 */
-	    if ((tmpstr = strstr(line, "rig not")) != NULL) {
-		    strcpy(status, "Check rig not connected.");
-    	}
-//    }
+        /* バッファの拡張のサイズを取得 */
+        if ((tmpstr = strstr(line, "New FiFo buffer")) != NULL) {
+            memset(&status[0], '\0', sizeof(status));
+            strcpy(status, tmpstr + 9);
+            status[strlen(status) - 1] = '\0';
+        }
+        /* 接続解除を取得 */
+        if ((tmpstr = strstr(line, "dmonitor end")) != NULL) {
+            memset(&status[0], '\0', sizeof(status));
+            strcpy(status, "Disconnected");
+        }
+    }
+
+    /* 無線機のUSB接続状況を取得 */
+    if ((tmpstr = strstr(line, "rig not")) != NULL) {
+        memset(&status[0], '\0', sizeof(status));
+	    strcpy(status, "Check rig not connected.");
+    }
 
 	pclose(fp);
 
