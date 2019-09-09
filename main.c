@@ -113,6 +113,7 @@ int main(int argc, char *argv[])
             if (strncmp(concall, "Update",  6) == 0) flag = 4;
             if (strncmp(concall, "UP",      2) == 0) flag = 5;
             if (strncmp(concall, "DWN",     3) == 0) flag = 6;
+            if (strncmp(concall, "USERS",   5) == 0) flag = 7;
 
 			switch (flag) {
 			case 1:
@@ -150,6 +151,10 @@ int main(int argc, char *argv[])
                 if (strncmp(concall, "dwn", 3) == 0) break;
                 strcpy(concall, "dwn");
                 system("killall -q -s SIGUSR2 dmonitor");
+                break;
+
+            case 7:
+                getusers();
                 break;
 
 			default:

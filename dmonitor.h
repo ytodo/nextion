@@ -68,6 +68,7 @@ int	    getlinkdata();
 int	    getstatus();
 int     getconfig();
 int     getipaddr();
+int     getusers();
 int	    openport(char *devicename, long baudrate);
 void	recvdata(char *rptcon);
 void	sendcmd(char *cmd);
