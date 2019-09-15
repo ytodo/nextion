@@ -46,6 +46,8 @@ int main(int argc, char *argv[])
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
 
+printf("%d\n", num);
+
 	/* GPIO シリアルポートのオープン*/
 	fd = openport(SERIALPORT, BAUDRATE);
 
@@ -118,16 +120,22 @@ int main(int argc, char *argv[])
 			switch (flag) {
 			case 1:
                 sendcmd("page MAIN");
+				system("killall -q -s 9 dmonitor");
+                system("killall sleep");
 				system("systemctl restart nextion.service");
 				break;
 
 			case 2:
 				sendcmd("page MAIN");
+				system("killall -q -s 9 dmonitor");
+                system("killall sleep");
 				system("shutdown -r now");
 				break;
 
 			case 3:
 				sendcmd("page MAIN");
+				system("killall -q -s 9 dmonitor");
+                system("killall sleep");
 				system("shutdown -h now");
 				break;
 
@@ -135,6 +143,7 @@ int main(int argc, char *argv[])
                 sendcmd("SYSTEM.b4.bco=63488");
                 sendcmd("SYSTEM.b4.pco=65535");
                 sendcmd("SYSTEM.b4.txt=\"WAIT\"");
+                system("killall sleep");
                 system("apt clean && apt update && apt upgrade -y && apt autoremove -y");
                 sendcmd("SYSTEM.b4.bco=64512");
                 sendcmd("SYSTEM.b4.txt=\"REBOOT\"");
