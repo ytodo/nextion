@@ -10,15 +10,17 @@ int getusers()
     char    command[32] = {'\0'};
     char    ret[16]     = {'\0'};
     int     i           = 0;
+    int     j           = 0;
 
     /* Remote Usersページへ */
     sendcmd("page USERS");
 
     /* [Return]ボタンが押されるまで繰り返す */
-    while ((strncmp(ret, "Return", 6)) != 0) {
+    while (1) {
 
         /* [Return]の検出 */
         recvdata(ret);
+        if ((strncmp(ret, "Return", 6)) == 0) break;
 
         /* コマンドの標準出力オープン */
         if ((fp = fopen(users_tbl, "r")) == NULL) {
@@ -26,14 +28,8 @@ int getusers()
             return (EXIT_FAILURE);
         }
 
-        /* 接続ユーザリストをクリア */
-        for (i = 0; i < 7; i++) {
-            sprintf(command, "USERS.t%d.txt=\"\"", i);
-            sendcmd(command);
-        }
+        /* ファイルを一行ずつ読み最終行まで繰り返す  */
         i = 0;
-
-       /* ファイルを一行ずつ読み最終行まで繰り返す  */
         while ((fgets(line, sizeof(line), fp)) != NULL) {
 
             /* <td> を見つけ内容を取得し、リストに表示 */
@@ -42,14 +38,24 @@ int getusers()
                 sprintf(command, "USERS.t%d.txt=\"%s\"", i, tmpstr);
                 sendcmd(command);
                 i++;
+                if (i  >= 14) break;
             }
         }
 
         /* ファイルクローズ */
         fclose(fp);
 
-        /* 5秒に一回リフレッシュする */
-        sleep(5);
+        /* リスト14件に満たない場合、残りをクリアする */
+        j = 0;
+        if (i < 14 ) {
+            for (j = i; j < 14; j++) {
+                sprintf(command, "USERS.t%d.txt=\"\"", j);
+                sendcmd(command);
+            }
+        }
+
+        /* 3秒に一回リフレッシュする */
+        sleep(3);
     }
 
     return(EXIT_SUCCESS);

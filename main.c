@@ -142,11 +142,11 @@ printf("%d\n", num);
             case 4:
                 sendcmd("SYSTEM.b4.bco=63488");
                 sendcmd("SYSTEM.b4.pco=65535");
-                sendcmd("SYSTEM.b4.txt=\"WAIT\"");
+                sendcmd("SYSTEM.b4.txt=\"WAIT for reboot!\"");
                 system("killall sleep");
                 system("apt clean && apt update && apt upgrade -y && apt autoremove -y");
                 sendcmd("SYSTEM.b4.bco=64512");
-                sendcmd("SYSTEM.b4.txt=\"REBOOT\"");
+                sendcmd("SYSTEM.b4.txt=\"REBOOTing now...!\"");
                 system("reboot");
                 break;
 
