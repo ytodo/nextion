@@ -13,8 +13,9 @@ int getlinkdata()
 	char		*strcall;
 	char		*straddr;
 	char		*strport;
+    char        *strzone;
 	char		*RPTLISTTBL = "/tmp/repeaters.tbl";
-	char		line[128] = {'\0'};
+	char		line[256] = {'\0'};
 	int		    i = 0;
 	FILE		*fp;
 
@@ -30,12 +31,8 @@ int getlinkdata()
 	}
 
 /* File sample
-{"Connected Table":[
-{"callsign":"JK1ZRW  ","ip_address":"183.177.205.139","port":51000},
-{"callsign":"JL3ZBS  ","ip_address":"111.64.23.93","port":51000},
-{"callsign":"JP0YDP  ","ip_address":"219.117.234.39","port":1024},
-{"callsign":"JP1YDS  ","ip_address":"210.239.249.164","port":51000},
-{"callsign":"JP1YEM  ","ip_address":"119.173.54.159","port":51000},
+{"callsign":"JL3ZBS A","ip_address":"222.159.237.250","port":51000,"status":"off", "area":"3",  |
+            "ur_call":"        ","my_call":"        ","rpt1_call":"        ","rpt2_call":"        ","zr_call":"JL3ZBS G"},
 */
 
 	/* テーブルを読み込み構造体に格納する */
@@ -43,8 +40,9 @@ int getlinkdata()
 
 		/* Find out Callsing, IP Address and Port number */
 		if ((strcall = strstr(line, "callsign")) != NULL ) {
-			 straddr = strstr(line, "ip_address");
-			 strport = strstr(line, "port");
+			straddr  = strstr(line, "ip_address");
+			strport  = strstr(line, "port");
+            strzone  = strstr(line, "zr_call");
 
 			/* コールサインの保存 */
 			strncpy(linkdata[i].call, strcall + 11, 8);
@@ -59,9 +57,13 @@ int getlinkdata()
 			strncpy(linkdata[i].addr, straddr + 13, strlen(straddr) - strlen(strport) - 16);
 			linkdata[i].addr[strlen(straddr) - strlen(strport) - 16] = '\0';
 
-			/* ポート番号の保存*/
+			/* ポート番号の保存 */
 			strncpy(linkdata[i].port, strport + 6, 5);
 			linkdata[i].port[5] = '\0';
+
+            /* ZR_CALLの取得 */
+            strncpy(linkdata[i].zone, strzone + 10, 8);
+            linkdata[i].zone[8] = '\0';
 
 			i++;
 		}
@@ -72,7 +74,7 @@ int getlinkdata()
 	/* Test */
 //	int j = 0;
 //	for (j = 0; j < i; j++) {
-//		printf("%2d %s %s %s\n", j + 1, linkdata[j].call, linkdata[j].addr, linkdata[j].port);
+//		printf("%2d %s %s %s\n", j + 1, linkdata[j].call, linkdata[j].addr, linkdata[j].port, linkdata[j].zone);
 //	}
 
     /* 軒数を返す */

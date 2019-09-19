@@ -54,6 +54,7 @@ typedef struct {                  			// 構造体の宣言
 	char	call[9];
 	char	addr[16];
 	char 	port[6];
+    char    zone[9];
 } repeater_t;
 extern	repeater_t	 linkdata[LISTSIZE];	// 構造体配列の宣言
 extern	char         status[CHARSIZE];

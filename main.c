@@ -172,11 +172,12 @@ printf("%d\n", num);
 				num = getlinkdata();
 				for (i = 0; i < num; i++) {
 					if (strncmp(linkdata[i].call, concall, 8) == 0) {
+
 						/* 現在稼働中のdmonitor を止める */
 						system("killall -q -s 9 dmonitor");
 
 						/* 接続コマンドの実行 */
-						sprintf(command, "dmonitor '%s' %s %s '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call);
+						sprintf(command, "dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
 						sendcmd("page MAIN");
 						system(command);
 						break;
