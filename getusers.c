@@ -14,6 +14,8 @@ int getusers()
 
     /* Remote Usersページへ */
     sendcmd("page USERS");
+    sendcmd("USERS.b0.txt=MAIN.link.txt");
+
 
     /* [Return]ボタンが押されるまで繰り返す */
     while (1) {

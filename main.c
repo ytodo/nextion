@@ -46,8 +46,6 @@ int main(int argc, char *argv[])
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
 
-printf("%d\n", num);
-
 	/* GPIO シリアルポートのオープン*/
 	fd = openport(SERIALPORT, BAUDRATE);
 
@@ -118,55 +116,59 @@ printf("%d\n", num);
             if (strncmp(concall, "USERS",   5) == 0) flag = 7;
 
 			switch (flag) {
-			case 1:
-                sendcmd("page MAIN");
-				system("killall -q -s 9 dmonitor");
-                system("killall sleep");
+			case 1:                     // nextionドライバのリスタート
+                sendcmd("dim=10");
+				system("killall -q -s 2 dmonitor");
 				system("systemctl restart nextion.service");
 				break;
 
-			case 2:
-				sendcmd("page MAIN");
-				system("killall -q -s 9 dmonitor");
-                system("killall sleep");
+			case 2:                     // 再起動
+				sendcmd("dim=10");
+				system("killall -q -s 2 dmonitor");
 				system("shutdown -r now");
 				break;
 
-			case 3:
-				sendcmd("page MAIN");
-				system("killall -q -s 9 dmonitor");
-                system("killall sleep");
+			case 3:                     // シャットダウン
+				sendcmd("dim=10");
+				system("killall -q -s 2 dmonitor");
 				system("shutdown -h now");
 				break;
 
-            case 4:
+            case 4:                     // OS及びdmonitorのアップデート
+
+                /* [Update]ボタンの表示を変える */
                 sendcmd("SYSTEM.b4.bco=63488");
                 sendcmd("SYSTEM.b4.pco=65535");
                 sendcmd("SYSTEM.b4.txt=\"WAIT for reboot!\"");
-                system("killall sleep");
+
+                /* システムコマンドの実行 */
+				system("killall -q -s 2 dmonitor");
                 system("apt clean && apt update && apt upgrade -y && apt autoremove -y");
+
+                /* [REBOOT]の表示及びrebootコマンド発行 */
                 sendcmd("SYSTEM.b4.bco=64512");
                 sendcmd("SYSTEM.b4.txt=\"REBOOTing now...!\"");
                 system("reboot");
                 break;
 
-            case 5:
+            case 5:                     // バッファの増加
                 if (strncmp(concall, "up", 2) == 0) break;
                 strcpy(concall, "up");
                 system("killall -q -s SIGUSR1 dmonitor");
                 break;
 
-            case 6:
+            case 6:                     // バッファの減少
                 if (strncmp(concall, "dwn", 3) == 0) break;
                 strcpy(concall, "dwn");
                 system("killall -q -s SIGUSR2 dmonitor");
                 break;
 
-            case 7:
+            case 7:                     // Remote Usersパネルへ接続ユーザ表示
                 getusers();
                 break;
 
 			default:
+
 				/* 指定リピータに接続する */
 				i = 0;
 				num = getlinkdata();
@@ -209,7 +211,7 @@ printf("%d\n", num);
 		/* ステータス・ラストハードの表示 */
 		if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0)) {
 			strcpy(statpre, status);
-			sendcmd("dim=50");
+//			sendcmd("dim=50");
 
             /* STATUS1 => STATUS2 */
 			sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
