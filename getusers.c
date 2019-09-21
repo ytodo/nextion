@@ -13,8 +13,8 @@ int getusers()
     int     j           = 0;
 
     /* Remote Usersページへ */
-    sendcmd("page USERS");
-    sendcmd("USERS.b0.txt=MAIN.link.txt");
+//    sendcmd("page USERS");
+//    sendcmd("USERS.b0.txt=MAIN.link.txt");
 
 
     /* [Return]ボタンが押されるまで繰り返す */

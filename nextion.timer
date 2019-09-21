@@ -2,7 +2,7 @@
 Description = Nextion Service for "dmonitor" delay timer
 
 [Timer]
-OnBootSec=40sec
+OnBootSec=30sec
 #Unit=nextion.service
 
 [Install]

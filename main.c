@@ -164,6 +164,9 @@ int main(int argc, char *argv[])
                 break;
 
             case 7:                     // Remote Usersパネルへ接続ユーザ表示
+                sendcmd("page USERS");
+                sprintf(command, "USERS.b0.txt=\"REMONTE USERS - %s\"", rptcall);
+                sendcmd(command);
                 getusers();
                 break;
 
