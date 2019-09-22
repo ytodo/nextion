@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 
             case 7:                     // Remote Usersパネルへ接続ユーザ表示
                 sendcmd("page USERS");
-                sprintf(command, "USERS.b0.txt=\"REMONTE USERS - %s\"", rptcall);
+                sprintf(command, "USERS.b0.txt=\"REMONTE USERS - %s\"", rptcallpre);
                 sendcmd(command);
                 getusers();
                 break;
@@ -214,7 +214,6 @@ int main(int argc, char *argv[])
 		/* ステータス・ラストハードの表示 */
 		if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0)) {
 			strcpy(statpre, status);
-//			sendcmd("dim=50");
 
             /* STATUS1 => STATUS2 */
 			sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
@@ -228,8 +227,6 @@ int main(int argc, char *argv[])
             /* statusをクリアする */
             status[0] = '\0';
 		}
-
-	sleep (0);
 	}
 
 	/* GPIO シリアルポートのクローズ*/
