@@ -148,7 +148,9 @@ int main(int argc, char *argv[])
                 /* [REBOOT]の表示及びrebootコマンド発行 */
                 sendcmd("SYSTEM.b4.bco=64512");
                 sendcmd("SYSTEM.b4.txt=\"REBOOTing now...!\"");
-                system("reboot");
+                sendcmd("dim=10");
+                system("killall -q -s 2 dmonitor");
+                system("shutdown -r now");
                 break;
 
             case 5:                     // バッファの増加
@@ -179,7 +181,7 @@ int main(int argc, char *argv[])
 					if (strncmp(linkdata[i].call, concall, 8) == 0) {
 
 						/* 現在稼働中のdmonitor を止める */
-						system("killall -q -s 9 dmonitor");
+						system("killall -q -s 2 dmonitor");
 
 						/* 接続コマンドの実行 */
 						sprintf(command, "dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
