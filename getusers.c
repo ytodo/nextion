@@ -12,11 +12,6 @@ int getusers()
     int     i           = 0;
     int     j           = 0;
 
-    /* Remote Usersページへ */
-//    sendcmd("page USERS");
-//    sendcmd("USERS.b0.txt=MAIN.link.txt");
-
-
     /* [Return]ボタンが押されるまで繰り返す */
     while (1) {
 
@@ -48,7 +43,6 @@ int getusers()
         fclose(fp);
 
         /* リスト14件に満たない場合、残りをクリアする */
-        j = 0;
         if (i < 14 ) {
             for (j = i; j < 14; j++) {
                 sprintf(command, "USERS.t%d.txt=\"\"", j);

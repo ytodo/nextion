@@ -26,6 +26,7 @@
 
 int main(int argc, char *argv[])
 {
+    FILE    *fp;
     int     num;                // 返り値のi を受ける（件数）
     int     arraycount;
     int     fd;
@@ -35,9 +36,9 @@ int main(int argc, char *argv[])
     char    command[32]     = {'\0'};
     char    statpre[32]     = {'\0'};
     char    rptcallpre[32]  = {'\0'};
-    char    *SERIALPORT     = "/dev/ttyAMA0";
     char    concall[8]      = {'\0'};
     char    concallpre[8]   = {'\0'};
+    char    *SERIALPORT     = "/dev/ttyAMA0";
 
     /* 環境設定ファイルの読み取り */
     getconfig();
@@ -97,7 +98,6 @@ int main(int argc, char *argv[])
         /* もしタッチデータが選択されていない場合、初回のみデフォルトリピータをセットする */
         if ((strlen(concall) == 0) && (strlen(default_rpt) != 0)) {
             strcpy(concall, default_rpt);
-            default_rpt[0] = '\0';
         }
 
         /* タッチデータが選択されている場合、前回と同じかチェック（同じならパス） */
@@ -149,7 +149,6 @@ int main(int argc, char *argv[])
                 sendcmd("SYSTEM.b4.bco=64512");
                 sendcmd("SYSTEM.b4.txt=\"REBOOTing now...!\"");
                 sendcmd("dim=10");
-                system("killall -q -s 2 dmonitor");
                 system("shutdown -r now");
                 break;
 
@@ -180,8 +179,8 @@ int main(int argc, char *argv[])
 				for (i = 0; i < num; i++) {
 					if (strncmp(linkdata[i].call, concall, 8) == 0) {
 
-						/* 現在稼働中のdmonitor を止める */
-						system("killall -q -s 2 dmonitor");
+						/* 現在稼働中のdmonitor をKILL */
+                        system("killall -q -s 9 dmonitor");
 
 						/* 接続コマンドの実行 */
 						sprintf(command, "dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
