@@ -51,7 +51,7 @@ int getusers()
         }
 
         /* 3秒に一回リフレッシュする */
-        sleep(3);
+        sleep(1);
     }
 
     return(EXIT_SUCCESS);

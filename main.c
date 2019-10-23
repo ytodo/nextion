@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
 	sprintf(command, "MAIN.stat1.txt=\"Read %d Repeaters\"", num);
 	sendcmd(command);
 	sendcmd("t2.txt=MAIN.stat1.txt");
+    sendcmd("t3.txt=\"\"");
 
 	/* 全リストを空にした後リピータ数分の文字配列にコールサインを格納 */
     for (i = 0; i < 228; i++) {
@@ -166,9 +167,10 @@ int main(int argc, char *argv[])
 
             case 7:                     // Remote Usersパネルへ接続ユーザ表示
                 sendcmd("page USERS");
-                sprintf(command, "USERS.b0.txt=\"REMONTE USERS - %s\"", rptcallpre);
+                sprintf(command, "USERS.b0.txt=\"LINKED USERS on %s\"", rptcallpre);
                 sendcmd(command);
                 getusers();
+                strcpy(concall, "Return");
                 break;
 
 			default:
@@ -203,7 +205,7 @@ int main(int argc, char *argv[])
 		getstatus();
 
 		/* 接続先の表示*/
-		if ((strncmp(rptcall, "", 1) != 0) && (strncmp(rptcall, rptcallpre, 8) !=0)) {
+		if ((strncmp(rptcall, "", 1) != 0) && (strncmp(rptcall, rptcallpre, 8) != 0)) {
 			strcpy(rptcallpre, rptcall);
 			sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
 			sendcmd(command);
@@ -228,10 +230,11 @@ int main(int argc, char *argv[])
             /* statusをクリアする */
             status[0] = '\0';
 		}
-	}
+	}       // Loop
 
 	/* GPIO シリアルポートのクローズ*/
 	close(fd);
+
 	return (EXIT_SUCCESS);
 }
 
