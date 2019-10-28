@@ -27,7 +27,7 @@ int getlinkdata()
 	if ((fp = fopen(RPTLISTTBL, "r")) == NULL) {
 		printf("File open error!\n");
 
-		return (EXIT_FAILURE);
+		return (i);
 	}
 
 /* File sample
