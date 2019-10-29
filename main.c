@@ -45,6 +45,8 @@ int main(int argc, char *argv[])
     getipaddr();
 
 	/* 現在利用可能なリピータリストの取得*/
+    system("systemctl restart auto_repmon.service");
+    sleep(1);
 	num = getlinkdata();
 
 	/* GPIO シリアルポートのオープン*/
@@ -177,6 +179,8 @@ int main(int argc, char *argv[])
 
 				/* 指定リピータに接続する */
 				i = 0;
+                system("systemctl restart auto_repmon.service");
+                sleep(1);
 				num = getlinkdata();
 				for (i = 0; i < num; i++) {
 					if (strncmp(linkdata[i].call, concall, 8) == 0) {
