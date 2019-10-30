@@ -44,31 +44,31 @@ int main(int argc, char *argv[])
     getconfig();
     getipaddr();
 
-	/* 現在利用可能なリピータリストの取得*/
+    /* 現在利用可能なリピータリストの取得*/
     system("systemctl restart auto_repmon.service");
     sleep(1);
-	num = getlinkdata();
+    num = getlinkdata();
 
-	/* GPIO シリアルポートのオープン*/
-	fd = openport(SERIALPORT, BAUDRATE);
+    /* GPIO シリアルポートのオープン*/
+    fd = openport(SERIALPORT, BAUDRATE);
 
 	/* メインスクリーンの初期設定 */
-	sendcmd("dim=50");
-	sendcmd("page MAIN");
+    sendcmd("dim=50");
+    sendcmd("page MAIN");
     sprintf(command, "MAIN.station.txt=\"STATION : %s\"", station);
     sendcmd(command);
     sprintf(command, "t0.txt=\"STATION : %s\"", station);
     sendcmd(command);
-  	sendcmd("t1.txt=\"LINK TO : NONE\"");
+ 	sendcmd("t1.txt=\"LINK TO : NONE\"");
     sendcmd("link.txt=\"LINK TO : NONE\"");
 
-	/* 読み込んだリピータの総数を表示 */
-	sprintf(command, "MAIN.stat1.txt=\"Read %d Repeaters\"", num);
-	sendcmd(command);
-	sendcmd("t2.txt=MAIN.stat1.txt");
+    /* 読み込んだリピータの総数を表示 */
+    sprintf(command, "MAIN.stat1.txt=\"Read %d Repeaters\"", num);
+    sendcmd(command);
+   	sendcmd("t2.txt=MAIN.stat1.txt");
     sendcmd("t3.txt=\"\"");
 
-	/* 全リストを空にした後リピータ数分の文字配列にコールサインを格納 */
+    /* 全リストを空にした後リピータ数分の文字配列にコールサインを格納 */
     for (i = 0; i < 228; i++) {
         sprintf(command, "VALUE.va%d.txt=\"\"", i);
         sendcmd(command);
@@ -88,15 +88,15 @@ int main(int argc, char *argv[])
 
 
 
-	/* 送・受信ループ */
-	while (1) {
+    /* 送・受信ループ */
+    while (1) {
 
-		/*
-		 * 受信処理
-		 */
+        /*
+         * 受信処理
+         */
 
-		/* タッチパネルのデータを読み込む */
-		recvdata(concall);
+        /* タッチパネルのデータを読み込む */
+        recvdata(concall);
 
         /* もしタッチデータが選択されていない場合、初回のみデフォルトリピータをセットする */
         if ((strlen(concall) == 0) && (strlen(default_rpt) != 0)) {
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
         }
 
         /* タッチデータが選択されている場合、前回と同じかチェック（同じならパス） */
-		if ((strlen(concall) > 1) && (strncmp(concall, concallpre, 8) != 0))  {
+        if ((strlen(concall) > 1) && (strncmp(concall, concallpre, 8) != 0))  {
 
 			/* 現在の返り値を保存 */
             strncpy(concallpre, concall, 8);
@@ -121,21 +121,21 @@ int main(int argc, char *argv[])
 			switch (flag) {
 			case 1:                     // nextionドライバのリスタート
                 sendcmd("dim=10");
-				system("killall -q -s 2 dmonitor");
-				system("systemctl restart nextion.service");
-				break;
+                system("killall -q -s 2 dmonitor");
+                system("systemctl restart nextion.service");
+                break;
 
-			case 2:                     // 再起動
-				sendcmd("dim=10");
-				system("killall -q -s 2 dmonitor");
-				system("shutdown -r now");
-				break;
+            case 2:                     // 再起動
+                sendcmd("dim=10");
+                system("killall -q -s 2 dmonitor");
+                system("shutdown -r now");
+                break;
 
-			case 3:                     // シャットダウン
-				sendcmd("dim=10");
-				system("killall -q -s 2 dmonitor");
-				system("shutdown -h now");
-				break;
+            case 3:                     // シャットダウン
+                sendcmd("dim=10");
+                system("killall -q -s 2 dmonitor");
+                system("shutdown -h now");
+                break;
 
             case 4:                     // OS及びdmonitorのアップデート
 
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
                 sendcmd("SYSTEM.b4.txt=\"WAIT for reboot!\"");
 
                 /* システムコマンドの実行 */
-				system("killall -q -s 2 dmonitor");
+                system("killall -q -s 2 dmonitor");
                 system("apt clean && apt update && apt upgrade -y && apt autoremove -y");
 
                 /* [REBOOT]の表示及びrebootコマンド発行 */
@@ -175,70 +175,69 @@ int main(int argc, char *argv[])
                 strcpy(concall, "Return");
                 break;
 
-			default:
+            default:
 
-				/* 指定リピータに接続する */
-				i = 0;
+                /* 指定リピータに接続する */
+                i = 0;
                 system("systemctl restart auto_repmon.service");
                 sleep(1);
-				num = getlinkdata();
-				for (i = 0; i < num; i++) {
-					if (strncmp(linkdata[i].call, concall, 8) == 0) {
+                num = getlinkdata();
+                for (i = 0; i < num; i++) {
+                    if (strncmp(linkdata[i].call, concall, 8) == 0) {
 
-						/* 現在稼働中のdmonitor をKILL */
+                        /* 現在稼働中のdmonitor をKILL */
                         system("killall -q -s 9 dmonitor");
 
-						/* 接続コマンドの実行 */
-						sprintf(command, "dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
-						sendcmd("page MAIN");
-						system(command);
-						break;
-					}
-				}
-			}
+                        /* 接続コマンドの実行 */
+                        sprintf(command, "dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
+                        sendcmd("page MAIN");
+                        system(command);
+                        break;
+                    }
+                }
+            }
             flag = 0;
 
 		}
 
 
-		/*
-		 * 送信処理
-		 */
+        /*
+         * 送信処理
+         */
 
-		/* ステータス・ラストハードの読み取り */
-		getstatus();
+        /* ステータス・ラストハードの読み取り */
+        getstatus();
 
-		/* 接続先の表示*/
-		if ((strncmp(rptcall, "", 1) != 0) && (strncmp(rptcall, rptcallpre, 8) != 0)) {
-			strcpy(rptcallpre, rptcall);
-			sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
-			sendcmd(command);
-			sprintf(command, "MAIN.link.txt=\"LINK TO : %s\"", rptcall);
-			sendcmd(command);
-		}
+        /* 接続先の表示*/
+        if ((strncmp(rptcall, "", 1) != 0) && (strncmp(rptcall, rptcallpre, 8) != 0)) {
+            strcpy(rptcallpre, rptcall);
+            sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
+            sendcmd(command);
+            sprintf(command, "MAIN.link.txt=\"LINK TO : %s\"", rptcall);
+            sendcmd(command);
+        }
 
 
-		/* ステータス・ラストハードの表示 */
-		if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0)) {
-			strcpy(statpre, status);
+        /* ステータス・ラストハードの表示 */
+        if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0)) {
+            strcpy(statpre, status);
 
             /* STATUS1 => STATUS2 */
-			sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
+            sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
 
             /* 取得ステイタス=> STATUS1 */
-			sprintf(command, "MAIN.stat1.txt=\"%s\"", status);
-			sendcmd(command);
-			sendcmd("MAIN.t2.txt=MAIN.stat1.txt");
-			sendcmd("MAIN.t3.txt=MAIN.stat2.txt");
+            sprintf(command, "MAIN.stat1.txt=\"%s\"", status);
+            sendcmd(command);
+            sendcmd("MAIN.t2.txt=MAIN.stat1.txt");
+            sendcmd("MAIN.t3.txt=MAIN.stat2.txt");
 
             /* statusをクリアする */
             status[0] = '\0';
-		}
-	}       // Loop
+        }
+    }       // Loop
 
-	/* GPIO シリアルポートのクローズ*/
-	close(fd);
+    /* GPIO シリアルポートのクローズ*/
+    close(fd);
 
-	return (EXIT_SUCCESS);
+    return (EXIT_SUCCESS);
 }
-
