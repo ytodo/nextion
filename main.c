@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
                 /* 指定リピータに接続する */
                 i = 0;
                 system("systemctl restart auto_repmon.service");
-                usleep(microsec * 100);
+                usleep(microsec * 100);     // リスト読み込み完了を確実にするウェイト
                 num = getlinkdata();
                 for (i = 0; i < num; i++) {
                     if (strncmp(linkdata[i].call, concall, 8) == 0) {
@@ -196,8 +196,9 @@ int main(int argc, char *argv[])
                         /* 接続コマンドの実行 */
                         sprintf(command, "dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
                         sendcmd("page MAIN");
-                usleep(microsec * 100);
 
+                        /* killした後、disconnectの表示を待って再接続 */
+                        usleep(microsec * 50);
                         system(command);
                         break;
                     }
