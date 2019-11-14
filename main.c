@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
     /* 現在利用可能なリピータリストの取得*/
     system("systemctl restart auto_repmon.service");
-    sleep(1);
+    usleep(microsec * 100);
     num = getlinkdata();
 
     /* GPIO シリアルポートのオープン*/
@@ -122,18 +122,21 @@ int main(int argc, char *argv[])
 			case 1:                     // nextionドライバのリスタート
                 sendcmd("dim=10");
                 system("killall -q -s 2 dmonitor");
+                system("rm /var/run/dmonitor.pid");
                 system("systemctl restart nextion.service");
                 break;
 
             case 2:                     // 再起動
                 sendcmd("dim=10");
                 system("killall -q -s 2 dmonitor");
+                system("rm /var/run/dmonitor.pid");
                 system("shutdown -r now");
                 break;
 
             case 3:                     // シャットダウン
                 sendcmd("dim=10");
                 system("killall -q -s 2 dmonitor");
+                system("rm /var/run/dmonitor.pid");
                 system("shutdown -h now");
                 break;
 
@@ -146,6 +149,7 @@ int main(int argc, char *argv[])
 
                 /* システムコマンドの実行 */
                 system("killall -q -s 2 dmonitor");
+                system("rm /var/run/dmonitor.pid");
                 system("apt clean && apt update && apt upgrade -y && apt autoremove -y");
 
                 /* [REBOOT]の表示及びrebootコマンド発行 */
@@ -180,13 +184,14 @@ int main(int argc, char *argv[])
                 /* 指定リピータに接続する */
                 i = 0;
                 system("systemctl restart auto_repmon.service");
-                sleep(1);
+                usleep(microsec * 100);
                 num = getlinkdata();
                 for (i = 0; i < num; i++) {
                     if (strncmp(linkdata[i].call, concall, 8) == 0) {
 
                         /* 現在稼働中のdmonitor をKILL */
-                        system("killall -q -s 9 dmonitor");
+                        system("killall -q -s 2 dmonitor");
+                        system("rm /var/run/dmonitor.pid");
 
                         /* 接続コマンドの実行 */
                         sprintf(command, "dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
