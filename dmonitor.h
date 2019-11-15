@@ -63,6 +63,7 @@ extern  char         station[CHARSIZE];
 extern  char         ipaddress[CHARSIZE];
 extern  char         default_rpt[CHARSIZE];
 extern  unsigned int microsec;
+extern  unsigned int debug;
 
 /* Functions */
 int	    getlinkdata();

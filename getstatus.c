@@ -56,7 +56,7 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
             }
 
             /* Last packet wrong ステータスの場合、文字を黄色に */
-            if (strstr(line, "Last packet wrong") != NULL) {
+            if ((debug == 1) && (strstr(line, "Last packet wrong") != NULL)) {
                 strcpy(status, "Last packet wrong...");
             }
 
@@ -81,6 +81,11 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
             strcpy(status, "Disconnected");
         }
 
+        /* 無線機の接続状況 */
+        if ((debug == 1) && ((tmpstr = strstr(line, "init/re-init")) != NULL)) {
+            memset(&status[0], '\0', sizeof(status));
+            strcpy(status, "RIG initializing is done.");
+        }
     }
 
 	pclose(fp);

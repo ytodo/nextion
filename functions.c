@@ -111,9 +111,10 @@ int getconfig(void)
 
     /* テーブルを読み込み変数に格納する */
     while ((fgets(line, sizeof(line), fp)) != NULL) {
-        if ((ret = strstr(line, "STATION"))     != NULL) sscanf(line, "STATION=%[^\n]", station);
+        if ((ret = strstr(line, "STATION"))     != NULL) sscanf(line, "STATION=%[^\n]",     station);
         if ((ret = strstr(line, "DEFAULT_RPT")) != NULL) sscanf(line, "DEFAULT_RPT=%[^\n]", default_rpt);
-        if ((ret = strstr(line, "SLEEPTIME"))   != NULL) sscanf(line, "SLEEPTIME=%d"  , &microsec);
+        if ((ret = strstr(line, "SLEEPTIME"))   != NULL) sscanf(line, "SLEEPTIME=%d",       &microsec);
+        if ((ret = strstr(line, "DEBUG"))       != NULL) sscanf(line, "DEBUG=%d",           &debug);
     }
 
     fclose(fp);

@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
     char    concallpre[8]   = {'\0'};
     char    *SERIALPORT     = "/dev/ttyAMA0";
 
+
     /* 環境設定ファイルの読み取り */
     getconfig();
     getipaddr();
