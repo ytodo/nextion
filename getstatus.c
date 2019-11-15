@@ -40,20 +40,28 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
 	/* 標準出力を配列に取得 */
 	while ((fgets(line, sizeof(line), fp)) != NULL) {
 
-        /* どこに接続したかを取得 */
-		if ((tmpstr = strstr(line, "Connected")) != NULL) {
-			strncpy(rptcall, tmpstr + 13, 8);
-        } else {
+        /* status に関する文字列があったら */
+        if ((tmpstr = strstr(line, "from")) != NULL) {
 
-           	/* status に関する文字列があったら */
-           	if ((tmpstr = strstr(line, "from")) != NULL) {
-
-                /* 日付時間とコールサインをログとして出力 */
+            /* 日付時間とコールサインをログとして出力 */
+            if ((strstr(line, "Connected") == NULL) && (strstr(line, "Last packet") == NULL)) {
                 memset(&status[0], '\0', sizeof(status));
                 strncpy(status, line, 16);
                 strncat(status, tmpstr - 9, 8);
             }
-		}
+
+            /* どこに接続したかを取得 */
+            if ((tmpstr = strstr(line, "Connected")) != NULL) {
+			    strncpy(rptcall, tmpstr + 13, 8);
+            }
+
+            /* Last packet wrong ステータスの場合、文字を黄色に */
+            if (strstr(line, "Last packet wrong") != NULL) {
+                strcpy(status, "Last packet wrong...");
+            }
+
+        }
+
         /* dmonitorの開始とバージョンを取得 */
 		if ((tmpstr = strstr(line, "dmonitor start")) != NULL) {
             memset(&status[0], '\0', sizeof(status));
@@ -66,17 +74,13 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
             strcpy(status, tmpstr + 9);
             status[strlen(status) - 1] = '\0';
         }
+
         /* 接続解除を取得 */
         if ((tmpstr = strstr(line, "dmonitor end")) != NULL) {
             memset(&status[0], '\0', sizeof(status));
             strcpy(status, "Disconnected");
         }
-    }
 
-    /* 無線機のUSB接続状況を取得 */
-    if ((tmpstr = strstr(line, "rig not")) != NULL) {
-        memset(&status[0], '\0', sizeof(status));
-	    strcpy(status, "Check rig not connected.");
     }
 
 	pclose(fp);

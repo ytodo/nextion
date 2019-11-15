@@ -192,6 +192,7 @@ int main(int argc, char *argv[])
                         /* 現在稼働中のdmonitor をKILL */
                         system("killall -q -s 2 dmonitor");
                         system("rm /var/run/dmonitor.pid");
+                        system("sudo rig_port_check");
 
                         /* 接続コマンドの実行 */
                         sprintf(command, "dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
