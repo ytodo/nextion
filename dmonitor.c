@@ -11,3 +11,4 @@ char            ipaddress[CHARSIZE]   = {'\0'};
 char            default_rpt[CHARSIZE] = {'\0'};
 unsigned int    microsec              = 0;
 unsigned int    debug                 = 0;
+unsigned int    stat                  = 0;

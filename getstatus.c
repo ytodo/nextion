@@ -11,27 +11,19 @@
 int getstatus()
 {
 	FILE	*fp;
-	char	line[128] 	= {'\0'};
-	char	*getstatus 	= "tail -n3 /var/log/dmonitor.log";
+	char	*getstatus   = "tail -n3 /var/log/dmonitor.log";
 	char	*tmpstr;
-    char    ret[2]      = {'\0'};
+    char    ret[2]       = {'\0'};
+	char	line[128]    = {'\0'};
+    char    jitter_av[8] = {'\0'};
+    char    jitter_mx[8] = {'\0'};
+    char    jitter_mi[8] = {'\0'};
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL) {
 		printf("File open error!\n");
 		return (EXIT_FAILURE);
 	}
-
-/* sample
-Nov 14 05:28:08 ham22 dmonitor[965]: dmonitor start V00.11 (Compiled Oct 22 2018 23:00:00)
-Nov 14 05:28:08 ham22 dmonitor[965]: RIG(ID-xxPlus)  open
-Nov 14 05:28:08 ham22 dmonitor[965]: Connected to JP3YIP A (128.53.142.124:51000)
-Nov 14 05:29:50 ham22 dmonitor[988]: dmonitor start V00.11 (Compiled Oct 22 2018 23:00:00)
-Nov 14 05:29:50 ham22 dmonitor[988]: RIG(ID-xxPlus)  open
-Nov 14 05:29:50 ham22 dmonitor[988]: Connected to JP3YIP A (128.53.127.230:51000)
-Nov 14 05:30:23 ham22 dmonitor[988]: JE3HCZ A from GW
-Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
-*/
 
 	/* 過去のデータをクリアする  */
 	memset(&status[0], '\0', sizeof(status));
@@ -48,6 +40,7 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
                 memset(&status[0], '\0', sizeof(status));
                 strncpy(status, line, 16);
                 strncat(status, tmpstr - 9, 8);
+                stat = 0;
             }
 
             /* どこに接続したかを取得 */
@@ -56,10 +49,11 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
             }
 
             /* Last packet wrong ステータスの場合、文字を黄色に */
-            if ((debug == 1) && (strstr(line, "Last packet wrong") != NULL)) {
-                strcpy(status, "Last packet wrong...");
+            if ((stat == 0) && (debug == 1) && (strstr(line, "Last packet wrong") != NULL)) {
+                strcpy(status, "Last packet is wrong...");
+                stat = 1;
+                break;
             }
-
         }
 
         /* dmonitorの開始とバージョンを取得 */
@@ -76,15 +70,23 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
         }
 
         /* 接続解除を取得 */
-        if ((tmpstr = strstr(line, "dmonitor end")) != NULL) {
+        if (strstr(line, "dmonitor end") != NULL) {
             memset(&status[0], '\0', sizeof(status));
             strcpy(status, "Disconnected");
         }
 
         /* 無線機の接続状況 */
-        if ((debug == 1) && ((tmpstr = strstr(line, "init/re-init")) != NULL)) {
+        if ((debug == 1) && (strstr(line, "init/re-init") != NULL)) {
             memset(&status[0], '\0', sizeof(status));
             strcpy(status, "RIG initializing is done.");
+        }
+
+        /* ドロップパケット比の表示 */
+        if ((stat == 1) && (debug == 1) && ((tmpstr = strstr(line, "drop")) != NULL)) {
+            memset(&status[0], '\0', sizeof(status));
+            strcpy(status, "Drop PKT ");
+            strcat(status, tmpstr + 17);
+            status[strlen(status) - 1] = '\0';
         }
     }
 
@@ -94,6 +96,14 @@ Nov 14 05:30:29 ham22 dmonitor[988]: JE3HCZ A from GW
 }
 
 
-
-
+/* sample
+Nov 16 09:35:00 ham12 dmonitor[30968]: drop pakcet rate 0.00% (0/22)
+Nov 16 09:35:00 ham12 dmonitor[30968]: jitter info. ave:20mSec. max:26mSec. min:17mSec.
+Nov 16 09:35:20 ham12 dmonitor[30968]: dmonitor end
+Nov 16 09:35:20 ham12 dmonitor[9408]: dmonitor start V01.27 (Compiled Nov 11 2019 12:50:00)
+Nov 16 09:35:20 ham12 dmonitor[9408]: Connected to JP3YIY A (153.131.76.69:51000) from JE3HCZ D
+Nov 16 09:35:21 ham12 dmonitor[9408]: RIG(ID-xxPlus) open
+Nov 16 09:35:21 ham12 dmonitor[9408]: hole punch done.
+Nov 16 09:35:21 ham12 dmonitor[9408]: RIG(ID-xxPlus) init/re-init done
+*/
 

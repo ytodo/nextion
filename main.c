@@ -243,6 +243,7 @@ int main(int argc, char *argv[])
 
             /* statusをクリアする */
             status[0] = '\0';
+
         }
     }       // Loop
 
