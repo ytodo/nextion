@@ -49,9 +49,8 @@ int getstatus()
             }
 
             /* Last packet wrong ステータスの場合、文字を黄色に */
-            if ((stat == 0) && (debug == 1) && (strstr(line, "Last packet wrong") != NULL)) {
+            if ((stat == 1) && (debug == 1) && (strstr(line, "Last packet wrong") != NULL)) {
                 strcpy(status, "Last packet is wrong...");
-                stat = 1;
                 break;
             }
         }
@@ -82,11 +81,12 @@ int getstatus()
         }
 
         /* ドロップパケット比の表示 */
-        if ((stat == 1) && (debug == 1) && ((tmpstr = strstr(line, "drop")) != NULL)) {
+        if ((debug == 1) && ((tmpstr = strstr(line, "drop")) != NULL)) {
             memset(&status[0], '\0', sizeof(status));
             strcpy(status, "Drop PKT ");
             strcat(status, tmpstr + 17);
             status[strlen(status) - 1] = '\0';
+            stat = 1;
         }
     }
 
