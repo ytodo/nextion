@@ -11,6 +11,7 @@
 
 int	    fd;
 int	    i = 0;
+int     j = 0;
 int	    len = 0;
 char	buf[32] = {'\0'};
 
@@ -84,7 +85,10 @@ void recvdata(char *rptcon)
 	len = read(fd, buf, sizeof(buf));
 	if (0 < len) {
 		for (i = 0; i < len; i++) {
-			sprintf(&rptcon[i], "%c", buf[i]);
+            if (buf[i] >= 41 && buf[i] <= 122) {
+    			sprintf(&rptcon[i], "%c", buf[i]);
+                j++;
+            }
 		}
 		rptcon[i] = '\0';
 	}
