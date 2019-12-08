@@ -85,7 +85,7 @@ void recvdata(char *rptcon)
 	len = read(fd, buf, sizeof(buf));
 	if (0 < len) {
 		for (i = 0; i < len; i++) {
-            if (buf[i] >= 41 && buf[i] <= 122) {
+            if (buf[i] >= 30 && buf[i] <= 122) {
     			sprintf(&rptcon[i], "%c", buf[i]);
                 j++;
             }
