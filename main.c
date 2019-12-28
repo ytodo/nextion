@@ -146,21 +146,17 @@ int main(int argc, char *argv[])
                 /* [Update]ボタンの表示を変える */
                 sendcmd("SYSTEM.b4.bco=63488");
                 sendcmd("SYSTEM.b4.pco=65535");
-//                sendcmd("SYSTEM.b4.txt=\"WAIT for reboot!\"");
                 sendcmd("SYSTEM.b4.txt=\"Checking Update\"");
 
                 /* システムコマンドの実行 */
                 system("killall -q -s 2 dmonitor");
                 system("rm /var/run/dmonitor.pid");
-//                system("apt clean && apt update && apt upgrade -y && apt autoremove -y");
                 system("apt clean && apt update && apt install dmonitor");
 
                 /* [REBOOT]の表示及びrebootコマンド発行 */
                 sendcmd("SYSTEM.b4.bco=64512");
-//                sendcmd("SYSTEM.b4.txt=\"REBOOTing now...!\"");
                 sendcmd("SYSTEM.b4.txt=\"Restarting...\"");
                 sendcmd("dim=10");
-//                system("shutdown -r now");
                 system("systemctl restart nextion.service");
                 break;
 
@@ -198,8 +194,6 @@ int main(int argc, char *argv[])
                         system("killall -q -s 2 dmonitor");
                         system("rm /var/run/dmonitor.pid");
                         system("sudo rig_port_check");
-
-printf("%s %s %s %s %s\n", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
 
                         /* 接続コマンドの実行 */
                         sprintf(command, "dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
