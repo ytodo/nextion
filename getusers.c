@@ -8,6 +8,7 @@ int getusers()
     char    tmpstr[32]  = {'\0'};
     char    *tmpptr;
     char    command[32] = {'\0'};
+    char    statpre[32] = {'\0'};
     char    ret[16]     = {'\0'};
     int     i           = 0;
     int     j           = 0;
@@ -35,22 +36,38 @@ int getusers()
                 sprintf(command, "USERS.t%d.txt=\"%s\"", i, tmpstr);
                 sendcmd(command);
                 i++;
-                if (i  >= 14) break;
+                if (i  >= 8) break;
             }
         }
 
         /* ファイルクローズ */
         fclose(fp);
 
-        /* リスト14件に満たない場合、残りをクリアする */
-        if (i < 14 ) {
-            for (j = i; j < 14; j++) {
+        /* リスト8件に満たない場合、残りをクリアする */
+        if (i < 8 ) {
+            for (j = i; j < 8; j++) {
                 sprintf(command, "USERS.t%d.txt=\"\"", j);
                 sendcmd(command);
             }
         }
 
-        /* 3秒に一回リフレッシュする */
+        /* ステータス・ラストハードの表示 */
+        getstatus();
+
+        if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0)) {
+            strcpy(statpre, status);
+
+            /* 取得ステイタス=> STATUS1 */
+            sendcmd("t9.txt=t8.txt");
+            sprintf(command, "t8.txt=\"%s\"", status);
+            sendcmd(command);
+
+            /* statusをクリアする */
+            status[0] = '\0';
+
+        }
+
+        /* 1秒に一回リフレッシュする */
         sleep(1);
     }
 
