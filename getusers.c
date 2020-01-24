@@ -36,7 +36,7 @@ int getusers()
                 sprintf(command, "USERS.t%d.txt=\"%s\"", i, tmpstr);
                 sendcmd(command);
                 i++;
-                if (i  >= 8) break;
+                if (i >= 8) break;
             }
         }
 
@@ -46,7 +46,7 @@ int getusers()
         /* リスト8件に満たない場合、残りをクリアする */
         if (i < 8 ) {
             for (j = i; j < 8; j++) {
-                sprintf(command, "USERS.t%d.txt=\"\"", j);
+                sprintf(command, "USERS.t%d.txt=\" \"", j);
                 sendcmd(command);
             }
         }
