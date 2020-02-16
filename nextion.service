@@ -6,7 +6,6 @@ After = network.target
 Type = simple
 ExecStart = /usr/local/bin/nextion
 ExecStop = /usr/bin/killall -q -s 2 nextion
-#ExecStop = /usr/bin/killall nextion
 
 [Install]
 WantedBy = multi-user.target
