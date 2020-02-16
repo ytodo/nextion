@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     fd = openport(SERIALPORT, BAUDRATE);
 
 	/* メインスクリーンの初期設定 */
-    sendcmd("dim=50");
+    sendcmd("dim=dims");
     sendcmd("page MAIN");
     sprintf(command, "MAIN.station.txt=\"STATION : %s\"", station);
     sendcmd(command);
