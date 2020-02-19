@@ -1,8 +1,6 @@
 /********************************************************
- *                                                      *
- *  サーバよりmulti_forward のインストールされた        *
- *  ゲートウェイリストをダウンロードして配列を作成する。*
- *                                                      *
+ 	サーバよりmulti_forward のインストールされた        
+	ゲートウェイリストをダウンロードして配列を作成する。
  ********************************************************/
 
 #include "dmonitor.h"
@@ -24,9 +22,9 @@ int getlinkdata()
 //	system(getrptlist);
 
 	/* テーブルをオープンする */
-	if ((fp = fopen(RPTLISTTBL, "r")) == NULL) {
+	if ((fp = fopen(RPTLISTTBL, "r")) == NULL)
+	{
 		printf("File open error!\n");
-
 		return (i);
 	}
 
@@ -38,10 +36,11 @@ int getlinkdata()
 */
 
 	/* テーブルを読み込み構造体に格納する */
-	while ((fgets(line, sizeof(line), fp)) != NULL) {
-
-		/* Find out Callsing, IP Address and Port number */
-		if ((strcall = strstr(line, "callsign")) != NULL ) {
+	while ((fgets(line, sizeof(line), fp)) != NULL)
+	{
+		/* Find out Callsign, IP Address and Port number */
+		if ((strcall = strstr(line, "callsign")) != NULL )
+		{
 			straddr  = strstr(line, "ip_addr");
 			strport  = strstr(line, "port");
             strzone  = strstr(line, "zr_call");
@@ -50,7 +49,8 @@ int getlinkdata()
 			strncpy(linkdata[i].call, strcall + 10, 8);
 
 			/* 第八番目もじ（拡張子）が空白だったら「Ａ」とする */
-			if (strncmp(" ", &linkdata[i].call[7], 1) == 0) {
+			if (strncmp(" ", &linkdata[i].call[7], 1) == 0)
+			{
 				strncpy(&linkdata[i].call[7], "A", 1);
 			}
 			linkdata[i].call[8] = '\0';

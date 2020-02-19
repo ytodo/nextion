@@ -20,16 +20,16 @@
  *
  */
 
-/**************************************************
- *  D-STAR Repeater Nextion display for dmonitor  *
- *           D*MONITOR version 1.3.0              *
- *           2018.11.01 - 2019.08.17              *
- *                                                *
- *  Multi_Forwardが搭載されているリピータリストを    *
- *  取得して「接続可能リピータ」としてdmonitor用     *
- *  ディスプレイに表示。タッチパネルから接続する	  *
- *                                                *
- **************************************************/
+/****************************************************
+	D-STAR Repeater Nextion display for dmonitor
+            D*MONITOR version 1.5.0
+            2018.11.01 - 2020.01.24
+
+	Multi_Forwardが搭載されているリピータリストを
+	取得して「接続可能リピータ」としてdmonitor用
+	ディスプレイに表示。タッチパネルから接続する
+
+ ****************************************************/
 #ifndef __DMONITOR_H__
 #define __DMONITOR_H__
 
@@ -53,8 +53,8 @@ typedef struct {                  			// 構造体の宣言
 	char	name[20];
 	char	call[9];
 	char	addr[16];
-	char 	port[6];
-    char    zone[9];
+	char	port[6];
+	char    zone[9];
 } repeater_t;
 extern	repeater_t	 linkdata[LISTSIZE];	// 構造体配列の宣言
 extern	char         status[CHARSIZE];
@@ -77,4 +77,3 @@ void	recvdata(char *rptcon);
 void	sendcmd(char *cmd);
 
 #endif // __DMONITOR_H__
-

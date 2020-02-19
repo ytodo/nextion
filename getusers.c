@@ -14,24 +14,26 @@ int getusers()
     int     j           = 0;
 
     /* [Return]ボタンが押されるまで繰り返す */
-    while (1) {
-
+    while (1)
+    {
         /* [Return]の検出 */
         recvdata(ret);
         if ((strncmp(ret, "Return", 6)) == 0) break;
 
         /* コマンドの標準出力オープン */
-        if ((fp = fopen(users_tbl, "r")) == NULL) {
+        if ((fp = fopen(users_tbl, "r")) == NULL)
+        {
             printf("File open error!\n");
             return (EXIT_FAILURE);
         }
 
         /* ファイルを一行ずつ読み最終行まで繰り返す  */
         i = 0;
-        while ((fgets(line, sizeof(line), fp)) != NULL) {
-
+        while ((fgets(line, sizeof(line), fp)) != NULL)
+        {
             /* <td> を見つけ内容を取得し、リストに表示 */
-            if ((tmpptr = strstr(line, "<td>")) != NULL) {
+            if ((tmpptr = strstr(line, "<td>")) != NULL)
+            {
                 strncpy(tmpstr, tmpptr + 4, 8);
                 sprintf(command, "USERS.t%d.txt=\"%s\"", i, tmpstr);
                 sendcmd(command);
@@ -44,8 +46,10 @@ int getusers()
         fclose(fp);
 
         /* リスト8件に満たない場合、残りをクリアする */
-        if (i < 8 ) {
-            for (j = i; j < 8; j++) {
+        if (i < 8 )
+        {
+            for (j = i; j < 8; j++)
+            {
                 sprintf(command, "USERS.t%d.txt=\" \"", j);
                 sendcmd(command);
             }
@@ -54,7 +58,8 @@ int getusers()
         /* ステータス・ラストハードの表示 */
         getstatus();
 
-        if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0)) {
+        if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0))
+        {
             strcpy(statpre, status);
 
             /* 取得ステイタス=> STATUS1 */

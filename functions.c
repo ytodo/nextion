@@ -1,9 +1,9 @@
 /********************************************************
- * 基本的なファンクション・コマンドのツールボックス         *
- *      openport                                        *
- *      sendcmd                                         *
- *      recvdata                                        *
- *      getconfig                                       *
+    基本的なファンクション・コマンドのツールボックス    
+        openport                                        
+        sendcmd                                         
+        recvdata                                        
+        getconfig                                       
  ********************************************************/
 
 #include "dmonitor.h"
@@ -50,7 +50,8 @@ int openport(char *devicename, long baudrate)
 
     tcflush(fd, TCIOFLUSH);
 
-	if ((tcsetattr(fd, TCSANOW, &newtio)) != 0) {
+	if ((tcsetattr(fd, TCSANOW, &newtio)) != 0)
+    {
 		exit(EXIT_FAILURE);
 	}
 
@@ -69,9 +70,10 @@ void sendcmd(char *cmd)
 	char	endofcmd[3] = {0xff, 0xff, 0xff};
 
 	/* コマンド文字列と終了文字列を書き込む */
-	if (strlen(cmd) > 0) {
-	        write(fd, cmd, strlen(cmd));
-        	write(fd, endofcmd, 3);
+	if (strlen(cmd) > 0)
+    {
+	    write(fd, cmd, strlen(cmd));
+        write(fd, endofcmd, 3);
 	}
 }
 
@@ -83,9 +85,12 @@ void recvdata(char *rptcon)
 {
 	/* GPIO RxD のASCIIデータを長さ分読み込む */
 	len = read(fd, buf, sizeof(buf));
-	if (0 < len) {
-		for (i = 0; i < len; i++) {
-            if (buf[i] >= 30 && buf[i] <= 122) {
+	if (0 < len)
+    {
+		for (i = 0; i < len; i++)
+        {
+            if (buf[i] >= 30 && buf[i] <= 122)
+            {
     			sprintf(&rptcon[i], "%c", buf[i]);
                 j++;
             }
@@ -107,20 +112,20 @@ int getconfig(void)
     char        *ret;
 
     /* テーブルをオープンする */
-    if ((fp = fopen(INIFILE, "r")) == NULL) {
+    if ((fp = fopen(INIFILE, "r")) == NULL)
+    {
         printf("File open error!\n");
-
         return (EXIT_FAILURE);
     }
 
     /* テーブルを読み込み変数に格納する */
-    while ((fgets(line, sizeof(line), fp)) != NULL) {
+    while ((fgets(line, sizeof(line), fp)) != NULL)
+    {
         if ((ret = strstr(line, "STATION"))     != NULL) sscanf(line, "STATION=%[^\n]",     station);
         if ((ret = strstr(line, "DEFAULT_RPT")) != NULL) sscanf(line, "DEFAULT_RPT=%[^\n]", default_rpt);
         if ((ret = strstr(line, "SLEEPTIME"))   != NULL) sscanf(line, "SLEEPTIME=%d",       &microsec);
         if ((ret = strstr(line, "DEBUG"))       != NULL) sscanf(line, "DEBUG=%d",           &debug);
     }
-
     fclose(fp);
 
     return (0);

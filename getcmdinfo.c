@@ -1,7 +1,7 @@
 /********************************************************
- *  RaspberryPiのIPアドレスをコマンドでチェックして      *
- * その標準所津力から文字列を取得グローバル変数の        *
- *  ipaddress に入れ main.c に渡す                      *
+    RaspberryPiのIPアドレスをコマンドでチェックして
+    その標準所津力から文字列を取得グローバル変数の
+    ipaddress に入れ main.c に渡す
  ********************************************************/
 
 #include "dmonitor.h"
@@ -16,7 +16,8 @@ int getipaddr()
 
     /* コマンドの標準出力をオープン */
     cmdline = "for DEV in `find /sys/devices -name net | grep -v virtual`; do ls $DEV/; done";
-    if ((fp = popen(cmdline, "r")) != NULL) {
+    if ((fp = popen(cmdline, "r")) != NULL)
+    {
         fgets(ifname, sizeof(ifname), fp);
         ifname[strlen(ifname) - 1] = '\0';
 
@@ -26,7 +27,8 @@ int getipaddr()
 
     /* コマンドの標準出力オープン（IPアドレスの取得）*/
     cmdline = "hostname -I | cut -f1 -d' '";
-    if ((fp = popen(cmdline, "r")) != NULL) {
+    if ((fp = popen(cmdline, "r")) != NULL)
+    {
         fgets(ifaddr, sizeof(ifaddr), fp);
         ifaddr[strlen(ifaddr) - 1] = '\0';
 

@@ -70,14 +70,16 @@ int main(int argc, char *argv[])
     sendcmd("t3.txt=\"\"");
 
     /* 全リストを空にした後リピータ数分の文字配列にコールサインを格納 */
-    for (i = 0; i < 228; i++) {
+    for (i = 0; i < 228; i++)
+    {
         sprintf(command, "VALUE.va%d.txt=\"\"", i);
         sendcmd(command);
         usleep(microsec);
     }
     usleep(microsec * 300);
     if (num > 228) num = 228;
-  	for (i = 0; i < num; i++) {
+  	for (i = 0; i < num; i++)
+    {
        	sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);
         sendcmd(command);
         usleep(microsec);
@@ -90,8 +92,8 @@ int main(int argc, char *argv[])
 
 
     /* 送・受信ループ */
-    while (1) {
-
+    while (1)
+    {
         /*
          * 受信処理
          */
@@ -100,13 +102,14 @@ int main(int argc, char *argv[])
         recvdata(concall);
 
         /* もしタッチデータが選択されていない場合、初回のみデフォルトリピータをセットする */
-        if ((strlen(concall) == 0) && (strlen(default_rpt) != 0)) {
+        if ((strlen(concall) == 0) && (strlen(default_rpt) != 0))
+        {
             strcpy(concall, default_rpt);
         }
 
         /* タッチデータが選択されている場合、前回と同じかチェック（同じならパス） */
-        if ((strlen(concall) > 1) && (strncmp(concall, concallpre, 8) != 0))  {
-
+        if ((strlen(concall) > 1) && (strncmp(concall, concallpre, 8) != 0))
+        {
 			/* 現在の返り値を保存 */
             strncpy(concallpre, concall, 8);
 
@@ -187,9 +190,10 @@ int main(int argc, char *argv[])
                 system("systemctl restart auto_repmon.service");
                 usleep(microsec * 100);     // リスト読み込み完了を確実にするウェイト
                 num = getlinkdata();
-                for (i = 0; i < num; i++) {
-                    if (strncmp(linkdata[i].call, concall, 8) == 0) {
-
+                for (i = 0; i < num; i++)
+                {
+                    if (strncmp(linkdata[i].call, concall, 8) == 0)
+                    {
                         /* 現在稼働中のdmonitor をKILL */
                         system("killall -q -s 2 dmonitor");
                         system("rm /var/run/dmonitor.pid");
@@ -207,9 +211,7 @@ int main(int argc, char *argv[])
                 }
             }
             flag = 0;
-
 		}
-
 
         /*
          * 送信処理
@@ -219,7 +221,8 @@ int main(int argc, char *argv[])
         getstatus();
 
         /* 接続先の表示*/
-        if ((strncmp(rptcall, "", 1) != 0) && (strncmp(rptcall, rptcallpre, 8) != 0)) {
+        if ((strncmp(rptcall, "", 1) != 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
+        {
             strcpy(rptcallpre, rptcall);
             sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
             sendcmd(command);
@@ -229,7 +232,8 @@ int main(int argc, char *argv[])
 
 
         /* ステータス・ラストハードの表示 */
-        if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0)) {
+        if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0))
+        {
             strcpy(statpre, status);
 
             /* STATUS1 => STATUS2 */
@@ -243,7 +247,6 @@ int main(int argc, char *argv[])
 
             /* statusをクリアする */
             status[0] = '\0';
-
         }
     }       // Loop
 

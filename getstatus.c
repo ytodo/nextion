@@ -1,8 +1,6 @@
 /********************************************************
- *                                                      *
- *      dmonitor のログファイルよりラストハード及び    　*
- *      状況を取得し変数status に入れる                 *
- *                                                      *
+    dmonitor のログファイルよりラストハード及び
+    状況を取得し変数status に入れる
  ********************************************************/
 
 #include "dmonitor.h"
@@ -20,7 +18,8 @@ int getstatus()
     char    jitter_mi[8] = {'\0'};
 
 	/* コマンドの標準出力オープン */
-	if ((fp = popen(getstatus, "r")) == NULL) {
+	if ((fp = popen(getstatus, "r")) == NULL)
+    {
 		printf("File open error!\n");
 		return (EXIT_FAILURE);
 	}
@@ -30,13 +29,14 @@ int getstatus()
 	memset(&rptcall[0],'\0', sizeof(rptcall));
 
 	/* 標準出力を配列に取得 */
-	while ((fgets(line, sizeof(line), fp)) != NULL) {
-
+	while ((fgets(line, sizeof(line), fp)) != NULL)
+    {
         /* status に関する文字列があったら */
-        if ((tmpstr = strstr(line, "from")) != NULL) {
-
+        if ((tmpstr = strstr(line, "from")) != NULL)
+        {
             /* 日付時間とコールサインをログとして出力 */
-            if ((strstr(line, "Connected") == NULL) && (strstr(line, "Last packet") == NULL)) {
+            if ((strstr(line, "Connected") == NULL) && (strstr(line, "Last packet") == NULL))
+            {
                 memset(&status[0], '\0', sizeof(status));
                 strncpy(status, line, 16);
                 strncat(status, tmpstr - 9, 8);
@@ -44,44 +44,51 @@ int getstatus()
             }
 
             /* どこに接続したかを取得 */
-            if ((tmpstr = strstr(line, "Connected")) != NULL) {
+            if ((tmpstr = strstr(line, "Connected")) != NULL)
+            {
 			    strncpy(rptcall, tmpstr + 13, 8);
             }
 
             /* Last packet wrong ステータスの場合、文字を黄色に */
-            if ((stat == 1) && (debug == 1) && (strstr(line, "Last packet wrong") != NULL)) {
+            if ((stat == 1) && (debug == 1) && (strstr(line, "Last packet wrong") != NULL))
+            {
                 strcpy(status, "Last packet is wrong...");
                 break;
             }
         }
 
         /* dmonitorの開始とバージョンを取得 */
-		if ((tmpstr = strstr(line, "dmonitor start")) != NULL) {
+		if ((tmpstr = strstr(line, "dmonitor start")) != NULL)
+        {
             memset(&status[0], '\0', sizeof(status));
 			strncpy(status, tmpstr, 21);
         }
 
         /* バッファの拡張のサイズを取得 */
-        if ((tmpstr = strstr(line, "New FiFo buffer")) != NULL) {
+        if ((tmpstr = strstr(line, "New FiFo buffer")) != NULL)
+        {
             memset(&status[0], '\0', sizeof(status));
             strcpy(status, tmpstr + 9);
             status[strlen(status) - 1] = '\0';
         }
 
         /* 接続解除を取得 */
-        if (strstr(line, "dmonitor end") != NULL) {
+        if (strstr(line, "dmonitor end") != NULL)
+        {
             memset(&status[0], '\0', sizeof(status));
             strcpy(status, "Disconnected");
         }
 
         /* 無線機の接続状況 */
-        if ((debug == 1) && (strstr(line, "init/re-init") != NULL)) {
+        if ((debug == 1) && (strstr(line, "init/re-init") != NULL))
+        {
             memset(&status[0], '\0', sizeof(status));
             strcpy(status, "RIG initializing is done.");
         }
 
         /* ドロップパケット比の表示 */
-        if ((debug == 1) && ((tmpstr = strstr(line, "drop")) != NULL)) {
+        if ((debug == 1) && ((tmpstr = strstr(line, "drop")) != NULL))
+        {
             memset(&status[0], '\0', sizeof(status));
             strcpy(status, "Drop PKT ");
             strcat(status, tmpstr + 17);
@@ -89,9 +96,7 @@ int getstatus()
             stat = 1;
         }
     }
-
 	pclose(fp);
-
 	return (EXIT_SUCCESS);
 }
 
