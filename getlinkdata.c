@@ -1,20 +1,19 @@
 /********************************************************
- 	サーバよりmulti_forward のインストールされた        
+	サーバよりmulti_forward のインストールされた        
 	ゲートウェイリストをダウンロードして配列を作成する。
  ********************************************************/
 
 #include "dmonitor.h"
-
 
 int getlinkdata()
 {
 	char		*strcall;
 	char		*straddr;
 	char		*strport;
-    char        *strzone;
+	char		*strzone;
 	char		*RPTLISTTBL = "/var/tmp/repeater_mon.html";
 	char		line[512] = {'\0'};
-	int		    i = 0;
+	int			i = 0;
 	FILE		*fp;
 
 	/* d-star.info からリピータリストを取得してテーブルを作成する */
@@ -43,7 +42,7 @@ int getlinkdata()
 		{
 			straddr  = strstr(line, "ip_addr");
 			strport  = strstr(line, "port");
-            strzone  = strstr(line, "zr_call");
+			strzone  = strstr(line, "zr_call");
 
 			/* コールサインの保存 */
 			strncpy(linkdata[i].call, strcall + 10, 8);
@@ -63,9 +62,9 @@ int getlinkdata()
 			strncpy(linkdata[i].port, strport + 5, 5);
 			linkdata[i].port[5] = '\0';
 
-            /* ZR_CALLの取得 */
-            strncpy(linkdata[i].zone, strzone + 9, 8);
-            linkdata[i].zone[8] = '\0';
+			/* ZR_CALLの取得 */
+			strncpy(linkdata[i].zone, strzone + 9, 8);
+			linkdata[i].zone[8] = '\0';
 
 			i++;
 		}
@@ -79,6 +78,6 @@ int getlinkdata()
 //		printf("%2d %s %s %s\n", j + 1, linkdata[j].call, linkdata[j].addr, linkdata[j].port, linkdata[j].zone);
 //	}
 
-    /* 軒数を返す */
+	/* 軒数を返す */
 	return (i);
 }
