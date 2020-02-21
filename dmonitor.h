@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018-2019 by Yosh Todo JE3HCZ
+ *  Copyright (C) 2018-2020 by Yosh Todo JE3HCZ
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  */
 
-/****************************************************
+/***********************************************************
 	D-STAR Repeater Nextion display for dmonitor
 		D*MONITOR version 1.5.0
 		2018.11.01 - 2020.01.24
@@ -28,7 +28,7 @@
 	Multi_Forwardが搭載されているリピータリストを
 	取得して「接続可能リピータ」としてdmonitor用
 	ディスプレイに表示。タッチパネルから接続する
- ****************************************************/
+ ***********************************************************/
 #ifndef __DMONITOR_H__
 #define __DMONITOR_H__
 
@@ -55,23 +55,23 @@ typedef struct {                  			// 構造体の宣言
 	char	port[6];
 	char	zone[9];
 }	repeater_t;
-extern	repeater_t		linkdata[LISTSIZE];	// 構造体配列の宣言
-extern	char			status[CHARSIZE];
-extern	char			rptcall[CHARSIZE];
-extern	char			station[CHARSIZE];
-extern	char			ipaddress[CHARSIZE];
-extern	char			default_rpt[CHARSIZE];
+extern	repeater_t	linkdata[LISTSIZE];	// 構造体配列の宣言
+extern	char		status[CHARSIZE];
+extern	char		rptcall[CHARSIZE];
+extern	char		station[CHARSIZE];
+extern	char		ipaddress[CHARSIZE];
+extern	char		default_rpt[CHARSIZE];
 extern	unsigned int	microsec;
 extern	unsigned int	debug;
 extern	unsigned int	stat;
 
 /* Functions */
-int		getlinkdata();
-int		getstatus();
-int		getconfig();
-int		getipaddr();
-int		getusers();
-int		openport(char *devicename, long baudrate);
+int	getlinkdata();
+int	getstatus();
+int	getconfig();
+int	getipaddr();
+int	getusers();
+int	openport(char *devicename, long baudrate);
 void	recvdata(char *rptcon);
 void	sendcmd(char *cmd);
 

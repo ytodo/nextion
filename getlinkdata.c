@@ -7,14 +7,14 @@
 
 int getlinkdata()
 {
-	char		*strcall;
-	char		*straddr;
-	char		*strport;
-	char		*strzone;
-	char		*RPTLISTTBL = "/var/tmp/repeater_mon.html";
-	char		line[512] = {'\0'};
-	int			i = 0;
-	FILE		*fp;
+	char	*strcall;
+	char	*straddr;
+	char	*strport;
+	char	*strzone;
+	char	*RPTLISTTBL = "/var/tmp/repeater_mon.html";
+	char	line[512] = {'\0'};
+	int	i = 0;
+	FILE	*fp;
 
 	/* d-star.info からリピータリストを取得してテーブルを作成する */
 	/* テーブルをオープンする */
