@@ -17,9 +17,6 @@ int getlinkdata()
 	FILE		*fp;
 
 	/* d-star.info からリピータリストを取得してテーブルを作成する */
-//	char *getrptlist = "cd /tmp && wget -q http://hole-punch.d-star.info:30011 && mv index.html repeaters.tbl";
-//	system(getrptlist);
-
 	/* テーブルをオープンする */
 	if ((fp = fopen(RPTLISTTBL, "r")) == NULL)
 	{
