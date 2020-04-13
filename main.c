@@ -201,6 +201,7 @@ int main(int argc, char *argv[])
 						/* 接続コマンドの実行 */
 						sprintf(command, "sudo /usr/bin/dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
 						system(command);
+
 						sendcmd("page MAIN");
 						break;
 					}
