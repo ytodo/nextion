@@ -3,7 +3,7 @@ dmonitor用 Nextion アドオンドライバー
 
 JARL D-STAR Commitee 作成の dmonitor にアドオンとしてインストールすることにより Nextion でコントロール出来るようになります。
 
-==過去に古いバージョンで下の git による作業をしたことの有る方は==
+==過去に古いバージョンで下の git による作業をしたことの有る方は==<br>
 すでに nextion フォルダが有りますので
 $ cd nextion
 $ git pull
