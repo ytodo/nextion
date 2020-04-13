@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2018-2019 by Yosh Todo JE3HCZ
+ *  Copyright (C) 2018-2020 by Yosh Todo JE3HCZ
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,18 +26,18 @@
 int main(int argc, char *argv[])
 {
 	FILE	*fp;
-	int		num;                // 返り値のi を受ける（件数）
-	int		arraycount;
-	int		fd;
-	int		i;
-	int		flag;
-	int		bufcnt;
-	char	command[32]		= {'\0'};
-	char	statpre[32]		= {'\0'};
+	int	num;                // 返り値のi を受ける（件数）
+	int	arraycount;
+	int	fd;
+	int	i;
+	int	flag;
+	int	bufcnt;
+	char	command[32]	= {'\0'};
+	char	statpre[32]	= {'\0'};
 	char	rptcallpre[32]	= {'\0'};
-	char	concall[8]		= {'\0'};
+	char	concall[8]	= {'\0'};
 	char	concallpre[8]	= {'\0'};
-	char	*SERIALPORT		= "/dev/ttyAMA0";
+	char	*SERIALPORT	= "/dev/ttyAMA0";
 
 
 	/* 環境設定ファイルの読み取り */
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 		if ((strlen(concall) == 0) && (strlen(default_rpt) != 0))
 		{
 			strcpy(concall, default_rpt);
-		 }
+		}
 
 		/* タッチデータが選択されている場合、前回と同じかチェック（同じならパス） */
 		if ((strlen(concall) > 1) && (strncmp(concall, concallpre, 8) != 0))
@@ -225,7 +225,6 @@ int main(int argc, char *argv[])
 			sprintf(command, "MAIN.link.txt=\"LINK TO : %s\"", rptcall);
 			sendcmd(command);
 		}
-
 
 		/* ステータス・ラストハードの表示 */
 		if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0))
