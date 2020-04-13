@@ -3,6 +3,7 @@
 int getusers()
 {
 	FILE    *fp;
+//	char    *users_tbl  = "/var/tmp/connected_table.html";
 	char    *users_tbl  = "/var/www/html/connected_table.html";
 	char    line[64]    = {'\0'};
 	char    tmpstr[32]  = {'\0'};
