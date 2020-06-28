@@ -184,10 +184,7 @@ int main(int argc, char *argv[])
 
 			case 8:						// ACTIVE REPEATERパネルへの表示と移動
 				sendcmd("page ACTIVE");
-                                sprintf(command, "ACTIVE.b0.txt=\"ACTIVE REPEATERS\"", rptcallpre);
-                                sendcmd(command);
 				getactive();
-                                strcpy(concall, "Return");
 				break;
 
 			default:

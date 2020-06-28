@@ -19,7 +19,7 @@ int getactive()
 	{
 		/* [Return]の検出 */
 		recvdata(ret);
-		if ((strncmp(ret, "Return", 6)) == 0) break;
+		if (strlen(ret) > 3) break;
 
 		/* コマンドの標準出力オープン */
 		if ((fp = fopen(active_tbl, "r")) == NULL)
