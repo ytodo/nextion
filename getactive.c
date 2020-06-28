@@ -14,10 +14,10 @@ int getactive()
 	int     i           = 0;
 	int     j           = 0;
 
-	/* [Return]ボタンが押されるまで繰り返す */
+	/* [Return]ボタンが押されるかリピータが選択されるまで繰り返す */
 	while (1)
 	{
-		/* [Return]の検出 */
+		/* [Return]又は接続リピータの検出 */
 		recvdata(ret);
 		if (strlen(ret) > 3) break;
 
@@ -56,7 +56,7 @@ int getactive()
 			}
 		}
 
-		/* 1秒に一回リフレッシュする */
+		/* 2秒に一回リフレッシュする */
 		sleep(2);
 	}
 
