@@ -71,8 +71,10 @@ int	getstatus();
 int	getconfig();
 int	getipaddr();
 int	getusers();
+int	getactive();
 int	openport(char *devicename, long baudrate);
 void	recvdata(char *rptcon);
 void	sendcmd(char *cmd);
+
 
 #endif // __DMONITOR_H__

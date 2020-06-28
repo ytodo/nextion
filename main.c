@@ -119,6 +119,7 @@ int main(int argc, char *argv[])
 			if (strncmp(concall, "UP",      2) == 0) flag = 5;
 			if (strncmp(concall, "DWN",     3) == 0) flag = 6;
 			if (strncmp(concall, "USERS",   5) == 0) flag = 7;
+			if (strncmp(concall, "ACTIVE",  6) == 0) flag = 8;
 
 			switch (flag) {
 			case 1:						// nextionドライバのリスタート
@@ -181,12 +182,20 @@ int main(int argc, char *argv[])
 				strcpy(concall, "Return");
 				break;
 
+			case 8:						// ACTIVE REPEATERパネルへの表示と移動
+				sendcmd("page ACTIVE");
+                                sprintf(command, "ACTIVE.b0.txt=\"ACTIVE REPEATERS\"", rptcallpre);
+                                sendcmd(command);
+				getactive();
+                                strcpy(concall, "Return");
+				break;
+
 			default:
 
 				/* 指定リピータに接続する */
 				i = 0;
 				system("systemctl restart auto_repmon.service");
-				usleep(microsec * 100);		// リスト読み込み完了を確実にするウェイト
+				usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 				num = getlinkdata();
 				for (i = 0; i < num; i++)
 				{
@@ -201,7 +210,6 @@ int main(int argc, char *argv[])
 						/* 接続コマンドの実行 */
 						sprintf(command, "sudo /usr/bin/dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
 						system(command);
-
 						sendcmd("page MAIN");
 						break;
 					}
