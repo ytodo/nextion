@@ -38,5 +38,5 @@ int getipaddr()
 	/* インターフェースとIPアドレスの代入 */
 	sprintf(ipaddress, "%s : %s", ifname, ifaddr);
 
-    return(0);
+	return(0);
 }

@@ -77,5 +77,4 @@ int	openport(char *devicename, long baudrate);
 void	recvdata(char *rptcon);
 void	sendcmd(char *cmd);
 
-
 #endif // __DMONITOR_H__
