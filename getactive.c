@@ -5,9 +5,9 @@ int getactive()
 	FILE    *fp;
 //	char    *active_tbl  = "/var/tmp/repeater_active.html";
 	char    *active_tbl  = "/var/www/html/repeater_active.html";
+	char    *tmpptr;
 	char    line[64]    = {'\0'};
 	char    tmpstr[32]  = {'\0'};
-	char    *tmpptr;
 	char    command[32] = {'\0'};
 	char    statpre[32] = {'\0'};
 	char    ret[16]     = {'\0'};
@@ -19,7 +19,11 @@ int getactive()
 	{
 		/* [Return]又は接続リピータの検出 */
 		recvdata(ret);
-		if (strlen(ret) > 3) break;
+		if (strlen(ret) > 3)
+		{
+			strncpy(concall, ret, 8);
+			break;
+		}
 
 		/* コマンドの標準出力オープン */
 		if ((fp = fopen(active_tbl, "r")) == NULL)
@@ -60,6 +64,6 @@ int getactive()
 		sleep(2);
 	}
 
-	return(EXIT_SUCCESS);
+	return(0);
 }
 

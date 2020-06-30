@@ -35,7 +35,6 @@ int main(int argc, char *argv[])
 	char	command[32]	= {'\0'};
 	char	statpre[32]	= {'\0'};
 	char	rptcallpre[32]	= {'\0'};
-	char	concall[8]	= {'\0'};
 	char	concallpre[8]	= {'\0'};
 	char	*SERIALPORT	= "/dev/ttyAMA0";
 
@@ -184,7 +183,7 @@ int main(int argc, char *argv[])
 
 			case 8:						// ACTIVE REPEATERパネルへの表示と移動
 				sendcmd("page ACTIVE");
-				getactive();
+				getactive(concall);
 				break;
 
 			default:

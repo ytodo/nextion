@@ -9,6 +9,7 @@ char		rptcall[CHARSIZE]	= {'\0'};
 char		station[CHARSIZE]	= {'\0'};
 char		ipaddress[CHARSIZE]	= {'\0'};
 char		default_rpt[CHARSIZE]	= {'\0'};
+char		concall[8]		= {'\0'};
 unsigned int	microsec		= 0;
 unsigned int	debug			= 0;
 unsigned int	stat			= 0;
