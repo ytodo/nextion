@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
 		getstatus();
 
 		/* 接続先の表示*/
-		if ((strncmp(rptcall, "", 1) != 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
+		if ((strncmp(rptcall, "J", 1) == 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
 		{
 			strcpy(rptcallpre, rptcall);
 			sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
