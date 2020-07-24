@@ -34,11 +34,13 @@ int getstatus()
 		if ((tmpstr = strstr(line, "from")) != NULL)
 		{
 			/* 日付時間とコールサインをログとして出力 */
-			if ((strstr(line, "Connected") == NULL) && (strstr(line, "Last packet") == NULL))
+			if (strstr(line, "Connected") == NULL)
 			{
 				memset(&status[0], '\0', sizeof(status));
-				strncpy(status, line, 16);
+				strncpy(status, line, 12);
+				strcat(status, " ");
 				strncat(status, tmpstr - 9, 8);
+				strncat(status, tmpstr + 4, 3);
 				stat = 0;
 			}
 
@@ -99,15 +101,20 @@ int getstatus()
 	return (EXIT_SUCCESS);
 }
 
-
-/* sample
-Nov 16 09:35:00 ham12 dmonitor[30968]: drop pakcet rate 0.00% (0/22)
-Nov 16 09:35:00 ham12 dmonitor[30968]: jitter info. ave:20mSec. max:26mSec. min:17mSec.
-Nov 16 09:35:20 ham12 dmonitor[30968]: dmonitor end
-Nov 16 09:35:20 ham12 dmonitor[9408]: dmonitor start V01.27 (Compiled Nov 11 2019 12:50:00)
-Nov 16 09:35:20 ham12 dmonitor[9408]: Connected to JP3YIY A (153.131.76.69:51000) from JE3HCZ D
-Nov 16 09:35:21 ham12 dmonitor[9408]: RIG(ID-xxPlus) open
-Nov 16 09:35:21 ham12 dmonitor[9408]: hole punch done.
-Nov 16 09:35:21 ham12 dmonitor[9408]: RIG(ID-xxPlus) init/re-init done
+/*
+Jul 15 04:53:38 ham12 dmonitor[10813]: dmonitor start V01.43 (Compiled Jul  3 2020 04:20:00)
+Jul 15 04:53:38 ham12 dmonitor[10813]: Connected to JL3ZBS A (111.64.21.98:51000) from JE3HCZ D
+Jul 15 04:53:39 ham12 dmonitor[10813]: RIG(ID-xxPlus) open
+Jul 15 04:53:39 ham12 dmonitor[10813]: RIG(ID-xxPlus) init/re-init done
+Jul 15 04:53:52 ham12 dmonitor[10813]: JE3HCZ A from ZR
+Jul 15 04:53:52 ham12 dmonitor[10813]: drop packet rate 0.00% (0/13)
+Jul 15 04:53:52 ham12 dmonitor[10813]: jitter info. ave:16mSec. max:168mSec. min:1mSec.
+Jul 15 04:53:53 ham12 dmonitor[10813]: rpt2:JL3ZBS A rpt1:JL3ZBS A ur:JK1ZRW Z my:JE3HCZ A my2:ADMO
+Jul 15 04:53:53 ham12 dmonitor[10813]: JK1ZRW Z from GW
+Jul 15 04:53:54 ham12 dmonitor[10813]: drop packet rate 0.00% (0/13)
+Jul 15 04:53:54 ham12 dmonitor[10813]: jitter info. ave:17mSec. max:21mSec. min:17mSec.
+Jul 15 04:53:54 ham12 dmonitor[10813]: rpt2:JL3ZBS A rpt1:JL3ZBS G ur:JE3HCZ A my:JK1ZRW Z my2:ZECH
+Jul 15 04:54:26 ham12 dmonitor[10813]: RIG(ICOM) close.
+Jul 15 04:54:26 ham12 dmonitor[10813]: dmonitor end
 */
 
