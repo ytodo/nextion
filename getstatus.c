@@ -37,10 +37,10 @@ int getstatus()
 			if (strstr(line, "Connected") == NULL)
 			{
 				memset(&status[0], '\0', sizeof(status));
-				strncpy(status, line, 12);
+				strncpy(status, line, 12);	// 日付時分
 				strcat(status, " ");
-				strncat(status, tmpstr - 9, 8);
-				strncat(status, tmpstr + 4, 3);
+				strncat(status, tmpstr - 9, 8);	// コールサイン１，２
+				strncat(status, tmpstr + 4, 3);	// ZR/GW
 				stat = 0;
 			}
 
