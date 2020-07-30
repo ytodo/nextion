@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
 			case 8:						// ACTIVE REPEATERパネルへの表示と移動
 				sendcmd("page ACTIVE");
 				getactive(concall);
-				break;
+//				break;
 
 			default:
 
