@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
 			/* statusをクリアする */
 			status[0] = '\0';
 		}
-	        usleep(microsec * 3);
+	        usleep(microsec * 5);
 	}	// Loop
 
 	/* GPIO シリアルポートのクローズ*/
