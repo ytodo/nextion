@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
 				/* システムコマンドの実行 */
 				system("killall -q -s 2 dmonitor");
 				system("rm /var/run/dmonitor.pid");
-				system("apt clean && apt update && apt install dmonitor");
+				system("apt clean && apt update && apt install dmonitor -y");
 
 				/* [REBOOT]の表示及びrebootコマンド発行 */
 				sendcmd("SYSTEM.b4.bco=64512");
