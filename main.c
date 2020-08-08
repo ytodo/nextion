@@ -55,9 +55,9 @@ int main(int argc, char *argv[])
 	sendcmd("dim=dims");
 	sendcmd("page MAIN");
 
-	sprintf(command, "t6.txt=\"Ver.%d.%d.%d\"", VERSION, VERSUB, RELEASE);
+	sprintf(command, "MAIN.version.txt=\"Ver.%d.%d.%d\"", VERSION, VERSUB, RELEASE);
 	sendcmd(command);
-
+	sendcmd("MAIN.t6.txt=version.txt");
 	sprintf(command, "MAIN.station.txt=\"STATION : %s\"", station);
 	sendcmd(command);
 	sprintf(command, "t0.txt=\"STATION : %s\"", station);
@@ -218,9 +218,6 @@ int main(int argc, char *argv[])
 					}
 				}
 			}
-printf("%s\n", concall);
-
-
 			flag = 0;
 		}
 
@@ -228,9 +225,6 @@ printf("%s\n", concall);
 		 * 送信処理
 		 */
 
-
-		sprintf(command, "MAIN.t6.txt=\"Ver.%d.%d.%d\"", VERSION, VERSUB, RELEASE);
-		sendcmd(command);
 
 		/* ステータス・ラストハードの読み取り */
 		getstatus();
@@ -262,7 +256,10 @@ printf("%s\n", concall);
 			/* statusをクリアする */
 			status[0] = '\0';
 		}
+
+		/* CPUの速さによるループ調整（nextion.ini:SLEEPTIME）*/
 	        usleep(microsec * 5);
+
 	}	// Loop
 
 	/* GPIO シリアルポートのクローズ*/
