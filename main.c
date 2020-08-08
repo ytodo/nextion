@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
 		/* ステータス・ラストハードの読み取り */
 		getstatus();
 
-		sprintf(command, "t6.txt=\"Ver.%d.%d.%d\"", VERSION, VERSUB, RELEASE);
+		sprintf(command, "MAIN.t6.txt=\"Ver.%d.%d.%d\"", VERSION, VERSUB, RELEASE);
 		sendcmd(command);
 
 		/* 接続先の表示*/
