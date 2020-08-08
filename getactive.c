@@ -20,10 +20,9 @@ int getactive()
 		/* [Return]又は接続リピータの検出 */
 		recvdata(ret);
 
-                if ((strncmp(ret, "Return", 6)) == 0) break;
-		if ((strncmp(ret, "J", 1)) == 0)
+		if (    (strncmp(ret, "J", 1)) == 0 || (strncmp(ret, "Return", 6)) == 0   )
 		{
-			strncpy(concall, ret, 8);
+			strcpy(concall, ret);
 			break;
 		}
 

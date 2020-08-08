@@ -46,6 +46,9 @@
 #define	BAUDRATE	9600
 #define	LISTSIZE	256
 #define	CHARSIZE	32
+#define	VERSION		1
+#define	VERSUB		6
+#define RELEASE		2
 
 /* Variables */
 typedef struct {                  			// 構造体の宣言

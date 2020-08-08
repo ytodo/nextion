@@ -54,6 +54,10 @@ int main(int argc, char *argv[])
 	/* メインスクリーンの初期設定 */
 	sendcmd("dim=dims");
 	sendcmd("page MAIN");
+
+	sprintf(command, "t6.txt=\"Ver.%d.%d.%d\"", VERSION, VERSUB, RELEASE);
+	sendcmd(command);
+
 	sprintf(command, "MAIN.station.txt=\"STATION : %s\"", station);
 	sendcmd(command);
 	sprintf(command, "t0.txt=\"STATION : %s\"", station);
@@ -220,6 +224,9 @@ int main(int argc, char *argv[])
 
 		/* ステータス・ラストハードの読み取り */
 		getstatus();
+
+		sprintf(command, "t6.txt=\"Ver.%d.%d.%d\"", VERSION, VERSUB, RELEASE);
+		sendcmd(command);
 
 		/* 接続先の表示*/
 		if ((strncmp(rptcall, "J", 1) == 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
