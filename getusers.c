@@ -3,8 +3,7 @@
 int getusers()
 {
 	FILE    *fp;
-//	char    *users_tbl  = "/var/tmp/connected_table.html";
-	char    *users_tbl  = "/var/www/html/connected_table.html";
+	char    *users_tbl  = "/var/tmp/connected_table.html";
 	char    line[64]    = {'\0'};
 	char    tmpstr[32]  = {'\0'};
 	char    *tmpptr;
@@ -19,7 +18,12 @@ int getusers()
 	{
 		/* [Return]の検出 */
 		recvdata(ret);
-		if ((strncmp(ret, "Return", 6)) == 0) break;
+		if ((strncmp(ret, "Return", 6)) == 0)
+		{
+			strncpy(concall, ret, 6);
+			concall[6] = '\0';
+			break;
+		}
 
 		/* コマンドの標準出力オープン */
 		if ((fp = fopen(users_tbl, "r")) == NULL)
@@ -75,6 +79,7 @@ int getusers()
 		/* 1秒に一回リフレッシュする */
 		sleep(1);
 	}
+	sendcmd("page MAIN");
 
 	return(EXIT_SUCCESS);
 }

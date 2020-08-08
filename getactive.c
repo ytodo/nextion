@@ -3,8 +3,7 @@
 int getactive()
 {
 	FILE    *fp;
-//	char    *active_tbl  = "/var/tmp/repeater_active.html";
-	char    *active_tbl  = "/var/www/html/repeater_active.html";
+	char    *active_tbl  = "/var/tmp/repeater_active.html";
 	char    *tmpptr;
 	char    line[64]    = {'\0'};
 	char    tmpstr[32]  = {'\0'};
@@ -20,11 +19,19 @@ int getactive()
 		/* [Return]又は接続リピータの検出 */
 		recvdata(ret);
 
-		if (    (strncmp(ret, "J", 1)) == 0 || (strncmp(ret, "Return", 6)) == 0   )
+		if (strncmp(ret, "J", 1) == 0)
 		{
 			strcpy(concall, ret);
+			concall[8] = '\0';
 			break;
 		}
+
+                if ((strncmp(ret, "Return", 6)) == 0)
+                {
+                        strncpy(concall, ret, 6);
+                        concall[6] = '\0';
+                        break;
+                }
 
 		/* コマンドの標準出力オープン */
 		if ((fp = fopen(active_tbl, "r")) == NULL)
@@ -64,6 +71,7 @@ int getactive()
 		/* 2秒に一回リフレッシュする */
 		sleep(2);
 	}
+	sendcmd("page MAIN");
 
 	return(0);
 }

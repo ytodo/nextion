@@ -182,12 +182,15 @@ int main(int argc, char *argv[])
 				sprintf(command, "USERS.b0.txt=\"LINKED USERS on %s\"", rptcallpre);
 				sendcmd(command);
 				getusers();
-				strcpy(concall, "Return");
 				break;
 
 			case 8:						// ACTIVE REPEATERパネルへの表示と移動
 				sendcmd("page ACTIVE");
 				getactive(concall);
+				if ((strncmp(concall, "J", 1) != 0) && (strncmp(concall, "Retrun", 6) != 0))
+				{
+					strncpy(concall, "Return", 6);
+				}
 				break;
 
 			default:
@@ -215,6 +218,9 @@ int main(int argc, char *argv[])
 					}
 				}
 			}
+printf("%s\n", concall);
+
+
 			flag = 0;
 		}
 
@@ -222,11 +228,12 @@ int main(int argc, char *argv[])
 		 * 送信処理
 		 */
 
-		/* ステータス・ラストハードの読み取り */
-		getstatus();
 
 		sprintf(command, "MAIN.t6.txt=\"Ver.%d.%d.%d\"", VERSION, VERSUB, RELEASE);
 		sendcmd(command);
+
+		/* ステータス・ラストハードの読み取り */
+		getstatus();
 
 		/* 接続先の表示*/
 		if ((strncmp(rptcall, "J", 1) == 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
