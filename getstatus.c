@@ -88,7 +88,7 @@ int getstatus()
 		}
 
 		/* ドロップパケット比の表示 */
-		if ((debug == 1) && ((tmpstr = strstr(line, "drop")) != NULL))
+		if ((debug == 1) && ((tmpstr = strstr(line, "drop packet")) != NULL))
 		{
 			memset(&status[0], '\0', sizeof(status));
 			strcpy(status, "Drop PKT ");
