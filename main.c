@@ -72,14 +72,14 @@ int main(int argc, char *argv[])
 	sendcmd("t3.txt=\"\"");
 
 	/* 全リストを空にした後リピータ数分の文字配列にコールサインを格納 */
-	for (i = 0; i < 228; i++)
+	for (i = 0; i < 227; i++)
 	{
 		sprintf(command, "VALUE.va%d.txt=\"\"", i);
 		sendcmd(command);
 		usleep(microsec);
 	}
 	usleep(microsec * 300);
-	if (num > 228) num = 228;
+	if (num > 227) num = 227;
 	for (i = 0; i < num; i++)
 	{
 		sprintf(command, "VALUE.va%d.txt=\"%s\"", i, linkdata[i].call);

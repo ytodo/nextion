@@ -24,13 +24,6 @@ int getlinkdata()
 		return (i);
 	}
 
-/* File sample
-<a name="area3"></a>3エリア<br>
-<table border="1" style="font-size:0.9em;">
-<tr><td><tt><a href="/cgi-bin/monitor?ip_addr=121.94.194.18&port=51000&callsign='JL3ZBS A'&zr_call='JL3ZBS G'" target="cmd1">JL3ZBS&nbsp;A</a></tt></td><td></td>
-<td><tt><a href="/cgi-bin/monitor?ip_addr=153.248.246.39&port=51000&callsign='JP3YCO A'&rep_name='姫路奥山430'&zr_call='JP3YCO G'" target="cmd1">JP3YCO&nbsp;A</a></tt></td><td>姫路奥山430</td>
-*/
-
 	/* テーブルを読み込み構造体に格納する */
 	while ((fgets(line, sizeof(line), fp)) != NULL)
 	{
