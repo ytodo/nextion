@@ -8,9 +8,10 @@
 int getstatus()
 {
 	FILE	*fp;
-	int	flag = 0;
+	int	flag	     = 0;
 	char	*getstatus   = "tail -n3 /var/log/dmonitor.log";
-	char	*tmpstr;
+	char	*tmpptr;
+	char	tmpstr[32]   = {'\0'};
 	char	ret[2]       = {'\0'};
 	char	line[128]    = {'\0'};
 	char	jitter_av[8] = {'\0'};
@@ -31,28 +32,30 @@ int getstatus()
 	/* 標準出力を配列に取得 */
 	while ((fgets(line, sizeof(line), fp)) != NULL)
 	{
-		/* rpt2 rpt1 ur my が存在するとき,flagを立てる */
-		if ((strstr(line, "rpt2") != NULL) || (strstr(line, "drop") != NULL)) flag = 1;
+		/* rpt2 rpt1 ur my が存在するとき,flagを立てる（430と1200のログ区分） */
+		if ((strstr(line, "rpt2") != NULL) || (strstr(line, "drop") != NULL) || (strstr(line, "from Rig") != NULL)) flag = 1;
 
 		/* status に関する文字列があったら */
-		if ((tmpstr = strstr(line, "from")) != NULL)
+		if ((tmpptr = strstr(line, "from")) != NULL)
 		{
 			/* 日付時間とコールサインをログとして出力 */
-			if ((strstr(line, "Connected") == NULL) && (flag == 1))
+			if (strstr(line, "Connected") == NULL)
 			{
-				memset(&status[0], '\0', sizeof(status));
-				strncpy(status, line, 12);	// 日付時分
-				strcat(status, " ");
-				strncat(status, tmpstr - 9, 8);	// コールサイン１，２
-				strncat(status, tmpstr + 4, 3);	// ZR/GW
+				memset(&tmpstr[0], '\0', sizeof(tmpstr));
+				strncpy(tmpstr, line, 12);	// 日付時分
+				strcat(tmpstr, " ");
+				strncat(tmpstr, tmpptr - 9, 8);	// コールサイン１，２
+				strncat(tmpstr, tmpptr + 4, 3);	// ZR/GW
+				if (strncmp(&tmpstr[22], "Ri", 2) == 0) strncpy(&tmpstr[22], "TM", 2);
+				if (flag == 1) strncpy(status, tmpstr, 24);
 				stat = 0;
-				flag = 0;
+
 			}
 
 			/* どこに接続したかを取得 */
-			if ((tmpstr = strstr(line, "Connected")) != NULL)
+			if ((tmpptr = strstr(line, "Connected")) != NULL)
 			{
-				strncpy(rptcall, tmpstr + 13, 8);
+				strncpy(rptcall, tmpptr + 13, 8);
 			}
 
 			/* Last packet wrong ステータスの場合、文字を黄色に */
@@ -64,17 +67,17 @@ int getstatus()
 		}
 
 		/* dmonitorの開始とバージョンを取得 */
-		if ((tmpstr = strstr(line, "dmonitor start")) != NULL)
+		if ((tmpptr = strstr(line, "dmonitor start")) != NULL)
 		{
 			memset(&status[0], '\0', sizeof(status));
-			strncpy(status, tmpstr, 21);
+			strncpy(status, tmpptr, 21);
 		}
 
 		/* バッファの拡張のサイズを取得 */
-		if ((tmpstr = strstr(line, "New FiFo buffer")) != NULL)
+		if ((tmpptr = strstr(line, "New FiFo buffer")) != NULL)
 		{
 			memset(&status[0], '\0', sizeof(status));
-			strcpy(status, tmpstr + 9);
+			strcpy(status, tmpptr + 9);
 			status[strlen(status) - 1] = '\0';
 		}
 
@@ -93,11 +96,11 @@ int getstatus()
 		}
 
 		/* ドロップパケット比の表示 */
-		if ((debug == 1) && ((tmpstr = strstr(line, "drop packet")) != NULL))
+		if ((debug == 1) && ((tmpptr = strstr(line, "drop packet")) != NULL))
 		{
 			memset(&status[0], '\0', sizeof(status));
 			strcpy(status, "Drop PKT ");
-			strcat(status, tmpstr + 17);
+			strcat(status, tmpptr + 17);
 			status[strlen(status) - 1] = '\0';
 			stat = 1;
 		}
