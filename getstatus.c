@@ -8,6 +8,7 @@
 int getstatus()
 {
 	FILE	*fp;
+	int	flag = 0;
 	char	*getstatus   = "tail -n3 /var/log/dmonitor.log";
 	char	*tmpstr;
 	char	ret[2]       = {'\0'};
@@ -30,11 +31,14 @@ int getstatus()
 	/* 標準出力を配列に取得 */
 	while ((fgets(line, sizeof(line), fp)) != NULL)
 	{
+		/* rpt2 rpt1 ur my が存在するとき,flagを立てる */
+		if ((strstr(line, "rpt2") != NULL) || (strstr(line, "drop") != NULL)) flag = 1;
+
 		/* status に関する文字列があったら */
 		if ((tmpstr = strstr(line, "from")) != NULL)
 		{
 			/* 日付時間とコールサインをログとして出力 */
-			if (strstr(line, "Connected") == NULL)
+			if ((strstr(line, "Connected") == NULL) && (flag == 1))
 			{
 				memset(&status[0], '\0', sizeof(status));
 				strncpy(status, line, 12);	// 日付時分
@@ -42,6 +46,7 @@ int getstatus()
 				strncat(status, tmpstr - 9, 8);	// コールサイン１，２
 				strncat(status, tmpstr + 4, 3);	// ZR/GW
 				stat = 0;
+				flag = 0;
 			}
 
 			/* どこに接続したかを取得 */
