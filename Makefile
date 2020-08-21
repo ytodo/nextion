@@ -25,5 +25,15 @@ $(PROGRAM)	: $(OBJECTS)
 clean	:
 	$(RM)  $(PROGRAM) $(OBJECTS)
 
+# Install files
+install	:
+	mv $(PROGRAM)		/usr/local/bin
+	cp auto_repmon2		/usr/local/bin
+	cp auto_repmon2.service	/etc/systemd/system
+	cp nextion.service	/etc/systemd/system
+	systemctl daemon-reload
+	systemctl restart nextion.service
+
 # Dependency of Header Files
 $(OBJECTS)	: dmonitor.h
+

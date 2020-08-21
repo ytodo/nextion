@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	getipaddr();
 
 	/* 現在利用可能なリピータリストの取得*/
-	system("systemctl restart auto_repmon.service");
+	system("systemctl restart auto_repmon2.service");
 	usleep(microsec * 100);
 	num = getlinkdata();
 

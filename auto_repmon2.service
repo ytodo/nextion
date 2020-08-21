@@ -1,0 +1,11 @@
+[Unit]
+Description = repeater_mon
+
+[Service]
+User = root
+ExecStart = /usr/local/bin/auto_repmon2
+Type = simple
+
+[Install]
+WantedBy = multi-user.target
+
