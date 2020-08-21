@@ -9,8 +9,7 @@ $ cd nextion<br>
 $ git pull<br>
 とするだけで最新版が差分で引っ張れます。<br>
 $ make<br>
-$ sudo mv nextion /usr/local/bin<br>
-$ sudo reboot<br>
+$ sudo make install<br>
 ==終了======================================================<br>
 
 今まで ZIP ファイルをダウンロードしていた方は、次のコマンドを順に実行してください。<br>
@@ -20,7 +19,7 @@ $ sudo apt install git<br>
 $ git clone https://github.com/ytodo/nextion.git<br>
 $ cd nextion<br>
 $ make<br>
-$ sudo mv nextion /usr/local/bin<br>
+$ sudo make install<br>
 
 nextion.iniのインストール<br>
 $ sudo cp nextion.ini /etc/<br>

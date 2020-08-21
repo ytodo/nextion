@@ -32,6 +32,8 @@ install	:
 	cp auto_repmon2.service	/etc/systemd/system
 	cp nextion.service	/etc/systemd/system
 	systemctl daemon-reload
+	killall -q -s 9 dmonitor
+	systemctl enable nextion.service
 	systemctl restart nextion.service
 
 # Dependency of Header Files

@@ -69,7 +69,7 @@ int getactive()
 		}
 
 		/* 2秒に一回リフレッシュする */
-		sleep(3);
+		sleep(2);
 	}
 	sendcmd("page MAIN");
 
