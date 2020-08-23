@@ -8,15 +8,15 @@
 int getstatus()
 {
 	FILE	*fp;
-	int	flag	     = 0;
-	char	*getstatus   = "tail -n3 /var/log/dmonitor.log";
+	char	*getstatus	= "tail -n3 /var/log/dmonitor.log";
 	char	*tmpptr;
-	char	tmpstr[32]   = {'\0'};
-	char	ret[2]       = {'\0'};
-	char	line[128]    = {'\0'};
-	char	jitter_av[8] = {'\0'};
-	char	jitter_mx[8] = {'\0'};
-	char	jitter_mi[8] = {'\0'};
+	char	tmpstr[32]	= {'\0'};
+	char	ret[2]		= {'\0'};
+	char	line[128]	= {'\0'};
+	char	jitter_av[8]	= {'\0'};
+	char	jitter_mx[8]	= {'\0'};
+	char	jitter_mi[8]	= {'\0'};
+	char	zrgw[8]		= {'\0'};
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL)
@@ -32,38 +32,44 @@ int getstatus()
 	/* 標準出力を配列に取得 */
 	while ((fgets(line, sizeof(line), fp)) != NULL)
 	{
-		/* rpt2 rpt1 ur my が存在するとき,flagを立てる（430と1200のログ区分） */
-		if ((strstr(line, "rpt2") != NULL) || (strstr(line, "drop") != NULL) || (strstr(line, "from Rig") != NULL)) flag = 1;
-
-		/* status に関する文字列があったら */
-		if ((tmpptr = strstr(line, "from")) != NULL)
+		/* rpt2, rpt1, ur, my の行が見つかったら */
+		if ((tmpptr = strstr(line, "rpt1:")) != NULL)
 		{
-			/* 日付時間とコールサインをログとして出力 */
-			if (strstr(line, "Connected") == NULL)
-			{
-				memset(&tmpstr[0], '\0', sizeof(tmpstr));
-				strncpy(tmpstr, line, 12);	// 日付時分
-				strcat(tmpstr, " ");
-				strncat(tmpstr, tmpptr - 9, 8);	// コールサイン１，２
-				strncat(tmpstr, tmpptr + 4, 3);	// ZR/GW
-				if (strncmp(&tmpstr[22], "Ri", 2) == 0) strncpy(&tmpstr[22], "TM", 2);
-				if (flag == 1) strncpy(status, tmpstr, 24);
-				stat = 0;
+			memset(&zrgw[0], '\0', sizeof(zrgw));
+			if (strncmp("G", tmpptr + 12, 1) == 0) strncpy(zrgw, " GW", 3);
+			if (strncmp("A", tmpptr + 12, 1) == 0) strncpy(zrgw, " ZR", 3);
+			if (strncmp("B", tmpptr + 12, 1) == 0) strncpy(zrgw, " ZR", 3);
 
-			}
+			memset(&status[0], '\0', sizeof(status));
+			strncpy(status, line, 12);      	// 日付時分
+			strcat(status, " ");
+			strncat(status, tmpptr + 29, 8); 	// コールサイン
+			strcat(status, zrgw); 			// ZR/GW
+			stat = 0;
+		}
 
-			/* どこに接続したかを取得 */
-			if ((tmpptr = strstr(line, "Connected")) != NULL)
-			{
-				strncpy(rptcall, tmpptr + 13, 8);
-			}
+		/* 無線機から送信したときのログを出力 */
+		if ((tmpptr = strstr(line, "from Rig")) != NULL)
+		{
+			memset(&status[0], '\0', sizeof(status));
+			strncpy(status, line, 12);	// 日付時分
+			strcat(status, " ");
+			strncat(status, tmpptr - 9, 8);	// コールサイン
+			strcat(status, " TM");		// ZR/GW
+			stat = 0;
+		}
 
-			/* Last packet wrong ステータスの場合、文字を黄色に */
-			if ((stat == 1) && (debug == 1) && (strstr(line, "Last packet wrong") != NULL))
-			{
-				strcpy(status, "Last packet is wrong...");
-				break;
-			}
+		/* どこに接続したかを取得 */
+		if ((tmpptr = strstr(line, "Connected")) != NULL)
+		{
+			strncpy(rptcall, tmpptr + 13, 8);
+		}
+
+		/* Last packet wrong ステータスの場合、文字を黄色に */
+		if ((stat == 1) && (debug == 1) && (strstr(line, "Last packet wrong") != NULL))
+		{
+			strcpy(status, "Last packet is wrong...");
+			break;
 		}
 
 		/* dmonitorの開始とバージョンを取得 */
