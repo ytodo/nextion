@@ -35,27 +35,31 @@ int getstatus()
 		/* rpt2, rpt1, ur, my の行が見つかったら */
 		if ((tmpptr = strstr(line, "rpt1:")) != NULL)
 		{
-			memset(&zrgw[0], '\0', sizeof(zrgw));
-			if (strncmp("G", tmpptr + 12, 1) == 0) strncpy(zrgw, " GW", 3);
-			if (strncmp("A", tmpptr + 12, 1) == 0) strncpy(zrgw, " ZR", 3);
-			if (strncmp("B", tmpptr + 12, 1) == 0) strncpy(zrgw, " ZR", 3);
+			memset(&zrgw[0], '\0', sizeof(tmpstr));
+			if (strncmp("G", tmpptr + 12, 1) == 0) strncpy(tmpstr, " GW", 3);
+			if (strncmp("A", tmpptr + 12, 1) == 0) strncpy(tmpstr, " ZR", 3);
+			if (strncmp("B", tmpptr + 12, 1) == 0) strncpy(tmpstr, " ZR", 3);
 
 			memset(&status[0], '\0', sizeof(status));
 			strncpy(status, line, 12);      	// 日付時分
 			strcat(status, " ");
 			strncat(status, tmpptr + 29, 8); 	// コールサイン
-			strcat(status, zrgw); 			// ZR/GW
+			strcat(status, tmpstr); 		// ZR/GW
 			stat = 0;
 		}
 
 		/* 無線機から送信したときのログを出力 */
-		if ((tmpptr = strstr(line, "from Rig")) != NULL)
+		if ((tmpptr = strstr(line, "from Rig")) != NULL || (tmpptr = strstr(line, "from DVAP")) != NULL)
 		{
+			memset(&zrgw[0], '\0', sizeof(tmpstr));
+			if (strncmp("Rig",  tmpptr + 5, 3) == 0) strncpy(tmpstr, " TM", 3);
+			if (strncmp("DVAP", tmpptr + 5, 4) == 0) strncpy(tmpstr, " DV", 3);
+
 			memset(&status[0], '\0', sizeof(status));
-			strncpy(status, line, 12);	// 日付時分
+			strncpy(status, line, 12);		// 日付時分
 			strcat(status, " ");
-			strncat(status, tmpptr - 9, 8);	// コールサイン
-			strcat(status, " TM");		// ZR/GW
+			strncat(status, tmpptr - 9, 8);		// コールサイン
+			strcat(status, tmpstr);			// Terminal-AP Mode/DVAP Mode
 			stat = 0;
 		}
 
