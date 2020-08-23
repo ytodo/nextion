@@ -127,21 +127,21 @@ int main(int argc, char *argv[])
 			switch (flag) {
 			case 1:						// nextionドライバのリスタート
 				sendcmd("dim=10");
-				system("killall -q -s 2 dmonitor");
+				system("killall -q -s 9 dmonitor");
 				system("rm /var/run/dmonitor.pid");
 				system("systemctl restart nextion.service");
 				break;
 
 			case 2:						// 再起動
 				sendcmd("dim=10");
-				system("killall -q -s 2 dmonitor");
+				system("killall -q -s 9 dmonitor");
 				system("rm /var/run/dmonitor.pid");
 				system("shutdown -r now");
 				break;
 
 			case 3:						// シャットダウン
 				sendcmd("dim=10");
-				system("killall -q -s 2 dmonitor");
+				system("killall -q -s 9 dmonitor");
 				system("rm /var/run/dmonitor.pid");
 				system("shutdown -h now");
 				break;
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 				sendcmd("SYSTEM.b4.txt=\"Checking Update\"");
 
 				/* システムコマンドの実行 */
-				system("killall -q -s 2 dmonitor");
+				system("killall -q -s 9 dmonitor");
 				system("rm /var/run/dmonitor.pid");
 				system("apt clean && apt update && apt install dmonitor -y");
 
@@ -205,8 +205,8 @@ int main(int argc, char *argv[])
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
 						/* 現在稼働中のdmonitor をKILL */
-						system("sudo killall -q -s 9 repeater_scan");
-						system("sudo killall -q -s 2 dmonitor");
+//						system("sudo killall -q -s 9 repeater_scan");
+						system("sudo killall -q -s 9 dmonitor");
 						system("sudo rm /var/run/dmonitor.pid");
 						system("sudo rig_port_check");
 

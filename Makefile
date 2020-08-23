@@ -31,8 +31,10 @@ install	:
 	cp auto_repmon2		/usr/local/bin
 	cp auto_repmon2.service	/etc/systemd/system
 	cp nextion.service	/etc/systemd/system
-	systemctl daemon-reload
 	killall -q -s 9 dmonitor
+	systemctl stop auto_repmon
+	systemctl disable auto_repmon
+	systemctl daemon-reload
 	systemctl enable nextion.service
 	systemctl restart nextion.service
 
