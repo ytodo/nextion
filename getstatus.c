@@ -26,21 +26,22 @@ int getstatus()
 	}
 
 	/* 過去のデータをクリアする  */
-	memset(&status[0], '\0', sizeof(status));
 	memset(&rptcall[0],'\0', sizeof(rptcall));
 
 	/* 標準出力を配列に取得 */
 	while ((fgets(line, sizeof(line), fp)) != NULL)
 	{
+		/* 過去のデータをクリアする  */
+		memset(&status[0], '\0', sizeof(status));
+		memset(&tmpstr[0], '\0', sizeof(tmpstr));
+
 		/* rpt2, rpt1, ur, my の行が見つかったら */
 		if ((tmpptr = strstr(line, "rpt1:")) != NULL)
 		{
-			memset(&zrgw[0], '\0', sizeof(tmpstr));
 			if (strncmp("G", tmpptr + 12, 1) == 0) strncpy(tmpstr, " GW", 3);
 			if (strncmp("A", tmpptr + 12, 1) == 0) strncpy(tmpstr, " ZR", 3);
 			if (strncmp("B", tmpptr + 12, 1) == 0) strncpy(tmpstr, " ZR", 3);
 
-			memset(&status[0], '\0', sizeof(status));
 			strncpy(status, line, 12);      	// 日付時分
 			strcat(status, " ");
 			strncat(status, tmpptr + 29, 8); 	// コールサイン
@@ -51,11 +52,9 @@ int getstatus()
 		/* 無線機から送信したときのログを出力 */
 		if ((tmpptr = strstr(line, "from Rig")) != NULL || (tmpptr = strstr(line, "from DVAP")) != NULL)
 		{
-			memset(&zrgw[0], '\0', sizeof(tmpstr));
 			if (strncmp("Rig",  tmpptr + 5, 3) == 0) strncpy(tmpstr, " TM", 3);
 			if (strncmp("DVAP", tmpptr + 5, 4) == 0) strncpy(tmpstr, " DV", 3);
 
-			memset(&status[0], '\0', sizeof(status));
 			strncpy(status, line, 12);		// 日付時分
 			strcat(status, " ");
 			strncat(status, tmpptr - 9, 8);		// コールサイン
@@ -79,14 +78,12 @@ int getstatus()
 		/* dmonitorの開始とバージョンを取得 */
 		if ((tmpptr = strstr(line, "dmonitor start")) != NULL)
 		{
-			memset(&status[0], '\0', sizeof(status));
 			strncpy(status, tmpptr, 21);
 		}
 
 		/* バッファの拡張のサイズを取得 */
 		if ((tmpptr = strstr(line, "New FiFo buffer")) != NULL)
 		{
-			memset(&status[0], '\0', sizeof(status));
 			strcpy(status, tmpptr + 9);
 			status[strlen(status) - 1] = '\0';
 		}
@@ -94,21 +91,28 @@ int getstatus()
 		/* 接続解除を取得 */
 		if (strstr(line, "dmonitor end") != NULL)
 		{
-			memset(&status[0], '\0', sizeof(status));
 			strcpy(status, "Disconnected");
 		}
 
 		/* 無線機の接続状況 */
 		if ((debug == 1) && (strstr(line, "init/re-init") != NULL))
 		{
-			memset(&status[0], '\0', sizeof(status));
 			strcpy(status, "RIG initializing is done.");
+		}
+
+		/* DVAP使用時の周波数 */
+		if ((debug == 1) && ((tmpptr = strstr(line, "Frequency")) != NULL))
+		{
+			strcpy(status, "DVAP FREQUENCY ");
+			strncat(status, tmpptr + 14, 3);
+			strcat(status, ".");
+			strncat(status, tmpptr + 17, 3);
+			strcat(status, "MHz");
 		}
 
 		/* ドロップパケット比の表示 */
 		if ((debug == 1) && ((tmpptr = strstr(line, "drop packet")) != NULL))
 		{
-			memset(&status[0], '\0', sizeof(status));
 			strcpy(status, "Drop PKT ");
 			strcat(status, tmpptr + 17);
 			status[strlen(status) - 1] = '\0';
@@ -118,21 +122,3 @@ int getstatus()
 	pclose(fp);
 	return (EXIT_SUCCESS);
 }
-
-/*
-Jul 15 04:53:38 ham12 dmonitor[10813]: dmonitor start V01.43 (Compiled Jul  3 2020 04:20:00)
-Jul 15 04:53:38 ham12 dmonitor[10813]: Connected to JL3ZBS A (111.64.21.98:51000) from JE3HCZ D
-Jul 15 04:53:39 ham12 dmonitor[10813]: RIG(ID-xxPlus) open
-Jul 15 04:53:39 ham12 dmonitor[10813]: RIG(ID-xxPlus) init/re-init done
-Jul 15 04:53:52 ham12 dmonitor[10813]: JE3HCZ A from ZR
-Jul 15 04:53:52 ham12 dmonitor[10813]: drop packet rate 0.00% (0/13)
-Jul 15 04:53:52 ham12 dmonitor[10813]: jitter info. ave:16mSec. max:168mSec. min:1mSec.
-Jul 15 04:53:53 ham12 dmonitor[10813]: rpt2:JL3ZBS A rpt1:JL3ZBS A ur:JK1ZRW Z my:JE3HCZ A my2:ADMO
-Jul 15 04:53:53 ham12 dmonitor[10813]: JK1ZRW Z from GW
-Jul 15 04:53:54 ham12 dmonitor[10813]: drop packet rate 0.00% (0/13)
-Jul 15 04:53:54 ham12 dmonitor[10813]: jitter info. ave:17mSec. max:21mSec. min:17mSec.
-Jul 15 04:53:54 ham12 dmonitor[10813]: rpt2:JL3ZBS A rpt1:JL3ZBS G ur:JE3HCZ A my:JK1ZRW Z my2:ZECH
-Jul 15 04:54:26 ham12 dmonitor[10813]: RIG(ICOM) close.
-Jul 15 04:54:26 ham12 dmonitor[10813]: dmonitor end
-*/
-
