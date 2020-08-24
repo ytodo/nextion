@@ -13,6 +13,10 @@ int getusers()
 	int     i           = 0;
 	int     j           = 0;
 
+
+	/* 既存ステイタスの表示 */
+	sendcmd("t8.txt=MAIN.stat2.txt");
+
 	/* [Return]ボタンが押されるまで繰り返す */
 	while (1)
 	{
