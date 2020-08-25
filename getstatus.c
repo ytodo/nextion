@@ -8,15 +8,10 @@
 int getstatus()
 {
 	FILE	*fp;
-	char	*getstatus	= "tail -n3 /var/log/dmonitor.log";
 	char	*tmpptr;
+	char	*getstatus	= "tail -n3 /var/log/dmonitor.log";
 	char	tmpstr[32]	= {'\0'};
-	char	ret[2]		= {'\0'};
 	char	line[128]	= {'\0'};
-	char	jitter_av[8]	= {'\0'};
-	char	jitter_mx[8]	= {'\0'};
-	char	jitter_mi[8]	= {'\0'};
-	char	zrgw[8]		= {'\0'};
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL)
@@ -101,13 +96,13 @@ int getstatus()
 		}
 
 		/* DVAP使用時の周波数 */
-		if ((debug == 1) && ((tmpptr = strstr(line, "Frequency")) != NULL))
+		if ((debug == 1) && ((tmpptr = strstr(line, "Frequency Set")) != NULL))
 		{
-			strcpy(status, "DVAP FREQUENCY ");
+			strcpy(status, "DVAP FREQ. ");
 			strncat(status, tmpptr + 14, 3);
 			strcat(status, ".");
 			strncat(status, tmpptr + 17, 3);
-			strcat(status, "MHz");
+			strcat(status, " MHz");
 		}
 
 		/* ドロップパケット比の表示 */
@@ -120,5 +115,6 @@ int getstatus()
 		}
 	}
 	pclose(fp);
+
 	return (EXIT_SUCCESS);
 }

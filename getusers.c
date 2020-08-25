@@ -67,7 +67,7 @@ int getusers()
 		/* ステータス・ラストハードの表示 */
 		getstatus();
 
-		if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0))
+		if ((strlen(status) != 0) && (strncmp(status, statpre, 24) != 0))
 		{
 			strcpy(statpre, status);
 

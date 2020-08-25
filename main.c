@@ -205,7 +205,6 @@ int main(int argc, char *argv[])
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
 						/* 現在稼働中のdmonitor をKILL */
-//						system("sudo killall -q -s 9 repeater_scan");
 						system("sudo killall -q -s 9 dmonitor");
 						system("sudo rm /var/run/dmonitor.pid");
 						system("sudo rig_port_check");
