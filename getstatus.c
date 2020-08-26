@@ -9,7 +9,7 @@ int getstatus()
 {
 	FILE	*fp;
 	char	*tmpptr;
-	char	*getstatus	= "tail -n3 /var/log/dmonitor.log";
+	char	*getstatus	= "tail -n10 /var/log/dmonitor.log";
 	char	tmpstr[32]	= {'\0'};
 	char	line[128]	= {'\0'};
 

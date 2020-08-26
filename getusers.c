@@ -15,7 +15,8 @@ int getusers()
 
 
 	/* 既存ステイタスの表示 */
-	sendcmd("t8.txt=MAIN.stat2.txt");
+	sendcmd("t8.txt=MAIN.stat1.txt");
+	sendcmd("t9.txt=MAIN.stat2.txt");
 
 	/* [Return]ボタンが押されるまで繰り返す */
 	while (1)

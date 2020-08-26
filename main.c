@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
 		}
 
 		/* ステータス・ラストハードの表示 */
-		if ((strncmp(status, "", 1) != 0) && (strncmp(status, statpre, 24) != 0))
+                if ((strlen(status) != 0) && (strncmp(status, statpre, 24) != 0))
 		{
 			strcpy(statpre, status);
 
