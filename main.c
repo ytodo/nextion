@@ -44,8 +44,8 @@ int main(int argc, char *argv[])
 	getipaddr();
 
 	/* 現在利用可能なリピータリストの取得*/
-	system("systemctl restart auto_repmon2.service");
-	usleep(microsec * 100);
+	system("sudo systemctl restart auto_repmon2.service");
+	usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 	num = getlinkdata();
 
 	/* GPIO シリアルポートのオープン*/
@@ -127,23 +127,23 @@ int main(int argc, char *argv[])
 			switch (flag) {
 			case 1:						// nextionドライバのリスタート
 				sendcmd("dim=10");
-				system("killall -q -s 9 dmonitor");
-				system("rm /var/run/dmonitor.pid");
-				system("systemctl restart nextion.service");
+				system("sudo killall -q -s 2 dmonitor");
+				system("sudo rm /var/run/dmonitor.pid");
+				system("sudo systemctl restart nextion.service");
 				break;
 
 			case 2:						// 再起動
 				sendcmd("dim=10");
-				system("killall -q -s 9 dmonitor");
-				system("rm /var/run/dmonitor.pid");
-				system("shutdown -r now");
+				system("sudo killall -q -s 2 dmonitor");
+				system("sudo rm /var/run/dmonitor.pid");
+				system("sudo shutdown -r now");
 				break;
 
 			case 3:						// シャットダウン
 				sendcmd("dim=10");
-				system("killall -q -s 9 dmonitor");
-				system("rm /var/run/dmonitor.pid");
-				system("shutdown -h now");
+				system("sudo killall -q -s 2 dmonitor");
+				system("sudo rm /var/run/dmonitor.pid");
+				system("sudo shutdown -h now");
 				break;
 
 			case 4:						// OS及びdmonitorのアップデート
@@ -154,27 +154,27 @@ int main(int argc, char *argv[])
 				sendcmd("SYSTEM.b4.txt=\"Checking Update\"");
 
 				/* システムコマンドの実行 */
-				system("killall -q -s 9 dmonitor");
-				system("rm /var/run/dmonitor.pid");
-				system("apt clean && apt update && apt install dmonitor -y");
+				system("sudo killall -q -s 2 dmonitor");
+				system("sudo rm /var/run/dmonitor.pid");
+				system("sudo apt clean && sudo apt update && suod apt install dmonitor -y");
 
 				/* [REBOOT]の表示及びrebootコマンド発行 */
 				sendcmd("SYSTEM.b4.bco=64512");
 				sendcmd("SYSTEM.b4.txt=\"Restarting...\"");
 				sendcmd("dim=10");
-				system("systemctl restart nextion.service");
+				system("sudo systemctl restart nextion.service");
 				break;
 
 			case 5:						// バッファの増加
 				if (strncmp(concall, "up", 2) == 0) break;
 				strcpy(concall, "up");
-				system("killall -q -s SIGUSR1 dmonitor");
+				system("sudo killall -q -s SIGUSR1 dmonitor");
 				break;
 
 			case 6:						// バッファの減少
 				if (strncmp(concall, "dwn", 3) == 0) break;
 				strcpy(concall, "dwn");
-				system("killall -q -s SIGUSR2 dmonitor");
+				system("sudo killall -q -s SIGUSR2 dmonitor");
 				break;
 
 			case 7:						// Remote Usersパネルへ接続ユーザ表示
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
 
 				/* 指定リピータに接続する */
 				i = 0;
-				system("systemctl restart auto_repmon.service");
+				system("sudo systemctl restart auto_repmon2.service");
 				usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 				num = getlinkdata();
 				for (i = 0; i < num; i++)
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
 						/* 現在稼働中のdmonitor をKILL */
-						system("sudo killall -q -s 9 dmonitor");
+						system("sudo killall -q -s 2 dmonitor");
 						system("sudo rm /var/run/dmonitor.pid");
 						system("sudo rig_port_check");
 
