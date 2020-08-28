@@ -117,36 +117,33 @@ int getstatus()
 	}
 	pclose(fp);
 
-                /* 接続先の表示*/
-                if ((strncmp(rptcall, "J", 1) == 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
-                {
-                        strcpy(rptcallpre, rptcall);
-                        sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
-                        sendcmd(command);
-                        sprintf(command, "MAIN.link.txt=\"LINK TO : %s\"", rptcall);
-                        sendcmd(command);
-                }
+	/* 接続先の表示*/
+	if ((strncmp(rptcall, "J", 1) == 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
+	{
+		strcpy(rptcallpre, rptcall);
+		sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
+		sendcmd(command);
+		sprintf(command, "MAIN.link.txt=\"LINK TO : %s\"", rptcall);
+		sendcmd(command);
+	}
 
-                /* ステータス・ラストハードの表示 */
-                if ((strlen(status) != 0) && (strncmp(status, statpre, 24) != 0))
-                {
-                        strcpy(statpre, status);
+	/* ステータス・ラストハードの表示 */
+	if ((strlen(status) != 0) && (strncmp(status, statpre, 24) != 0))
+	{
+		strcpy(statpre, status);
 
-                        /* STATUS1 => STATUS2 */
-                        sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
+		/* STATUS1 => STATUS2 */
+		sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
 
-                        /* 取得ステイタス=> STATUS1 */
-                        sprintf(command, "MAIN.stat1.txt=\"%s\"", status);
-                        sendcmd(command);
-                        sendcmd("MAIN.t2.txt=MAIN.stat1.txt");
-                        sendcmd("MAIN.t3.txt=MAIN.stat2.txt");
+		/* 取得ステイタス=> STATUS1 */
+		sprintf(command, "MAIN.stat1.txt=\"%s\"", status);
+		sendcmd(command);
+		sendcmd("MAIN.t2.txt=MAIN.stat1.txt");
+		sendcmd("MAIN.t3.txt=MAIN.stat2.txt");
 
-                        /* statusをクリアする */
-                        status[0] = '\0';
-                }
-
-
-
+		/* statusをクリアする */
+		status[0] = '\0';
+	}
 
 	return (EXIT_SUCCESS);
 }

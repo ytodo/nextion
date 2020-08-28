@@ -13,13 +13,13 @@ int getusers()
 	int     j           = 0;
 
 
-	/* 既存ステイタスの表示 */
-	sendcmd("t8.txt=MAIN.stat1.txt");
-	sendcmd("t9.txt=MAIN.stat2.txt");
-
 	/* [Return]ボタンが押されるまで繰り返す */
 	while (1)
 	{
+		/* 既存ステイタスの表示 */
+		sendcmd("t8.txt=MAIN.stat1.txt");
+		sendcmd("t9.txt=MAIN.stat2.txt");
+
 		/* [Return]の検出 */
 		recvdata(ret);
 		if ((strncmp(ret, "Return", 6)) == 0)
@@ -67,19 +67,6 @@ int getusers()
 		/* ステータス・ラストハードの表示 */
 		getstatus();
 
-//		if ((strlen(status) != 0) && (strncmp(status, statpre, 24) != 0))
-//		{
-//			strcpy(statpre, status);
-
-			/* 取得ステイタス=> STATUS1 */
-//			sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
-//			sprintf(command, "MAIN.stat1.txt=\"%s\"", status);
-//			sendcmd(command);
-
-			/* statusをクリアする */
-//			status[0] = '\0';
-//		}
-
 		/* 1秒に一回リフレッシュする */
 		sleep(1);
 	}
@@ -87,4 +74,3 @@ int getusers()
 
 	return(EXIT_SUCCESS);
 }
-
