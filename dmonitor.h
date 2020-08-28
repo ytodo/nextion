@@ -60,11 +60,14 @@ typedef struct {                  			// 構造体の宣言
 }	repeater_t;
 extern	repeater_t	linkdata[LISTSIZE];	// 構造体配列の宣言
 extern	char		status[CHARSIZE];
+extern	char		statpre[CHARSIZE];
 extern	char		rptcall[CHARSIZE];
+extern	char		rptcallpre[CHARSIZE];
 extern	char		station[CHARSIZE];
 extern	char		ipaddress[CHARSIZE];
 extern	char		default_rpt[CHARSIZE];
 extern	char		concall[8];
+extern	char		concallpre[8];
 extern	unsigned int	microsec;
 extern	unsigned int	debug;
 extern	unsigned int	stat;

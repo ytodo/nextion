@@ -208,6 +208,7 @@ int main(int argc, char *argv[])
 						system("sudo killall -q -s 2 dmonitor");
 						system("sudo rm /var/run/dmonitor.pid");
 						system("sudo rig_port_check");
+						usleep(microsec * 10);
 
 						/* 接続コマンドの実行 */
 						sprintf(command, "sudo /usr/bin/dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
@@ -229,32 +230,32 @@ int main(int argc, char *argv[])
 		getstatus();
 
 		/* 接続先の表示*/
-		if ((strncmp(rptcall, "J", 1) == 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
-		{
-			strcpy(rptcallpre, rptcall);
-			sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
-			sendcmd(command);
-			sprintf(command, "MAIN.link.txt=\"LINK TO : %s\"", rptcall);
-			sendcmd(command);
-		}
+//		if ((strncmp(rptcall, "J", 1) == 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
+//		{
+//			strcpy(rptcallpre, rptcall);
+//			sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
+//			sendcmd(command);
+//			sprintf(command, "MAIN.link.txt=\"LINK TO : %s\"", rptcall);
+//			sendcmd(command);
+//		}
 
 		/* ステータス・ラストハードの表示 */
-                if ((strlen(status) != 0) && (strncmp(status, statpre, 24) != 0))
-		{
-			strcpy(statpre, status);
+//		if ((strlen(status) != 0) && (strncmp(status, statpre, 24) != 0))
+//		{
+//			strcpy(statpre, status);
 
 			/* STATUS1 => STATUS2 */
-			sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
+//			sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
 
 			/* 取得ステイタス=> STATUS1 */
-			sprintf(command, "MAIN.stat1.txt=\"%s\"", status);
-			sendcmd(command);
-			sendcmd("MAIN.t2.txt=MAIN.stat1.txt");
-			sendcmd("MAIN.t3.txt=MAIN.stat2.txt");
+//			sprintf(command, "MAIN.stat1.txt=\"%s\"", status);
+//			sendcmd(command);
+//			sendcmd("MAIN.t2.txt=MAIN.stat1.txt");
+//			sendcmd("MAIN.t3.txt=MAIN.stat2.txt");
 
 			/* statusをクリアする */
-			status[0] = '\0';
-		}
+//			status[0] = '\0';
+//		}
 
 		/* CPUの速さによるループ調整（nextion.ini:SLEEPTIME）*/
 	        usleep(microsec * 5);

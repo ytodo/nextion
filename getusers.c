@@ -8,7 +8,6 @@ int getusers()
 	char    tmpstr[32]  = {'\0'};
 	char    *tmpptr;
 	char    command[32] = {'\0'};
-	char    statpre[32] = {'\0'};
 	char    ret[16]     = {'\0'};
 	int     i           = 0;
 	int     j           = 0;
@@ -68,18 +67,18 @@ int getusers()
 		/* ステータス・ラストハードの表示 */
 		getstatus();
 
-		if ((strlen(status) != 0) && (strncmp(status, statpre, 24) != 0))
-		{
-			strcpy(statpre, status);
+//		if ((strlen(status) != 0) && (strncmp(status, statpre, 24) != 0))
+//		{
+//			strcpy(statpre, status);
 
 			/* 取得ステイタス=> STATUS1 */
-			sendcmd("t9.txt=t8.txt");
-			sprintf(command, "t8.txt=\"%s\"", status);
-			sendcmd(command);
+//			sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
+//			sprintf(command, "MAIN.stat1.txt=\"%s\"", status);
+//			sendcmd(command);
 
 			/* statusをクリアする */
-			status[0] = '\0';
-		}
+//			status[0] = '\0';
+//		}
 
 		/* 1秒に一回リフレッシュする */
 		sleep(1);
