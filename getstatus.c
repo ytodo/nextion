@@ -9,10 +9,13 @@ int getstatus()
 {
 	FILE	*fp;
 	char	*tmpptr;
-	char	*getstatus	= "tail -n10 /var/log/dmonitor.log";
+	char	*getstatus	= "tail -n3 /var/log/dmonitor.log";
 	char	tmpstr[32]	= {'\0'};
 	char	line[128]	= {'\0'};
 	char	command[32]	= {'\0'};
+	char	mycall[8]	= {'\0'};
+	char	mycallpre[8]	= {'\0'};
+	char	tmpstat[32]	= {'\0'};
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL)
@@ -31,17 +34,29 @@ int getstatus()
 		memset(&status[0], '\0', sizeof(status));
 		memset(&tmpstr[0], '\0', sizeof(tmpstr));
 
-		/* rpt2, rpt1, ur, my の行が見つかったら */
-		if ((tmpptr = strstr(line, "rpt1:")) != NULL)
+		/* dmonitorへの信号がZRからかGW側からかを判断して status 代入の準備のみする */
+		if ((tmpptr = strstr(line, "from ZR")) != NULL || (tmpptr = strstr(line, "from GW")) != NULL)
 		{
-			if (strncmp("G", tmpptr + 12, 1) == 0) strncpy(tmpstr, " GW", 3);
-			if (strncmp("A", tmpptr + 12, 1) == 0) strncpy(tmpstr, " ZR", 3);
-			if (strncmp("B", tmpptr + 12, 1) == 0) strncpy(tmpstr, " ZR", 3);
+			memset(&tmpstat[0], '\0', sizeof(tmpstat));
 
-			strncpy(status, line, 12);      	// 日付時分
-			strcat(status, " ");
-			strncat(status, tmpptr + 29, 8); 	// コールサイン
-			strcat(status, tmpstr); 		// ZR/GW
+			/* MyCallsignの取得 */
+			memset(&mycall[0], '\0', sizeof(mycall));
+			strncpy(mycall, tmpptr - 9, 8);		// My Callsign
+
+			/* MyCallsignが単なるループではない場合 */
+			if (strncmp(mycall, mycallpre, 8) != 0)
+			{
+				strncpy(tmpstat, line, 12);      	// 日付時分
+				strcat(tmpstat, " ");
+				strncat(tmpstat, mycall, 8); 		// コールサイン
+				strncat(tmpstat, tmpptr + 4, 3);	// ZR/GW
+			}
+		}
+
+		/* rpt2, rpt1, ur, my の行が見つかったら,コールサインを照合して前段のtmpstatをstatusに代入 */
+		if ((tmpptr = strstr(line, "my:")) != NULL)
+		{
+			if (strncmp(mycall, tmpptr + 3, 8) == 0) strcpy(status, tmpstat);
 			stat = 0;
 		}
 
