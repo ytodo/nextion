@@ -1,6 +1,6 @@
 #include "dmonitor.h"
 
-int getusers()
+int getusers(char ret[16])
 {
 	FILE    *fp;
 	char    *users_tbl  = "/var/tmp/connected_table.html";
@@ -8,7 +8,6 @@ int getusers()
 	char    tmpstr[32]  = {'\0'};
 	char    *tmpptr;
 	char    command[32] = {'\0'};
-	char    ret[16]     = {'\0'};
 	int     i           = 0;
 	int     j           = 0;
 
@@ -24,8 +23,7 @@ int getusers()
 		recvdata(ret);
 		if ((strncmp(ret, "Return", 6)) == 0)
 		{
-			strncpy(concall, ret, 6);
-			concall[6] = '\0';
+			ret[6] = '\0';
 			break;
 		}
 

@@ -1,6 +1,6 @@
 #include "dmonitor.h"
 
-int getactive()
+int getactive(char ret[16])
 {
 	FILE    *fp;
 	char    *active_tbl  = "/var/tmp/repeater_active.html";
@@ -9,7 +9,6 @@ int getactive()
 	char    tmpstr[32]  = {'\0'};
 	char    command[32] = {'\0'};
 	char    statpre[32] = {'\0'};
-	char    ret[16]     = {'\0'};
 	int     i           = 0;
 	int     j           = 0;
 
@@ -21,17 +20,15 @@ int getactive()
 
 		if (strncmp(ret, "J", 1) == 0)
 		{
-			strcpy(concall, ret);
-			concall[8] = '\0';
+			ret[8] = '\0';
 			break;
 		}
 
                 if ((strncmp(ret, "Return", 6)) == 0)
                 {
-                        strncpy(concall, ret, 6);
-                        concall[6] = '\0';
-                        break;
-                }
+			ret[6]	= '\0';
+			break;
+		}
 
 		/* コマンドの標準出力オープン */
 		if ((fp = fopen(active_tbl, "r")) == NULL)

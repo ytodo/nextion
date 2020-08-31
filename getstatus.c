@@ -24,9 +24,6 @@ int getstatus()
 		return (EXIT_FAILURE);
 	}
 
-	/* 過去のデータをクリアする  */
-	memset(&rptcall[0],'\0', sizeof(rptcall));
-
 	/* 標準出力を配列に取得 */
 	while ((fgets(line, sizeof(line), fp)) != NULL)
 	{
@@ -135,7 +132,7 @@ int getstatus()
 	/* 接続先の表示*/
 	if ((strncmp(rptcall, "J", 1) == 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
 	{
-		strcpy(rptcallpre, rptcall);
+		strncpy(rptcallpre, rptcall, 8);
 		sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
 		sendcmd(command);
 		sprintf(command, "MAIN.link.txt=\"LINK TO : %s\"", rptcall);
