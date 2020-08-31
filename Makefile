@@ -27,16 +27,16 @@ clean	:
 
 # Install files
 install	:
-	mv $(PROGRAM)		/usr/local/bin
-	cp auto_repmon2		/usr/local/bin
-	cp auto_repmon2.service	/etc/systemd/system
-	cp nextion.service	/etc/systemd/system
-	killall -q -s 9 dmonitor
-	systemctl stop auto_repmon
-	systemctl disable auto_repmon
-	systemctl daemon-reload
-	systemctl enable nextion.service
-	systemctl restart nextion.service
+	sudo mv $(PROGRAM)		/usr/local/bin
+	sudo cp auto_repmon2		/usr/local/bin
+	sudo cp auto_repmon2.service	/etc/systemd/system
+	sudo cp nextion.service		/etc/systemd/system
+	sudo killall -q -s 9 dmonitor
+	sudo systemctl stop auto_repmon
+	sudo systemctl disable auto_repmon
+	sudo systemctl daemon-reload
+	sudo systemctl enable nextion.service
+	sudo systemctl restart nextion.service
 
 # Dependency of Header Files
 $(OBJECTS)	: dmonitor.h
