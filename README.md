@@ -21,16 +21,13 @@ $ cd nextion<br>
 $ make<br>
 $ sudo make install<br>
 
-nextion.iniのインストール<br>
-$ sudo cp nextion.ini /etc/<br>
+nextion.iniの編集<br>
 $ sudo nano /etc/nextion.ini<br>
 
 nextion.iniの説明を読んで、お使いになる方の環境に合わせてください。<br>
 
 自動起動にする場合<br>
-$ sudo nextion.service /etc/systemd/system/<br>
-$ sudo systemctl enable nextion.service<br>
-$ sudo reboot<br>
+上記インストール手順によって自動的に設定されます。
 もし、タイミングによって立ち上がらない場合は、nextion.timerの秒数を調整して<br>
 $ sudo systemctl enable nextion.timer<br>
 $ sudo systemctl disable nextion.service<br>
