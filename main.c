@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
 
 			case 7:						// Remote Usersパネルへ接続ユーザ表示
 				sendcmd("page USERS");
-				sprintf(command, "USERS.b0.txt=\"LINKED USERS on %s\"", rptcallpre);
+				sprintf(command, "USERS.b0.txt=\"LINKED USERS on %s\"", rptcall);
 				sendcmd(command);
 				getusers();
 				break;
