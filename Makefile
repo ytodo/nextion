@@ -31,10 +31,10 @@ install	:
 	sudo cp nextion.service		/etc/systemd/system
 	sudo systemctl daemon-reload
 	sudo killall -q -s 9 dmonitor
-	sudo systemctl stop auto_repmon
-	sudo systemctl disable auto_repmon
-	sudo systemctl enable auto_repmon_light
-	sudo systemctl restart auto_repmon_light
+	sudo systemctl stop auto_repmon.service
+	sudo systemctl disable auto_repmon.service
+	sudo systemctl stop rpt_conn.service
+	sudo systemctl disable rpt_conn.service
 	sudo systemctl enable nextion.service
 	sudo systemctl restart nextion.service
 

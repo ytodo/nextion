@@ -197,7 +197,6 @@ int main(int argc, char *argv[])
 
 				/* 指定リピータに接続する */
 				i = 0;
-				system("sudo systemctl restart auto_repmon_light.service");
 				usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 				num = getlinkdata();
 				for (i = 0; i < num; i++)
@@ -205,8 +204,10 @@ int main(int argc, char *argv[])
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
 						/* 現在稼働中のdmonitor をKILL */
+						system("sudo systemctl stop rpt_conn");
 						system("sudo killall -q -s 2 dmonitor");
 						system("sudo rm /var/run/dmonitor.pid");
+						system("sudo rm -f /var/run/rpt_conn.pid");
 						system("sudo rig_port_check");
 						usleep(microsec * 10);
 
