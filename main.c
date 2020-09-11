@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	getipaddr();
 
 	/* 現在利用可能なリピータリストの取得*/
-	system("sudo systemctl restart auto_repmon2.service");
+	system("sudo systemctl restart auto_repmon_light.service");
 	usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 	num = getlinkdata();
 
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
 
 				/* 指定リピータに接続する */
 				i = 0;
-				system("sudo systemctl restart auto_repmon2.service");
+				system("sudo systemctl restart auto_repmon_light.service");
 				usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 				num = getlinkdata();
 				for (i = 0; i < num; i++)

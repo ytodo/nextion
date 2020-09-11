@@ -1,9 +1,0 @@
-#!/bin/bash
-#	dmonitor
-#	auto update of repeater_mon.html
-
-while :
-do
-repeater_mon
-sleep 5
-done

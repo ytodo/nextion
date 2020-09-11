@@ -28,13 +28,13 @@ clean	:
 # Install files
 install	:
 	sudo mv $(PROGRAM)		/usr/local/bin
-	sudo cp auto_repmon2		/usr/local/bin
-	sudo cp auto_repmon2.service	/etc/systemd/system
 	sudo cp nextion.service		/etc/systemd/system
+	sudo systemctl daemon-reload
 	sudo killall -q -s 9 dmonitor
 	sudo systemctl stop auto_repmon
 	sudo systemctl disable auto_repmon
-	sudo systemctl daemon-reload
+	sudo systemctl enable auto_repmon_light
+	sudo systemctl restart auto_repmon_light
 	sudo systemctl enable nextion.service
 	sudo systemctl restart nextion.service
 
