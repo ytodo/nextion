@@ -48,7 +48,7 @@
 #define	CHARSIZE	32
 #define	VERSION		1
 #define	VERSUB		6
-#define RELEASE		4
+#define RELEASE		5
 
 /* Variables */
 typedef struct {                  			// 構造体の宣言

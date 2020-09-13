@@ -100,6 +100,7 @@ int getstatus()
 		if (strstr(line, "dmonitor end") != NULL)
 		{
 			strcpy(status, "Disconnected");
+			strcpy(rptcall, "NONE");
 		}
 
 		/* 無線機の接続状況 */
@@ -130,7 +131,7 @@ int getstatus()
 	pclose(fp);
 
 	/* 接続先の表示*/
-	if ((strncmp(rptcall, "J", 1) == 0) && (strncmp(rptcall, rptcallpre, 8) != 0))
+	if (((strncmp(rptcall, "J", 1) == 0) || (strncmp(rptcall, "NONE", 4) == 0)) && (strncmp(rptcall, rptcallpre, 8) != 0))
 	{
 		strncpy(rptcallpre, rptcall, 8);
 		sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);

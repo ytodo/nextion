@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 
 	/* 現在利用可能なリピータリストの取得*/
 	system("sudo systemctl restart auto_repmon_light.service");
+	system("sudo systemctl restart rpt_conn.service");
 	usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 	num = getlinkdata();
 
@@ -127,8 +128,10 @@ int main(int argc, char *argv[])
 			switch (flag) {
 			case 1:						// nextionドライバのリスタート
 				sendcmd("dim=10");
+				system("sudo systemctl restart rpt_conn.service");
+				system("sudo systemctl restart auto_repmon_light.service");
 				system("sudo killall -q -s 2 dmonitor");
-				system("sudo rm /var/run/dmonitor.pid");
+				system("sudo rm -f /var/run/dmonitor.pid");
 				system("sudo systemctl restart nextion.service");
 				break;
 
@@ -204,9 +207,10 @@ int main(int argc, char *argv[])
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
 						/* 現在稼働中のdmonitor をKILL */
-						system("sudo systemctl stop rpt_conn");
+						system("sudo systemctl stop rpt_conn.service");
 						system("sudo killall -q -s 2 dmonitor");
-						system("sudo rm /var/run/dmonitor.pid");
+						system("sudo rm -f /var/run/dmonitor.pid");
+						system("sudo killall -q -s 9 rpt_conn");
 						system("sudo rm -f /var/run/rpt_conn.pid");
 						system("sudo rig_port_check");
 						usleep(microsec * 10);
@@ -229,6 +233,13 @@ int main(int argc, char *argv[])
 
 		/* ステータス・ラストハードの読み取りと表示 */
 		getstatus();
+		if (strncmp(status, "Disconnected", 12) == 0)
+		{
+			system("sudo systemctl restart rpt_conn");
+			system("sudo systemctl restart auto_repmon");
+			system("sudo killall -q -s 2 dmonitor");
+			system("sudo rm -f /var/nun/dmonitor.pid");
+		}
 
 		/* CPUの速さによるループ調整（nextion.ini:SLEEPTIME）*/
 	        usleep(microsec * 5);
