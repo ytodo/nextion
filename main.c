@@ -213,7 +213,6 @@ int main(int argc, char *argv[])
 						system("sudo killall -q -s 9 rpt_conn");
 						system("sudo rm -f /var/run/rpt_conn.pid");
 						system("sudo rig_port_check");
-						usleep(microsec * 10);
 
 						/* 接続コマンドの実行 */
 						sprintf(command, "sudo /usr/bin/dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
@@ -233,6 +232,8 @@ int main(int argc, char *argv[])
 
 		/* ステータス・ラストハードの読み取りと表示 */
 		getstatus();
+
+		/* 無線機からのコマンドを接続解除の間受け取る準備 */
 		if (strncmp(status, "Disconnected", 12) == 0)
 		{
 			system("sudo systemctl restart rpt_conn");

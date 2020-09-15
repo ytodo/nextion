@@ -55,6 +55,7 @@ int getstatus()
 		{
 			if (strncmp(mycall, tmpptr + 3, 8) == 0) strcpy(status, tmpstat);
 			stat = 0;
+			break;
 		}
 
 		/* 無線機から送信したときのログを出力 */
@@ -68,12 +69,21 @@ int getstatus()
 			strncat(status, tmpptr - 9, 8);		// コールサイン
 			strcat(status, tmpstr);			// Terminal-AP Mode/DVAP Mode
 			stat = 0;
+			break;
+		}
+
+		/* dmonitorの開始とバージョンを取得 */
+		if ((tmpptr = strstr(line, "dmonitor start")) != NULL)
+		{
+			strncpy(status, tmpptr, 21);
+			break;
 		}
 
 		/* どこに接続したかを取得 */
 		if ((tmpptr = strstr(line, "Connected")) != NULL)
 		{
 			strncpy(rptcall, tmpptr + 13, 8);
+			break;
 		}
 
 		/* Last packet wrong ステータスの場合、文字を黄色に */
@@ -83,17 +93,12 @@ int getstatus()
 			break;
 		}
 
-		/* dmonitorの開始とバージョンを取得 */
-		if ((tmpptr = strstr(line, "dmonitor start")) != NULL)
-		{
-			strncpy(status, tmpptr, 21);
-		}
-
 		/* バッファの拡張のサイズを取得 */
 		if ((tmpptr = strstr(line, "New FiFo buffer")) != NULL)
 		{
 			strcpy(status, tmpptr + 9);
 			status[strlen(status) - 1] = '\0';
+			break;
 		}
 
 		/* 接続解除を取得 */
@@ -107,6 +112,7 @@ int getstatus()
 		if ((debug == 1) && (strstr(line, "init/re-init") != NULL))
 		{
 			strcpy(status, "RIG initializing is done.");
+			break;
 		}
 
 		/* DVAP使用時の周波数 */
@@ -117,6 +123,7 @@ int getstatus()
 			strcat(status, ".");
 			strncat(status, tmpptr + 17, 3);
 			strcat(status, " MHz");
+			break;
 		}
 
 		/* ドロップパケット比の表示 */
@@ -126,6 +133,7 @@ int getstatus()
 			strcat(status, tmpptr + 17);
 			status[strlen(status) - 1] = '\0';
 			stat = 1;
+			break;
 		}
 	}
 	pclose(fp);
