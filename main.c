@@ -213,6 +213,7 @@ int main(int argc, char *argv[])
 						system("sudo killall -q -s 9 rpt_conn");
 						system("sudo rm -f /var/run/rpt_conn.pid");
 						system("sudo rig_port_check");
+						usleep(microsec * 10);
 
 						/* 接続コマンドの実行 */
 						sprintf(command, "sudo /usr/bin/dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);

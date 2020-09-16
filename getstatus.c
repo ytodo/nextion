@@ -1,4 +1,6 @@
-/************************************************************ dmonitor のログファイルよりラストハード及び 状況を取得し変数status に入れる
+/************************************************************
+ dmonitor のログファイルよりラストハード及び
+ 状況を取得し変数status に入れる
  ************************************************************/
 
 #include "dmonitor.h"
@@ -72,13 +74,23 @@ int getstatus()
 		if ((tmpptr = strstr(line, "dmonitor start")) != NULL)
 		{
 			strncpy(status, tmpptr, 21);
-			break;
 		}
 
 		/* どこに接続したかを取得 */
 		if ((tmpptr = strstr(line, "Connected")) != NULL)
 		{
 			strncpy(rptcall, tmpptr + 13, 8);
+		}
+
+		/* DVAP使用時の周波数 */
+		if ((debug == 1) && ((tmpptr = strstr(line, "Frequency Set")) != NULL))
+		{
+			strcpy(status, "DVAP FREQ. ");
+			strncat(status, tmpptr + 14, 3);
+			strcat(status, ".");
+			strncat(status, tmpptr + 17, 3);
+			strcat(status, " MHz");
+			break;
 		}
 
 		/* Last packet wrong ステータスの場合、文字を黄色に */
@@ -98,17 +110,6 @@ int getstatus()
 		if ((debug == 1) && (strstr(line, "init/re-init") != NULL))
 		{
 			strcpy(status, "RIG initializing is done.");
-		}
-
-		/* DVAP使用時の周波数 */
-		if ((debug == 1) && ((tmpptr = strstr(line, "Frequency Set")) != NULL))
-		{
-			strcpy(status, "DVAP FREQ. ");
-			strncat(status, tmpptr + 14, 3);
-			strcat(status, ".");
-			strncat(status, tmpptr + 17, 3);
-			strcat(status, " MHz");
-			break;
 		}
 
 		/* UNLINKコマンドの処理 */
