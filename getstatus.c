@@ -55,7 +55,6 @@ int getstatus()
 		{
 			if (strncmp(mycall, tmpptr + 3, 8) == 0) strcpy(status, tmpstat);
 			stat = 0;
-			break;
 		}
 
 		/* 無線機から送信したときのログを出力 */
@@ -69,7 +68,6 @@ int getstatus()
 			strncat(status, tmpptr - 9, 8);		// コールサイン
 			strcat(status, tmpstr);			// Terminal-AP Mode/DVAP Mode
 			stat = 0;
-			break;
 		}
 
 		/* dmonitorの開始とバージョンを取得 */
@@ -83,14 +81,12 @@ int getstatus()
 		if ((tmpptr = strstr(line, "Connected")) != NULL)
 		{
 			strncpy(rptcall, tmpptr + 13, 8);
-			break;
 		}
 
 		/* Last packet wrong ステータスの場合、文字を黄色に */
 		if ((stat == 1) && (debug == 1) && (strstr(line, "Last packet wrong") != NULL))
 		{
 			strcpy(status, "Last packet is wrong...");
-			break;
 		}
 
 		/* バッファの拡張のサイズを取得 */
@@ -98,21 +94,12 @@ int getstatus()
 		{
 			strcpy(status, tmpptr + 9);
 			status[strlen(status) - 1] = '\0';
-			break;
-		}
-
-		/* 接続解除を取得 */
-		if (strstr(line, "dmonitor end") != NULL)
-		{
-			strcpy(status, "Disconnected");
-			strcpy(rptcall, "NONE");
 		}
 
 		/* 無線機の接続状況 */
 		if ((debug == 1) && (strstr(line, "init/re-init") != NULL))
 		{
 			strcpy(status, "RIG initializing is done.");
-			break;
 		}
 
 		/* DVAP使用時の周波数 */
@@ -123,7 +110,19 @@ int getstatus()
 			strcat(status, ".");
 			strncat(status, tmpptr + 17, 3);
 			strcat(status, " MHz");
-			break;
+		}
+
+		/* UNLINKコマンドの処理 */
+		if (strstr(line, "my2:UNLK") != NULL)
+		{
+			strcpy(status, "UNLINK FROM RIG");
+		}
+
+		/* 接続解除を取得 */
+		if (strstr(line, "dmonitor end") != NULL)
+		{
+			strcpy(status, "Disconnected");
+			strcpy(rptcall, "NONE");
 		}
 
 		/* ドロップパケット比の表示 */
@@ -133,8 +132,9 @@ int getstatus()
 			strcat(status, tmpptr + 17);
 			status[strlen(status) - 1] = '\0';
 			stat = 1;
-			break;
 		}
+
+
 	}
 	pclose(fp);
 

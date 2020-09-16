@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
 	/* 現在利用可能なリピータリストの取得*/
 	system("sudo systemctl restart auto_repmon_light.service");
 	system("sudo systemctl restart rpt_conn.service");
-	usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 	num = getlinkdata();
+	usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 
 	/* GPIO シリアルポートのオープン*/
 	fd = openport(SERIALPORT, BAUDRATE);
@@ -234,12 +234,12 @@ int main(int argc, char *argv[])
 		getstatus();
 
 		/* 無線機からのコマンドを接続解除の間受け取る準備 */
-		if (strncmp(status, "Disconnected", 12) == 0)
+		if (strcmp(status, "UNLINK FROM RIG") == 0)
 		{
-			system("sudo systemctl restart rpt_conn");
-			system("sudo systemctl restart auto_repmon");
-			system("sudo killall -q -s 2 dmonitor");
-			system("sudo rm -f /var/nun/dmonitor.pid");
+                        system("sudo systemctl restart rpt_conn");
+                        system("sudo systemctl restart auto_repmon_light");
+                        system("sudo killall -q -s 2 dmonitor");
+                        system("sudo rm -f /var/nun/dmonitor.pid");
 		}
 
 		/* CPUの速さによるループ調整（nextion.ini:SLEEPTIME）*/
