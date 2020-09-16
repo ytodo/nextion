@@ -31,7 +31,7 @@ int getstatus()
 		memset(&status[0], '\0', sizeof(status));
 		memset(&tmpstr[0], '\0', sizeof(tmpstr));
 
-		/* dmonitorへの信号がZRからかGW側からかを判断して status 代入の準備のみする */
+		/* <1>dmonitorへの信号がZRからかGW側からかを判断して status 代入の準備のみする */
 		if ((tmpptr = strstr(line, "from ZR")) != NULL || (tmpptr = strstr(line, "from GW")) != NULL)
 		{
 			memset(&tmpstat[0], '\0', sizeof(tmpstat));
@@ -50,14 +50,14 @@ int getstatus()
 			}
 		}
 
-		/* rpt2, rpt1, ur, my の行が見つかったら,コールサインを照合して前段のtmpstatをstatusに代入 */
+		/* <2>rpt2, rpt1, ur, my の行が見つかったら,コールサインを照合して前段のtmpstatをstatusに代入 */
 		if ((tmpptr = strstr(line, "my:")) != NULL)
 		{
 			if (strncmp(mycall, tmpptr + 3, 8) == 0) strcpy(status, tmpstat);
 			stat = 0;
 		}
 
-		/* 無線機から送信したときのログを出力 */
+		/* <3>無線機から送信したときのログを出力 */
 		if ((tmpptr = strstr(line, "from Rig")) != NULL || (tmpptr = strstr(line, "from DVAP")) != NULL)
 		{
 			if (strncmp("Rig",  tmpptr + 5, 3) == 0) strncpy(tmpstr, " TM", 3);
@@ -70,19 +70,19 @@ int getstatus()
 			stat = 0;
 		}
 
-		/* dmonitorの開始とバージョンを取得 */
+		/* <4>dmonitorの開始とバージョンを取得 */
 		if ((tmpptr = strstr(line, "dmonitor start")) != NULL)
 		{
 			strncpy(status, tmpptr, 21);
 		}
 
-		/* どこに接続したかを取得 */
+		/* <5>どこに接続したかを取得 */
 		if ((tmpptr = strstr(line, "Connected")) != NULL)
 		{
 			strncpy(rptcall, tmpptr + 13, 8);
 		}
 
-		/* DVAP使用時の周波数 */
+		/* <6>DVAP使用時の周波数 */
 		if ((debug == 1) && ((tmpptr = strstr(line, "Frequency Set")) != NULL))
 		{
 			strcpy(status, "DVAP FREQ. ");
@@ -93,39 +93,39 @@ int getstatus()
 			break;
 		}
 
-		/* Last packet wrong ステータスの場合、文字を黄色に */
+		/* <7>Last packet wrong ステータスの場合、文字を黄色に */
 		if ((stat == 1) && (debug == 1) && (strstr(line, "Last packet wrong") != NULL))
 		{
 			strcpy(status, "Last packet is wrong...");
 		}
 
-		/* バッファの拡張のサイズを取得 */
+		/* <8>バッファの拡張のサイズを取得 */
 		if ((tmpptr = strstr(line, "New FiFo buffer")) != NULL)
 		{
 			strcpy(status, tmpptr + 9);
 			status[strlen(status) - 1] = '\0';
 		}
 
-		/* 無線機の接続状況 */
+		/* <9>無線機の接続状況 */
 		if ((debug == 1) && (strstr(line, "init/re-init") != NULL))
 		{
 			strcpy(status, "RIG initializing is done.");
 		}
 
-		/* UNLINKコマンドの処理 */
+		/* <10>UNLINKコマンドの処理 */
 		if (strstr(line, "my2:UNLK") != NULL)
 		{
 			strcpy(status, "UNLINK FROM RIG");
 		}
 
-		/* 接続解除を取得 */
+		/* <11>接続解除を取得 */
 		if (strstr(line, "dmonitor end") != NULL)
 		{
 			strcpy(status, "Disconnected");
 			strcpy(rptcall, "NONE");
 		}
 
-		/* ドロップパケット比の表示 */
+		/* <12>ドロップパケット比の表示 */
 		if ((debug == 1) && ((tmpptr = strstr(line, "drop packet")) != NULL))
 		{
 			strcpy(status, "Drop PKT ");
@@ -133,8 +133,6 @@ int getstatus()
 			status[strlen(status) - 1] = '\0';
 			stat = 1;
 		}
-
-
 	}
 	pclose(fp);
 
