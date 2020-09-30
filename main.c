@@ -130,6 +130,7 @@ int main(int argc, char *argv[])
 				sendcmd("dim=10");
 				system("sudo systemctl restart rpt_conn.service");
 				system("sudo systemctl restart auto_repmon_light.service");
+				system("sudo /var/www/cgi-bin/repUpd");
 				system("sudo killall -q -s 2 dmonitor");
 				system("sudo rm -f /var/run/dmonitor.pid");
 				system("sudo systemctl restart nextion.service");
