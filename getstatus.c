@@ -31,24 +31,49 @@ int getstatus()
 		memset(&status[0], '\0', sizeof(status));
 		memset(&tmpstr[0], '\0', sizeof(tmpstr));
 
-		/* <1>dmonitorへの信号がZRからかGW側からかを判断して status 代入の準備のみする */
-		if ((tmpptr = strstr(line, "from ZR")) != NULL || (tmpptr = strstr(line, "from GW")) != NULL)
-		{
-			memset(&tmpstat[0], '\0', sizeof(tmpstat));
+                /* status に関する文字列があったら */
+                if ((tmpptr = strstr(line, "from")) != NULL)
+                {
 
-			/* MyCallsignの取得 */
-			memset(&mycall[0], '\0', sizeof(mycall));
-			strncpy(mycall, tmpptr - 9, 8);		// My Callsign
+                        /* <1-1>dmonitorへの信号がZRからかGW側からかを判断して status 代入の準備のみする */
+                        if ((tmpptr = strstr(line, "from ZR")) != NULL || (tmpptr = strstr(line, "from GW")) != NULL)
+                        {
+                                memset(&tmpstat[0], '\0', sizeof(tmpstat));
 
-			/* MyCallsignが単なるループではない場合 */
-			if (strncmp(mycall, mycallpre, 8) != 0)
-			{
-				strncpy(tmpstat, line, 12);      	// 日付時分
-				strcat(tmpstat, " ");
-				strncat(tmpstat, mycall, 8); 		// コールサイン
-				strncat(tmpstat, tmpptr + 4, 3);	// ZR/GW
-			}
-		}
+                                /* MyCallsignの取得 */
+                                memset(&mycall[0], '\0', sizeof(mycall));
+                                strncpy(mycall, tmpptr - 9, 8);         // My Callsign
+
+                                /* MyCallsignが単なるループではない場合 */
+                                if (strncmp(mycall, mycallpre, 8) != 0)
+                                {
+                                        strncpy(tmpstat, line, 12);             // 日付時分
+                                        strcat(tmpstat, " ");
+                                        strncat(tmpstat, mycall, 8);            // コールサイン
+                                        strncat(tmpstat, tmpptr + 4, 3);        // ZR/GW
+                                }
+                        }
+
+                        /* <2>無線機から送信したときのログを出力 */
+                        if ((tmpptr = strstr(line, "from Rig")) != NULL || (tmpptr = strstr(line, "from DVAP")) != NULL)
+                        {
+                                if (strncmp("Rig",  tmpptr + 5, 3) == 0) strncpy(tmpstr, " TM", 3);
+                                if (strncmp("DVAP", tmpptr + 5, 4) == 0) strncpy(tmpstr, " DV", 3);
+
+                                strncpy(status, line, 12);              // 日付時分
+                                strcat(status, " ");
+                                strncat(status, tmpptr - 9, 8);         // コールサイン
+                                strcat(status, tmpstr);                 // Terminal-AP Mode/DVAP Mode
+                                stat = 0;
+                        }
+
+                        /* <3>どこに接続したかを取得 */
+                        if ((tmpptr = strstr(line, "Connected")) != NULL)
+                        {
+                                strncpy(rptcall, tmpptr + 13, 8);
+                                rptcall[8] = '\0';
+                        }
+                }
 
 		/* <2>rpt2, rpt1, ur, my の行が見つかったら,コールサインを照合して前段のtmpstatをstatusに代入 */
 		if ((tmpptr = strstr(line, "my:")) != NULL)
@@ -57,29 +82,10 @@ int getstatus()
 			stat = 0;
 		}
 
-		/* <3>無線機から送信したときのログを出力 */
-		if ((tmpptr = strstr(line, "from Rig")) != NULL || (tmpptr = strstr(line, "from DVAP")) != NULL)
-		{
-			if (strncmp("Rig",  tmpptr + 5, 3) == 0) strncpy(tmpstr, " TM", 3);
-			if (strncmp("DVAP", tmpptr + 5, 4) == 0) strncpy(tmpstr, " DV", 3);
-
-			strncpy(status, line, 12);		// 日付時分
-			strcat(status, " ");
-			strncat(status, tmpptr - 9, 8);		// コールサイン
-			strcat(status, tmpstr);			// Terminal-AP Mode/DVAP Mode
-			stat = 0;
-		}
-
 		/* <4>dmonitorの開始とバージョンを取得 */
 		if ((tmpptr = strstr(line, "dmonitor start")) != NULL)
 		{
 			strncpy(status, tmpptr, 21);
-		}
-
-		/* <5>どこに接続したかを取得 */
-		if ((tmpptr = strstr(line, "Connected")) != NULL)
-		{
-			strncpy(rptcall, tmpptr + 13, 8);
 		}
 
 		/* <6>DVAP使用時の周波数 */
@@ -159,6 +165,8 @@ int getstatus()
 		sendcmd(command);
 		sendcmd("MAIN.t2.txt=MAIN.stat1.txt");
 		sendcmd("MAIN.t3.txt=MAIN.stat2.txt");
+                sendcmd("USERS.t8.txt=DMON.stat1.txt");
+                sendcmd("USERS.t9.txt=DMON.stat2.txt");
 
 		/* statusをクリアする */
 		status[0] = '\0';
