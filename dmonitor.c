@@ -7,6 +7,7 @@ repeater_t	linkdata[LISTSIZE]	= {'\0'};
 char		station[CHARSIZE]	= {'\0'};
 char		ipaddress[CHARSIZE]	= {'\0'};
 char		default_rpt[CHARSIZE]	= {'\0'};
+char		nextion_port[CHARSIZE]	= {'\0'};
 char		status[CHARSIZE]	= {'\0'};
 char		statpre[CHARSIZE]	= {'\0'};
 char		rptcall[CHARSIZE]	= {'\0'};

@@ -120,9 +120,14 @@ int	getconfig(void)
 	{
 		if ((ret = strstr(line, "STATION"))     != NULL) sscanf(line, "STATION=%[^\n]",     station);
 		if ((ret = strstr(line, "DEFAULT_RPT")) != NULL) sscanf(line, "DEFAULT_RPT=%[^\n]", default_rpt);
+		if ((ret = strstr(line, "PORT"))	!= NULL) sscanf(line, "PORT=%[^\n]",	    nextion_port);
 		if ((ret = strstr(line, "SLEEPTIME"))   != NULL) sscanf(line, "SLEEPTIME=%d",       &microsec);
 		if ((ret = strstr(line, "DEBUG"))       != NULL) sscanf(line, "DEBUG=%d",           &debug);
 	}
 	fclose(fp);
+
+printf("%s\n", nextion_port);
+
+
 	return (0);
 }

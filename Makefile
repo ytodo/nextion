@@ -29,10 +29,11 @@ clean	:
 install	:
 	@echo "Compiling software...and install."
 	@cd /home/$(USER)/nextion
-	@make
+	@make > /dev/null
 	@sudo mv $(PROGRAM)		/usr/local/bin
 	@sudo cp nextion.service	/etc/systemd/system
 	@sudo systemctl daemon-reload
+	@sudo cp nextion.ini 		/etc
 
 	@echo "Disable auto_repmon service to use auto_repmon_light."
 	@sudo systemctl stop auto_repmon.service
@@ -59,10 +60,11 @@ update	:
 	@git pull
 	@make > /dev/null
 	@sudo mv $(PROGRAM)             /usr/local/bin
-	@sudo cp nextion.service        /etc/systemd/system
-	@sudo systemctl daemon-reload
 
-	@sudo killall -q -9 dmonitor
+	@echo "Disable auto_repmon service to use auto_repmon_light."
+	@sudo systemctl stop auto_repmon.service
+	@sudo systemctl disable auto_repmon.service > /dev/null
+
 	@echo "Starting D*MONITOR nextion service..."
 	@sudo systemctl enable nextion.service
 	@sudo systemctl restart nextion.service

@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	char	statpre[32]	= {'\0'};
 	char	concall[8]	= {'\0'};
 	char	concallpre[8]	= {'\0'};
-	char	*SERIALPORT	= "/dev/ttyAMA0";
+	char	SERIALPORT[16]	= {'\0'};
 
 
 	/* 環境設定ファイルの読み取り */
@@ -50,6 +50,16 @@ int main(int argc, char *argv[])
 	usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 
 	/* GPIO シリアルポートのオープン*/
+	if ((nextion_port != NULL) && (strlen(nextion_port) != 0))
+	{
+		/* nextion.iniにポート指定が有る場合 */
+		sprintf(&SERIALPORT[0], "/dev/%s", nextion_port);
+	}
+	else
+	{	/* ポート指定が無い場合 */
+		strcpy(SERIALPORT, "/dev/ttyAMA0");
+
+	}
 	fd = openport(SERIALPORT, BAUDRATE);
 
 	/* メインスクリーンの初期設定 */

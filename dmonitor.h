@@ -58,11 +58,12 @@ typedef struct {                  			// 構造体の宣言
 	char	port[6];
 	char	zone[9];
 }	repeater_t;
-extern	repeater_t	linkdata[LISTSIZE];	// 構造体配列の宣言
+extern	repeater_t	linkdata[LISTSIZE];		// 構造体配列の宣言(リピータリスト）
 
-extern	char		station[CHARSIZE];
+extern	char		station[CHARSIZE];		// 
 extern	char		ipaddress[CHARSIZE];
 extern	char		default_rpt[CHARSIZE];
+extern 	char		nextion_port[CHARSIZE];
 extern	char		status[CHARSIZE];
 extern	char		statpre[CHARSIZE];
 extern	char		rptcall[CHARSIZE];
