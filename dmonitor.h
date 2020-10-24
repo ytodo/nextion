@@ -65,18 +65,26 @@ extern	char		ipaddress[CHARSIZE];
 extern	char		default_rpt[CHARSIZE];
 extern 	char		nextion_port[CHARSIZE];
 extern	char		status[CHARSIZE];
-extern	char		statpre[CHARSIZE];
+extern	char		statpre1[CHARSIZE];
+extern	char		statpre2[CHARSIZE];
+extern	char		statpre3[CHARSIZE];
 extern	char		rptcall[CHARSIZE];
-extern	char		rptcallpre[CHARSIZE];
+extern	char		rptcallpre1[CHARSIZE];
+extern	char		rptcallpre2[CHARSIZE];
+extern	char		dmon_pid[6];
+extern	char		dmon_pid_cur[6];
 extern	unsigned int	microsec;
 extern	unsigned int	debug;
 extern	unsigned int	stat;
+extern	unsigned int	linecounter;
 
 /* Functions */
 int	getlinkdata();
 int	getstatus();
 int	getconfig();
 int	getipaddr();
+int	disp_stat();
+int	disp_rpt();
 int	getusers(char ret[16]);
 int	getactive(char ret[16]);
 int	openport(char *devicename, long baudrate);

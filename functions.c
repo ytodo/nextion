@@ -126,8 +126,5 @@ int	getconfig(void)
 	}
 	fclose(fp);
 
-printf("%s\n", nextion_port);
-
-
 	return (0);
 }

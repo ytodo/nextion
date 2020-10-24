@@ -64,6 +64,8 @@ update	:
 	@echo "Disable auto_repmon service to use auto_repmon_light."
 	@sudo systemctl stop auto_repmon.service
 	@sudo systemctl disable auto_repmon.service > /dev/null
+	@sudo systemctl stop lighttpd.service
+	@sudo systemctl disable lighttpd.service
 
 	@echo "Starting D*MONITOR nextion service..."
 	@sudo systemctl enable nextion.service

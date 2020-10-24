@@ -43,13 +43,15 @@ int main(int argc, char *argv[])
 	getconfig();
 	getipaddr();
 
-	/* 現在利用可能なリピータリストの取得*/
-	system("sudo systemctl restart auto_repmon_light.service");
-	system("sudo systemctl restart rpt_conn.service");
-	num = getlinkdata();
-	usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
+	/* 関連するサービスのコントロール */
+	system("sudo systemctl stop auto_repmon");
+//	system("sudo systemctl restart auto_repmon_light");
+//	system("sudo systemctl restart rpt_conn");
 
-	/* GPIO シリアルポートのオープン*/
+	/* 現在利用可能なリピータリストの取得*/
+	num = getlinkdata();
+
+	/* シリアルポートのオープン nextion.iniより */
 	if ((nextion_port != NULL) && (strlen(nextion_port) != 0))
 	{
 		/* nextion.iniにポート指定が有る場合 */
@@ -76,11 +78,14 @@ int main(int argc, char *argv[])
 	sendcmd("t1.txt=\"LINK TO : NONE\"");
 	sendcmd("link.txt=\"LINK TO : NONE\"");
 
-	/* 読み込んだリピータの総数を表示 */
-	sprintf(command, "MAIN.stat1.txt=\"Read %d Repeaters\"", num);
+	/* Nextionの初期化と読み込んだリピータ総数の表示 */
+	sendcmd("MAIN.t2.txt=\"\"");
+	sendcmd("MAIN.t3.txt=\"\"");
+	sendcmd("MAIN.stat1.txt=\"\"");
+	sendcmd("MAIN.stat2.txt=\"\"");
+	sprintf(command, "MAIN.stat1.txt=\"Reading %d Repeaters\"", num);
 	sendcmd(command);
 	sendcmd("t2.txt=MAIN.stat1.txt");
-	sendcmd("t3.txt=\"\"");
 
 	/* 全リストを空にした後リピータ数分の文字配列にコールサインを格納 */
 	for (i = 0; i < 227; i++)
@@ -138,18 +143,18 @@ int main(int argc, char *argv[])
 			switch (flag) {
 			case 1:						// nextionドライバのリスタート
 				sendcmd("dim=10");
-				system("sudo systemctl restart rpt_conn.service");
-				system("sudo systemctl restart auto_repmon_light.service");
-				system("sudo /var/www/cgi-bin/repUpd");
-				system("sudo killall -q -s 2 dmonitor");
+				system("sudo killall -q -2 dmonitor");
 				system("sudo rm -f /var/run/dmonitor.pid");
-				system("sudo systemctl restart nextion.service");
+				system("sudo killall -q -9 sleep");
+				system("sudo /var/www/cgi-bin/repUpd");
+				system("sudo systemctl restart nextion");
 				break;
 
 			case 2:						// 再起動
 				sendcmd("dim=10");
 				system("sudo killall -q -s 2 dmonitor");
 				system("sudo rm /var/run/dmonitor.pid");
+				system("sudo killall -q -9 sleep");
 				system("sudo shutdown -r now");
 				break;
 
@@ -157,11 +162,11 @@ int main(int argc, char *argv[])
 				sendcmd("dim=10");
 				system("sudo killall -q -s 2 dmonitor");
 				system("sudo rm /var/run/dmonitor.pid");
+				system("sudo killall -q -9 sleep");
 				system("sudo shutdown -h now");
 				break;
 
-			case 4:						// OS及びdmonitorのアップデート
-
+			case 4:						// dmonitorのアップデート
 				/* [Update]ボタンの表示を変える */
 				sendcmd("SYSTEM.b4.bco=63488");
 				sendcmd("SYSTEM.b4.pco=65535");
@@ -170,13 +175,13 @@ int main(int argc, char *argv[])
 				/* システムコマンドの実行 */
 				system("sudo killall -q -s 2 dmonitor");
 				system("sudo rm /var/run/dmonitor.pid");
-				system("sudo apt clean && sudo apt update && suod apt install dmonitor -y");
+				system("sudo apt clean && sudo apt update && sudo apt install dmonitor -y");
 
 				/* [REBOOT]の表示及びrebootコマンド発行 */
 				sendcmd("SYSTEM.b4.bco=64512");
 				sendcmd("SYSTEM.b4.txt=\"Restarting...\"");
 				sendcmd("dim=10");
-				system("sudo systemctl restart nextion.service");
+				system("sudo systemctl restart nextion");
 				break;
 
 			case 5:						// バッファの増加
@@ -193,7 +198,7 @@ int main(int argc, char *argv[])
 
 			case 7:						// Remote Usersパネルへ接続ユーザ表示
 				sendcmd("page USERS");
-				sprintf(command, "USERS.b0.txt=\"LINKED USERS on %s\"", rptcall);
+				sprintf(command, "USERS.b0.txt=\"LINKED USERS on %s\"", rptcallpre1);
 				sendcmd(command);
 				getusers(concall);
 				break;
@@ -204,7 +209,7 @@ int main(int argc, char *argv[])
 				if ((strncmp(concall, "J", 1) != 0) && (strncmp(concall, "Retrun", 6) != 0))
 				{
 					strncpy(concall, "Return", 6);
-				}
+				}	
 				break;
 
 			default:
@@ -218,13 +223,13 @@ int main(int argc, char *argv[])
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
 						/* 現在稼働中のdmonitor をKILL */
-						system("sudo systemctl stop rpt_conn.service");
-						system("sudo killall -q -s 2 dmonitor");
+//						system("sudo systemctl stop rpt_conn");
+						system("sudo killall -q -2 dmonitor");
 						system("sudo rm -f /var/run/dmonitor.pid");
-						system("sudo killall -q -s 9 rpt_conn");
-						system("sudo rm -f /var/run/rpt_conn.pid");
+//						system("sudo killall -q -9 rpt_conn");
+//						system("sudo rm -f /var/run/rpt_conn.pid");
 						system("sudo rig_port_check");
-						usleep(microsec * 10);
+						usleep(microsec * 50);
 
 						/* 接続コマンドの実行 */
 						sprintf(command, "sudo /usr/bin/dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
@@ -237,10 +242,10 @@ int main(int argc, char *argv[])
 			flag = 0;
 		}
 
+
 		/*
 		 * 送信処理
 		 */
-
 
 		/* ステータス・ラストハードの読み取りと表示 */
 		getstatus();
@@ -248,8 +253,7 @@ int main(int argc, char *argv[])
 		/* 無線機からのコマンドを接続解除の間受け取る準備 */
 		if (strcmp(status, "UNLINK FROM RIG") == 0)
 		{
-                        system("sudo systemctl restart rpt_conn");
-                        system("sudo systemctl restart auto_repmon_light");
+//			system("sudo systemctl restart rpt_conn");
                         system("sudo killall -q -s 2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
 		}
