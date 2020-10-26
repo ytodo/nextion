@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	getipaddr();
 
 	/* 関連するサービスのコントロール */
-	system("sudo systemctl stop auto_repmon");
+	system("sudo systemctl restart auto_repmon");
 //	system("sudo systemctl restart auto_repmon_light");
 //	system("sudo systemctl restart rpt_conn");
 
@@ -145,6 +145,7 @@ int main(int argc, char *argv[])
 				sendcmd("dim=10");
 				system("sudo killall -q -2 dmonitor");
 				system("sudo rm -f /var/run/dmonitor.pid");
+				system("sudo killall -q -9 repeater_scan");
 				system("sudo killall -q -9 sleep");
 				system("sudo /var/www/cgi-bin/repUpd");
 				system("sudo systemctl restart nextion");
@@ -152,16 +153,18 @@ int main(int argc, char *argv[])
 
 			case 2:						// 再起動
 				sendcmd("dim=10");
-				system("sudo killall -q -s 2 dmonitor");
+				system("sudo killall -q -2 dmonitor");
 				system("sudo rm /var/run/dmonitor.pid");
+				system("sudo killall -q -9 repeater_scan");
 				system("sudo killall -q -9 sleep");
 				system("sudo shutdown -r now");
 				break;
 
 			case 3:						// シャットダウン
 				sendcmd("dim=10");
-				system("sudo killall -q -s 2 dmonitor");
+				system("sudo killall -q -2 dmonitor");
 				system("sudo rm /var/run/dmonitor.pid");
+				system("sudo killall -q -9 repeater_scan");
 				system("sudo killall -q -9 sleep");
 				system("sudo shutdown -h now");
 				break;
@@ -173,8 +176,9 @@ int main(int argc, char *argv[])
 				sendcmd("SYSTEM.b4.txt=\"Checking Update\"");
 
 				/* システムコマンドの実行 */
-				system("sudo killall -q -s 2 dmonitor");
+				system("sudo killall -q -2 dmonitor");
 				system("sudo rm /var/run/dmonitor.pid");
+				system("sudo killall -q -9 repeater_scan");
 				system("sudo apt clean && sudo apt update && sudo apt install dmonitor -y");
 
 				/* [REBOOT]の表示及びrebootコマンド発行 */
@@ -254,7 +258,7 @@ int main(int argc, char *argv[])
 		if (strcmp(status, "UNLINK FROM RIG") == 0)
 		{
 //			system("sudo systemctl restart rpt_conn");
-                        system("sudo killall -q -s 2 dmonitor");
+                        system("sudo killall -q -2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
 		}
 

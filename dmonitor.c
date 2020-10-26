@@ -8,6 +8,7 @@ char		station[CHARSIZE]	= {'\0'};
 char		ipaddress[CHARSIZE]	= {'\0'};
 char		default_rpt[CHARSIZE]	= {'\0'};
 char		nextion_port[CHARSIZE]	= {'\0'};
+char		rigtype[8]		= {'\0'};
 char		status[CHARSIZE]	= {'\0'};
 char		statpre1[CHARSIZE]	= {'\0'};
 char		statpre2[CHARSIZE]	= {'\0'};

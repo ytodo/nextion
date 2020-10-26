@@ -16,19 +16,6 @@ int getstatus()
 	char	mycall[8]	= {'\0'};
 	char	mycallpre[8]	= {'\0'};
 	char	tmpstat[32]	= {'\0'};
-	int	i		= 0;
-	int	j		= 0;
-
-	/* 新しいインスタンスが立ち上がるのを待ってPIDを取得 */
-//	usleep(microsec * 50);
-//	if ((fp = popen(pidfile, "r")) != NULL)
-//	{
-//		fgets(dmon_pid, sizeof(dmon_pid), popen(pidfile, "r"));
-//		dmon_pid[strlen(dmon_pid) - 1] = '\0';
-//	} else {
-//		return(EXIT_FAILURE);
-//	}
-//	pclose;
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL)
@@ -40,10 +27,6 @@ int getstatus()
 	/* ファイル内容を配列に取得 */
 	while (fgets(line, sizeof(line), fp) != NULL)
 	{
-		/* dmonitorのPIDが合致する物のみ通す */
-//		sprintf(dmon_pid_cur, "%s", dmon_pid);
-//		if (strstr(line, dmon_pid_cur) == NULL) continue;
-	
 		/* 過去のデータをクリアする  */
 		memset(status, '\0', sizeof(status));
 		memset(tmpstr, '\0', sizeof(tmpstr));
@@ -80,12 +63,8 @@ int getstatus()
 				strncat(tmpstat, mycall, 8);            // コールサイン
 				strncat(tmpstat, tmpptr + 4, 3);        // ZR/GW
 			}
-		}
-		/* <3-2>rpt2, rpt1, ur, my の行が見つかったら,コールサインを照合して前段のtmpstatをstatusに代入 */
-		if ((tmpptr = strstr(line, "my:")) != NULL)
-		{
-			if (strncmp(mycall, tmpptr + 3, 8) == 0) strcpy(status, tmpstat);
-			disp_stat(command);
+			strcpy(status, tmpstat);
+			disp_stat();
 		}
 
 		/* <4>無線機から送信したときのログを出力 */
@@ -95,12 +74,10 @@ int getstatus()
 		{
 			if (strncmp("Rig",  tmpptr + 5, 3) == 0)
 			{
-				if (strncmp("J", tmpptr - 9, 1) == 0)
-				{
+				if (strcmp(rigtype, "ICOM") == 0)
+			 	{
 					strncpy(tmpstr, " TM", 3);
-				}
-				else
-				{
+				} else {
 					strncpy(tmpstr, " RF", 3);
 				}
 			} else {
@@ -122,21 +99,20 @@ int getstatus()
 			if (strstr(line, "DVMEGA")) strcpy(status, "DVMEGA FREQ. ");
 
 			/* ケーブル接続の場合はポートの初期化を表示する */
-			if (strstr(line, "ID-xxPlus"))
+			if (strcmp(rigtype, "ICOM") == 0)
 			{
 				strcpy(status, "RIG initializing is done.");
-				continue;
+			} else {
+				strncat(status, tmpptr + 14, 3);
+				strcat(status, ".");
+				strncat(status, tmpptr + 17, 3);
+				strcat(status, " MHz");
 			}
-
-			strncat(status, tmpptr + 14, 3);
-			strcat(status, ".");
-			strncat(status, tmpptr + 17, 3);
-			strcat(status, " MHz");
 			disp_stat();
 		}
 
 		/* <6>Last packet wrong ステータスの場合、文字を黄色に */
-		if ((stat == 1) && (debug == 1) && (strstr(line, "Last packet wrong") != NULL))
+		if ((debug == 1) && (strstr(line, "Last packet wrong") != NULL))
 		{
 			strcpy(status, "Last packet is wrong...");
 			disp_stat();
@@ -184,7 +160,6 @@ int getstatus()
 		}
 	}
 	pclose(fp);
-
 	return (EXIT_SUCCESS);
 }
 
@@ -200,8 +175,6 @@ int disp_rpt()
 	if (strcmp(rptcall, rptcallpre1) != 0)
 	{
 		strcpy(rptcallpre1, rptcall);
-
-printf("%s\n", rptcall);
 
 		sprintf(command, "MAIN.t1.txt=\"LINK TO : %s\"", rptcall);
 		sendcmd(command);
@@ -224,8 +197,6 @@ int disp_stat()
 		strcpy(statpre3, statpre2);
 		strcpy(statpre2, statpre1);
 		strcpy(statpre1, status);
-
-printf("%s\n", status);
 
 		/* STATUS1 => STATUS2 */
 		sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");

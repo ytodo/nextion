@@ -103,15 +103,16 @@ void recvdata(char *rptcon)
 int	getconfig(void)
 {
 	char	*INIFILE = "/etc/nextion.ini";
+	char	*RIGFILE = "/var/www/rig.type";
 	char	line[64] = {'\0'};
-	int		i = 0;
+	int	i 	 = 0;
 	FILE	*fp;
 	char	*ret;
 
-	/* テーブルをオープンする */
+	/* nextion.iniファイルをオープンする */
 	if ((fp = fopen(INIFILE, "r")) == NULL)
 	{
-		printf("File open error!\n");
+		printf("nextion.ini file open error!\n");
 		return (EXIT_FAILURE);
 	}
 
@@ -125,6 +126,18 @@ int	getconfig(void)
 		if ((ret = strstr(line, "DEBUG"))       != NULL) sscanf(line, "DEBUG=%d",           &debug);
 	}
 	fclose(fp);
+
+	/* rig.typeファイルをオープンする */
+	if ((fp = fopen(RIGFILE, "r")) == NULL)
+	{
+		printf("rig.type file open error!\n");
+	}
+
+	/* 内容を読込み変数に代入する */
+	while ((fgets(line, sizeof(line), fp)) != NULL)
+	{
+		sscanf(line, "%[^\n]", rigtype);
+	}
 
 	return (0);
 }
