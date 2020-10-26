@@ -61,9 +61,7 @@ update	:
 	@make > /dev/null
 	@sudo mv $(PROGRAM)             /usr/local/bin
 
-	@echo "Disable auto_repmon service to use auto_repmon_light."
-	@sudo systemctl stop auto_repmon.service
-	@sudo systemctl disable auto_repmon.service > /dev/null
+	@echo "Disable lighttpd.service."
 	@sudo systemctl stop lighttpd.service
 	@sudo systemctl disable lighttpd.service
 
