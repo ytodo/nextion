@@ -66,6 +66,7 @@ update	:
 	@sudo systemctl disable lighttpd.service
 
 	@echo "Starting D*MONITOR nextion service..."
+	@sudo killall -2 dmonitor
 	@sudo systemctl enable nextion.service
 	@sudo systemctl restart nextion.service
 

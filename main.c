@@ -45,8 +45,6 @@ int main(int argc, char *argv[])
 
 	/* 関連するサービスのコントロール */
 	system("sudo systemctl restart auto_repmon");
-//	system("sudo systemctl restart auto_repmon_light");
-//	system("sudo systemctl restart rpt_conn");
 
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
@@ -227,11 +225,8 @@ int main(int argc, char *argv[])
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
 						/* 現在稼働中のdmonitor をKILL */
-//						system("sudo systemctl stop rpt_conn");
 						system("sudo killall -q -2 dmonitor");
 						system("sudo rm -f /var/run/dmonitor.pid");
-//						system("sudo killall -q -9 rpt_conn");
-//						system("sudo rm -f /var/run/rpt_conn.pid");
 						system("sudo rig_port_check");
 						usleep(microsec * 50);
 
@@ -257,7 +252,7 @@ int main(int argc, char *argv[])
 		/* 無線機からのコマンドを接続解除の間受け取る準備 */
 		if (strcmp(status, "UNLINK FROM RIG") == 0)
 		{
-//			system("sudo systemctl restart rpt_conn");
+			system("sudo systemctl restart rpt_conn");
                         system("sudo killall -q -2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
 		}
