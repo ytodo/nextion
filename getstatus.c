@@ -15,7 +15,7 @@ int getstatus()
 	char	command[64]	= {'\0'};
 	char	mycall[8]	= {'\0'};
 	char	mycallpre[8]	= {'\0'};
-	char	tmpstat[32]	= {'\0'};
+	char	stat[5]		= {'\0'};
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL)
@@ -49,8 +49,6 @@ int getstatus()
 		/* <3-1>dmonitorへの信号がZRからかGW側からかを判断して status 代入の準備のみする */
 		if ((tmpptr = strstr(line, "from ZR")) != NULL || (tmpptr = strstr(line, "from GW")) != NULL)
 		{
-			memset(tmpstat, '\0', sizeof(tmpstat));
-
 			/* MyCallsignの取得 */
 			memset(mycall, '\0', sizeof(mycall));
 			strncpy(mycall, tmpptr - 9, 8);         // My Callsign
@@ -58,12 +56,11 @@ int getstatus()
 			/* MyCallsignが単なるループではない場合 */
 			if (strncmp(mycall, mycallpre, 8) != 0)
 			{
-				strncpy(tmpstat, line, 12);             // 日付時分
-				strcat(tmpstat, " ");
-				strncat(tmpstat, mycall, 8);            // コールサイン
-				strncat(tmpstat, tmpptr + 4, 3);        // ZR/GW
+				strncpy(status, line, 12);             // 日付時分
+				strcat(status, " ");
+				strncat(status, mycall, 8);            // コールサイン
+				strncat(status, tmpptr + 4, 3);        // ZR/GW
 			}
-			strcpy(status, tmpstat);
 			disp_stat();
 		}
 
@@ -88,6 +85,7 @@ int getstatus()
 			strncat(status, tmpptr - 9, 8);         // コールサイン
 			strcat(status, tmpstr);                 // Terminal-AP Mode/DVAP Mode
 			disp_stat();
+
 		}
 
 		/* <5>無線機の接続状況 */
@@ -197,6 +195,8 @@ int disp_stat()
 		strcpy(statpre3, statpre2);
 		strcpy(statpre2, statpre1);
 		strcpy(statpre1, status);
+
+printf("%s\n", status);
 
 		/* STATUS1 => STATUS2 */
 		sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
