@@ -46,7 +46,7 @@ int getstatus()
 			disp_stat();
 		}
 
-		/* <3-1>dmonitorへの信号がZRからかGW側からかを判断して status 代入の準備のみする */
+		/* <3>dmonitorへの信号がZRからかGW側からかを判断して status 代入の準備のみする */
 		if ((tmpptr = strstr(line, "from ZR")) != NULL || (tmpptr = strstr(line, "from GW")) != NULL)
 		{
 			/* MyCallsignの取得 */
@@ -83,7 +83,7 @@ int getstatus()
 			strncpy(status, line, 12);              // 日付時分
 			strcat(status, " ");
 			strncat(status, tmpptr - 9, 8);         // コールサイン
-			strcat(status, tmpstr);                 // Terminal-AP Mode/DVAP Mode
+			strcat(status, tmpstr);                 // Terminal-AP Mode/DVAP/DVMEGA/Node
 			disp_stat();
 
 		}
