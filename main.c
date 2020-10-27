@@ -143,8 +143,8 @@ int main(int argc, char *argv[])
 				sendcmd("dim=10");
 				system("sudo killall -q -2 dmonitor");
 				system("sudo rm -f /var/run/dmonitor.pid");
-				system("sudo killall -q -9 repeater_scan");
 				system("sudo killall -q -9 sleep");
+				system("sudo killall -q -9 repeater_scan");
 				system("sudo /var/www/cgi-bin/repUpd");
 				system("sudo systemctl restart nextion");
 				break;
@@ -152,9 +152,9 @@ int main(int argc, char *argv[])
 			case 2:						// 再起動
 				sendcmd("dim=10");
 				system("sudo killall -q -2 dmonitor");
-				system("sudo rm /var/run/dmonitor.pid");
-				system("sudo killall -q -9 repeater_scan");
+				system("sudo rm -f /var/run/dmonitor.pid");
 				system("sudo killall -q -9 sleep");
+				system("sudo killall -q -9 repeater_scan");
 				system("sudo shutdown -r now");
 				break;
 
@@ -162,8 +162,8 @@ int main(int argc, char *argv[])
 				sendcmd("dim=10");
 				system("sudo killall -q -2 dmonitor");
 				system("sudo rm /var/run/dmonitor.pid");
-				system("sudo killall -q -9 repeater_scan");
 				system("sudo killall -q -9 sleep");
+				system("sudo killall -q -9 repeater_scan");
 				system("sudo shutdown -h now");
 				break;
 
