@@ -72,6 +72,7 @@ void sendcmd(char *cmd)
 		write(fd, cmd, strlen(cmd));
 		write(fd, endofcmd, 3);
 	}
+	return;
 }
 
 
@@ -115,7 +116,6 @@ int	getconfig(void)
 		printf("nextion.ini file open error!\n");
 		return (EXIT_FAILURE);
 	}
-
 	/* テーブルを読み込み変数に格納する */
 	while ((fgets(line, sizeof(line), fp)) != NULL)
 	{
@@ -127,17 +127,18 @@ int	getconfig(void)
 	}
 	fclose(fp);
 
+
 	/* rig.typeファイルをオープンする */
 	if ((fp = fopen(RIGFILE, "r")) == NULL)
 	{
 		printf("rig.type file open error!\n");
 	}
-
 	/* 内容を読込み変数に代入する */
 	while ((fgets(line, sizeof(line), fp)) != NULL)
 	{
 		sscanf(line, "%[^\n]", rigtype);
 	}
+	fclose(fp);
 
 	return (0);
 }

@@ -8,8 +8,6 @@ int getstatus()
 	FILE	*fp;
 	char	*tmpptr;
 	char	*getstatus	= "tail -n3 /var/log/dmonitor.log";
-	char	*LOGFILE	= "/var/log/dmonitor.log";
-	char	*pidfile	= "pidof dmonitor";
 	char	line[128]	= {'\0'};
 	char	tmpstr[32]	= {'\0'};
 	char	command[64]	= {'\0'};
@@ -157,6 +155,8 @@ int getstatus()
 			disp_rpt();
 		}
 	}
+
+	/* 標準出力クローズ */
 	pclose(fp);
 	return (EXIT_SUCCESS);
 }

@@ -44,7 +44,9 @@ int main(int argc, char *argv[])
 	getipaddr();
 
 	/* 関連するサービスのコントロール */
-	system("sudo systemctl restart auto_repmon");
+	system("sudo systemctl stop auto_repmon");
+	system("sudo systemctl restart rpt_conn");
+	system("sudo systemctl restart auto_repmon_light");
 
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
@@ -53,7 +55,7 @@ int main(int argc, char *argv[])
 	if ((nextion_port != NULL) && (strlen(nextion_port) != 0))
 	{
 		/* nextion.iniにポート指定が有る場合 */
-		sprintf(&SERIALPORT[0], "/dev/%s", nextion_port);
+		sprintf(SERIALPORT, "/dev/%s", nextion_port);
 	}
 	else
 	{	/* ポート指定が無い場合 */
@@ -252,9 +254,9 @@ int main(int argc, char *argv[])
 		/* 無線機からのコマンドを接続解除の間受け取る準備 */
 		if (strcmp(status, "UNLINK FROM RIG") == 0)
 		{
-			system("sudo systemctl restart rpt_conn");
                         system("sudo killall -q -2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
+			usleep(microsec * 50);
 		}
 
 		/* CPUの速さによるループ調整（nextion.ini:SLEEPTIME）*/
