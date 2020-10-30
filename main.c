@@ -227,10 +227,13 @@ int main(int argc, char *argv[])
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
 						/* 現在稼働中のdmonitor をKILL */
+						system("sudo killall -q -9 repeater_scan");
 						system("sudo killall -q -2 dmonitor");
 						system("sudo rm -f /var/run/dmonitor.pid");
+						system("sudo killall -q -9 rpt_conn");
+						system("sudo rm -f /var/run/rpt_conn.pid");
 						system("sudo rig_port_check");
-						usleep(microsec * 50);
+//						usleep(microsec * 50);
 
 						/* 接続コマンドの実行 */
 						sprintf(command, "sudo /usr/bin/dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
