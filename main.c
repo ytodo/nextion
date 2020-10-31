@@ -226,29 +226,20 @@ int main(int argc, char *argv[])
 				{
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
-						/* 現在稼働中のdmonitor をKILL */
-//						system("sudo killall -q -9 repeater_scan");
-//						system("sudo killall -q -2 dmonitor");
-//						system("sudo rm -f /var/run/dmonitor.pid");
-//						system("sudo killall -q -9 rpt_conn");
-//						system("sudo rm -f /var/run/rpt_conn.pid");
-//						system("sudo rig_port_check");
-//						usleep(microsec * 50);
-
-system ("sudo systemctl stop rpt_conn");
-system ("sudo killall -q -s 9 repeater_scan");
-system ("sudo killall -q -s 2 dmonitor");
-system ("sudo rm -f /var/run/dmonitor.pid");
-system ("sudo killall -q -s 9 rpt_conn");
-system ("sudo rm -f /var/run/rpt_con.pid");
-system ("sudo rig_port_check");
-system ("sudo cp /dev/null /var/tmp/update.log");
-system ("sudo cp /var/www/html/error_msg.html.save /var/tmp/error_msg.html");
-system("sudo touch /var/tmp/error_msg.html");
-system ("sudo cp /var/www/html/short_msg.html.save /var/tmp/short_msg.html");
-system("sudo touch /var/tmp/short_msg.html");
-system ("ulimit -c unlimited");
-
+						/* 接続コマンド実行前処理 */
+						system ("sudo systemctl stop rpt_conn");
+						system ("sudo killall -q -s 9 repeater_scan");
+						system ("sudo killall -q -s 2 dmonitor");
+						system ("sudo rm -f /var/run/dmonitor.pid");
+						system ("sudo killall -q -s 9 rpt_conn");
+						system ("sudo rm -f /var/run/rpt_con.pid");
+						system ("sudo rig_port_check");
+						system ("sudo cp /dev/null /var/tmp/update.log");
+						system ("sudo cp /var/www/html/error_msg.html.save /var/tmp/error_msg.html");
+						system("sudo touch /var/tmp/error_msg.html");
+						system ("sudo cp /var/www/html/short_msg.html.save /var/tmp/short_msg.html");
+						system("sudo touch /var/tmp/short_msg.html");
+						system ("ulimit -c unlimited");
 
 						/* 接続コマンドの実行 */
 						sprintf(command, "sudo /usr/bin/dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
