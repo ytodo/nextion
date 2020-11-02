@@ -214,7 +214,7 @@ int main(int argc, char *argv[])
 				if ((strncmp(concall, "J", 1) != 0) && (strncmp(concall, "Retrun", 6) != 0))
 				{
 					strncpy(concall, "Return", 6);
-				}	
+				}
 				break;
 
 			default:
@@ -266,7 +266,9 @@ int main(int argc, char *argv[])
 		{
                         system("sudo killall -q -2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
+			system("sudo systemctl restart rpt_conn");
 			usleep(microsec * 50);
+			status[0] = '\0';
 		}
 
 		/* CPUの速さによるループ調整（nextion.ini:SLEEPTIME）*/
