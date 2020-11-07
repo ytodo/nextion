@@ -266,8 +266,8 @@ int main(int argc, char *argv[])
 		{
                         system("sudo killall -q -2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
+			usleep(microsec * 10);
 			system("sudo systemctl restart rpt_conn");
-			usleep(microsec * 50);
 			status[0] = '\0';
 		}
 
