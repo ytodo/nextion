@@ -36,11 +36,11 @@ install	:
 	@sudo cp nextion.ini 		/etc
 
 	@echo "Disable auto_repmon service to use auto_repmon_light."
-	@sudo systemctl stop auto_repmon.service
-	@sudo systemctl disable auto_repmon.service
+#	@sudo systemctl stop auto_repmon.service
+#	@sudo systemctl disable auto_repmon.service
 
-	@sudo systemctl stop rpt_conn.service
-	@sudo systemctl disable rpt_conn.service
+#	@sudo systemctl stop rpt_conn.service
+#	@sudo systemctl disable rpt_conn.service
 
 	@echo "Disable monitorix service"
 	@sudo systemctl stop monitorix.service

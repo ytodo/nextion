@@ -241,6 +241,7 @@ int main(int argc, char *argv[])
 						system ("sudo cp /var/www/html/short_msg.html.save /var/tmp/short_msg.html");
 						system("sudo touch /var/tmp/short_msg.html");
 						system ("ulimit -c unlimited");
+usleep(microsec * 50);
 
 						/* 接続コマンドの実行 */
 						sprintf(command, "sudo /usr/bin/dmonitor '%s' %s %s '%s' '%s'", station, linkdata[i].addr, linkdata[i].port, linkdata[i].call, linkdata[i].zone);
