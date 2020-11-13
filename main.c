@@ -221,7 +221,6 @@ int main(int argc, char *argv[])
 
 				/* 指定リピータに接続する */
 				i = 0;
-				usleep(microsec * 100);			// リスト読み込み完了を確実にするウェイト
 				num = getlinkdata();
 				for (i = 0; i < num; i++)
 				{
