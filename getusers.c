@@ -11,6 +11,10 @@ int getusers(char ret[16])
 	int     i           = 0;
 	int     j           = 0;
 
+	/* 画面をUSERSに切替える */
+	sendcmd("page USERS");
+	sprintf(command, "USERS.b0.txt=\"LINKED USERS on %s\"", rptcallpre1);
+	sendcmd(command);
 
 	/* [Return]ボタンが押されるまで繰り返す */
 	while (1)
