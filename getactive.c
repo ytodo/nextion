@@ -14,6 +14,8 @@ int getactive(char ret[16])
 
 	/* 画面をACTIVEに切り替える */
 	sendcmd("page ACTIVE");
+	usleep(microsec * 10);
+
 
 	/* [Return]ボタンが押されるかリピータが選択されるまで繰り返す */
 	while (1)

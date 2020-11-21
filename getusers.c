@@ -35,6 +35,7 @@ int getusers(char ret[16])
 		if ((fp = fopen(users_tbl, "r")) == NULL)
 		{
 			printf("File open error!\n");
+			sendcmd("page MAIN");
 			return (EXIT_FAILURE);
 		}
 

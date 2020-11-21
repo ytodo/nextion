@@ -35,13 +35,6 @@ install	:
 	@sudo systemctl daemon-reload
 	@sudo cp nextion.ini 		/etc
 
-	@echo "Disable auto_repmon service to use auto_repmon_light."
-#	@sudo systemctl stop auto_repmon.service
-#	@sudo systemctl disable auto_repmon.service
-
-#	@sudo systemctl stop rpt_conn.service
-#	@sudo systemctl disable rpt_conn.service
-
 	@echo "Disable monitorix service"
 	@sudo systemctl stop monitorix.service
 	@sudo systemctl disable monitorix.service
@@ -56,7 +49,7 @@ install	:
 
 update	:
 	@echo "Compliling software...and install."
-	@cd /home/$(USER)/nextion
+	@cd ~/nextion
 	@git pull
 	@make > /dev/null
 	@sudo mv $(PROGRAM)             /usr/local/bin
