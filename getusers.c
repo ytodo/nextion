@@ -12,6 +12,7 @@ int getusers(char ret[16])
 	int     j           = 0;
 
 	/* 画面をUSERSに切替える */
+	usleep(microsec * 10);
 	sendcmd("page USERS");
 	sprintf(command, "USERS.b0.txt=\"LINKED USERS on %s\"", rptcallpre1);
 	sendcmd(command);

@@ -227,6 +227,7 @@ int main(int argc, char *argv[])
 						system ("sudo killall -q -s 9 repeater_scan");
 						system ("sudo killall -q -s 2 dmonitor");
 						system ("sudo rm -f /var/run/dmonitor.pid");
+						usleep(microsec * 50);
 						system ("sudo killall -q -s 9 rpt_conn");
 						system ("sudo rm -f /var/run/rpt_con.pid");
 						system ("sudo rig_port_check");
