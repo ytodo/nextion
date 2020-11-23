@@ -69,7 +69,7 @@ int getstatus()
 		{
 			if (strncmp("Rig",  tmpptr + 5, 3) == 0)
 			{
-				if (strcmp(rigtype, "ICOM") == 0)
+				if (strncmp(rigtype, "ICOM", 4) == 0)
 			 	{
 					strncpy(tmpstr, " TM", 3);
 				} else {
