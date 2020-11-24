@@ -13,7 +13,6 @@ int getactive(char ret[16])
 	int     j           = 0;
 
 	/* 画面をACTIVEに切り替える */
-	usleep(microsec * 10);
 	sendcmd("page ACTIVE");
 
 	/* [Return]ボタンが押されるかリピータが選択されるまで繰り返す */
@@ -72,7 +71,5 @@ int getactive(char ret[16])
 		/* 2秒に一回リフレッシュする */
 		sleep(2);
 	}
-	sendcmd("page MAIN");
-
 	return(0);
 }

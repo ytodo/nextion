@@ -203,10 +203,12 @@ int main(int argc, char *argv[])
 
 			case 7:						// Remote Usersパネルへ接続ユーザ表示
 				getusers(concall);
+				sendcmd("page MAIN");
 				break;
 
 			case 8:						// ACTIVE REPEATERパネルへの表示と移動
 				getactive(concall);
+				sendcmd("page MAIN");
 				if ((strncmp(concall, "J", 1) != 0) && (strncmp(concall, "Retrun", 6) != 0))
 				{
 					strncpy(concall, "Return", 6);
@@ -227,7 +229,7 @@ int main(int argc, char *argv[])
 						system ("sudo killall -q -s 9 repeater_scan");
 						system ("sudo killall -q -s 2 dmonitor");
 						system ("sudo rm -f /var/run/dmonitor.pid");
-						usleep(microsec * 50);
+						sleep(5);
 						system ("sudo killall -q -s 9 rpt_conn");
 						system ("sudo rm -f /var/run/rpt_con.pid");
 						system ("sudo rig_port_check");
