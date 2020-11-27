@@ -45,9 +45,9 @@ int main(int argc, char *argv[])
 	getipaddr();
 
 	/* 関連するサービスのコントロール */
-//	system("sudo systemctl restart auto_repmon");
+	system("sudo systemctl restart auto_repmon");
 	system("sudo systemctl restart rpt_conn");
-	system("sudo systemctl restart auto_repmon_light");
+//	system("sudo systemctl restart auto_repmon_light");
 
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
