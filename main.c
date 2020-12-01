@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
 						system("sudo killall -q -s 9 dmonitor");
 						system("sudo rm -f /var/run/dmonitor.pid");
 						system("sudo killall -q -s 9 rpt_conn");
-						system("sudo rm -f /var/run/rpt_con.pid");
+						system("sudo rm -f /var/run/rpt_conn.pid");
 						system("sudo rig_port_check");
 						system("sudo cp /dev/null /var/tmp/update.log");
 						system("sudo cp /var/www/html/error_msg.html.save /var/tmp/error_msg.html");
