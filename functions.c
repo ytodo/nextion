@@ -104,7 +104,7 @@ void recvdata(char *rptcon)
 int	getconfig(void)
 {
 	char	*INIFILE = "/etc/nextion.ini";
-	char	*RIGFILE = "/var/www/rig.type";
+	char	*RIGFILE = "/var/www/dmonitor.conf";
 	char	line[64] = {'\0'};
 	int	i 	 = 0;
 	FILE	*fp;
@@ -131,12 +131,16 @@ int	getconfig(void)
 	/* rig.typeファイルをオープンする */
 	if ((fp = fopen(RIGFILE, "r")) == NULL)
 	{
-		printf("rig.type file open error!\n");
+		printf("dmonitor.conf file open error!\n");
 	}
 	/* 内容を読込み変数に代入する */
 	while ((fgets(line, sizeof(line), fp)) != NULL)
 	{
 		sscanf(line, "%[^\n]", rigtype);
+		if ((strncmp(rigtype, "ICOM",   4) == 0) ||
+		    (strncmp(rigtype, "DVAP",   4) == 0) ||
+		    (strncmp(rigtype, "DVMEGA", 6) == 0) ||
+		    (strncmp(rigtype, "NODE",   4) == 0)) break;
 	}
 	fclose(fp);
 
