@@ -8,7 +8,7 @@ JARL D-STAR Commitee 作成の dmonitor にアドオンとしてインストー�
 $ cd nextion<br>
 $ git pull<br>
 とするだけで最新版が差分で引っ張れます。<br>
-$ sudo make update<br>
+$ make update<br>
 
 <b>上記のアップデートコマンドでは、設定ファイルが上書きされることは有りません</b><br>
 但し、1.6.5-->1.6.6 では、nextion.iniの項目が増えていますので、編集するか置き換えてください。
@@ -21,7 +21,7 @@ nextionアドオンのコンパイルとインストール<br>
 $ sudo apt install git<br>
 $ git clone https://github.com/ytodo/nextion.git<br>
 $ cd nextion<br>
-$ sudo make install<br>
+$ make install<br>
 
 nextion.iniの編集<br>
 $ sudo nano /etc/nextion.ini<br>
