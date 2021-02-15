@@ -196,8 +196,6 @@ int disp_stat()
 		strcpy(statpre2, statpre1);
 		strcpy(statpre1, status);
 
-printf("%s\n", status);
-
 		/* STATUS1 => STATUS2 */
 		sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
 
