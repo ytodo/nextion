@@ -58,13 +58,20 @@ update	:
 	@git pull
 	@make > /dev/null
 	@sudo mv $(PROGRAM)             /usr/local/bin
-
+	@echo
 	@echo "Disable lighttpd.service."
 	@sudo systemctl stop lighttpd.service
 	@sudo systemctl disable lighttpd.service
-
+	@echo
+	@echo "Disable auto_repmon.service"
+	@sudo systemctl stop auto_repmon.service
+	@sudo systemctl disable auto_repmon.service
+	@echo
 	@echo "Starting D*MONITOR nextion service..."
-	@sudo killall -2 dmonitor
+	count := `ps -ef | grep $PROCESS_NAME | grep -v grep | wc -l`
+	if [ $count != 0  ]; then\
+		@sudo killall -2 dmonitor\
+	fi
 	@sudo systemctl enable nextion.service
 	@sudo systemctl restart nextion.service
 

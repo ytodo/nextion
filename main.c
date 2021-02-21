@@ -45,6 +45,10 @@ int main(int argc, char *argv[])
 	getipaddr();
 
 	/* 関連するサービスのコントロール */
+	if (REPMON == "auto_repmon_light")
+	{
+		system("sudo systemctl stop auto_repmon");
+	}
 	sprintf(command, "sudo systemctl restart %s", REPMON);
 	system(command);
 	system("sudo systemctl restart rpt_conn");
@@ -148,7 +152,6 @@ int main(int argc, char *argv[])
 				system("sudo rm -f /var/run/dmonitor.pid");
 				system("sudo killall -q -9 sleep");
 				system("sudo killall -q -9 repeater_scan");
-				system("sudo /var/www/cgi-bin/repUpd");
 				system("sudo systemctl restart nextion");
 				break;
 
@@ -227,21 +230,17 @@ int main(int argc, char *argv[])
 						/* 接続コマンド実行前処理 */
 						system("sudo killall -q -2 dmonitor");
 						system("sudo rm -f /var/run/dmonitor.pid");
-						usleep(microsec * 100);
-
 						system("sudo systemctl stop rpt_conn");
 						system("sudo killall -q -s 9 repeater_scan");
 						system("sudo killall -q -s 9 rpt_conn");
 						system("sudo rm -f /var/run/rpt_conn.pid");
 
+						/* リピータリストの更新 */
+						system("sudo /var/www/cgi-bin/repUpd");
+
+						/* 前処理終了を待ってポートチェック */
+						usleep(microsec * 300);
 						system("sudo rig_port_check");
-
-						system("sudo cp /dev/null /var/tmp/update.log");
-						system("sudo cp /var/www/html/error_msg.html.save /var/tmp/error_msg.html");
-						system("sudo touch /var/tmp/error_msg.html");
-						system("sudo cp /var/www/html/short_msg.html.save /var/tmp/short_msg.html");
-						system("sudo touch /var/tmp/short_msg.html");
-
 						system ("ulimit -c unlimited");
 
 						/* 接続コマンドの実行 */
@@ -268,7 +267,7 @@ int main(int argc, char *argv[])
 		{
                         system("sudo killall -q -2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
-			usleep(microsec * 10);
+			usleep(microsec * 100);
 			system("sudo systemctl restart rpt_conn");
 			status[0] = '\0';
 		}
