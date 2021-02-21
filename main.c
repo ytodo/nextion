@@ -230,16 +230,14 @@ int main(int argc, char *argv[])
 						/* 接続コマンド実行前処理 */
 						system("sudo killall -q -2 dmonitor");
 						system("sudo rm -f /var/run/dmonitor.pid");
+						usleep(microsec * 300);
+
 						system("sudo systemctl stop rpt_conn");
 						system("sudo killall -q -s 9 repeater_scan");
 						system("sudo killall -q -s 9 rpt_conn");
 						system("sudo rm -f /var/run/rpt_conn.pid");
 
-						/* リピータリストの更新 */
-						system("sudo /var/www/cgi-bin/repUpd");
-
 						/* 前処理終了を待ってポートチェック */
-						usleep(microsec * 300);
 						system("sudo rig_port_check");
 						system ("ulimit -c unlimited");
 
@@ -267,7 +265,7 @@ int main(int argc, char *argv[])
 		{
                         system("sudo killall -q -2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
-			usleep(microsec * 100);
+			usleep(microsec * 300);
 			system("sudo systemctl restart rpt_conn");
 			status[0] = '\0';
 		}
