@@ -1,19 +1,22 @@
 #include "dmonitor.h"
 
-/*********************************************************************
+/**************************************************************************
  dmonitor のログファイルよりラストハード及び状況を取得し変数status に入れる
- *********************************************************************/
+ **************************************************************************/
 int getstatus()
 {
 	FILE	*fp;
 	char	*tmpptr;
-	char	*getstatus	= "tail -n3 /var/log/dmonitor.log";
+//	char	*tmpptr2;
+	char	*getstatus	= "tail -n3 /var/log/dmonitor.log | egrep -v 'inet|jitter|drop'";
 	char	line[128]	= {'\0'};
 	char	tmpstr[32]	= {'\0'};
-	char	command[64]	= {'\0'};
 	char	mycall[8]	= {'\0'};
 	char	mycallpre[8]	= {'\0'};
 	char	stat[5]		= {'\0'};
+//	char	pktnum[]	= {'\0'};
+//	int	length		= 0;
+
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL)
@@ -33,8 +36,15 @@ int getstatus()
 		if ((tmpptr = strstr(line, "Connected")) != NULL)
 		{
 			rptcall[0] = '\0';
+//			pktnum[0]  = '\0';
 			strncpy(rptcall, tmpptr + 13, 8);
 			disp_rpt();
+
+//			tmpptr  = strstr(line, "dmonitor[");
+//			tmpptr2 = strstr(line, "]: ");
+//			length  = strlen(tmpptr) - strlen(tmpptr2) - 9;
+
+//			strncpy(chkpktnum, tmpptr + 9, length);
 		}
 
 		/* <2>dmonitorの開始とバージョンを取得 */
@@ -44,7 +54,7 @@ int getstatus()
 			disp_stat();
 		}
 
-		/* <3>dmonitorへの信号がZRからかGW側からかを判断して status 代入の準備のみする */
+		/* <3>dmonitorへの信号がZRからかGW側からかを判断して status に代入する */
 		if ((tmpptr = strstr(line, "from ZR")) != NULL || (tmpptr = strstr(line, "from GW")) != NULL)
 		{
 			/* MyCallsignの取得 */
@@ -137,6 +147,7 @@ int getstatus()
 			disp_rpt();
 			strcpy(status, "Disconnected");
 			disp_stat();
+			chkpktnum[0] = '\0';
 		}
 
 		/* <10>ドロップパケット比の表示 */

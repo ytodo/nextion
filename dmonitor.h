@@ -49,8 +49,8 @@
 #define	VERSION		1
 #define	VERSUB		6
 #define RELEASE		6
-#define REPMON		"auto_repmon_light"
-//#define REPMON		"auto_repmon"
+#define AUTOREPMON		"auto_repmon_light"
+//#define AUTOREPMON		"auto_repmon"
 
 /* Variables */
 typedef struct {                  			// 構造体の宣言
@@ -67,6 +67,7 @@ extern	char		ipaddress[CHARSIZE];
 extern	char		default_rpt[CHARSIZE];
 extern 	char		nextion_port[CHARSIZE];
 extern	char		rigtype[8];
+extern	char		chkpktnum[8];
 extern	char		status[CHARSIZE];
 extern	char		statpre1[CHARSIZE];
 extern	char		statpre2[CHARSIZE];

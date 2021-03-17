@@ -45,13 +45,13 @@ int main(int argc, char *argv[])
 	getipaddr();
 
 	/* 関連するサービスのコントロール */
-	if (REPMON == "auto_repmon_light")
+	if (AUTOREPMON == "auto_repmon_light")
 	{
 		system("sudo systemctl stop auto_repmon");
+		system("sudo systemctl disable auto_repmon");
 	}
-	sprintf(command, "sudo systemctl restart %s", REPMON);
+	sprintf(command, "sudo systemctl restart %s", AUTOREPMON);
 	system(command);
-	system("sudo systemctl restart rpt_conn");
 
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
@@ -228,13 +228,14 @@ int main(int argc, char *argv[])
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
 						/* 接続コマンド実行前処理 */
+						system("sudo killall -q -9 sleep");
 						system("sudo killall -q -2 dmonitor");
 						system("sudo rm -f /var/run/dmonitor.pid");
-						usleep(microsec * 300);
+						usleep(microsec * 400);
 
 						system("sudo systemctl stop rpt_conn");
-						system("sudo killall -q -s 9 repeater_scan");
-						system("sudo killall -q -s 9 rpt_conn");
+						system("sudo killall -q -9 repeater_scan");
+						system("sudo killall -q -9 rpt_conn");
 						system("sudo rm -f /var/run/rpt_conn.pid");
 
 						/* 前処理終了を待ってポートチェック */

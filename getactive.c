@@ -13,7 +13,8 @@ int getactive(char ret[16])
 	int     j           = 0;
 
 	/* 画面をACTIVEに切り替える */
-	system("sudo systemctl restart auto_repmon");
+	sprintf(command, "sudo systemctl restart %s", AUTOREPMON);
+	system(command);
 	sendcmd("page ACTIVE");
 
 	/* [Return]ボタンが押されるかリピータが選択されるまで繰り返す */
@@ -25,6 +26,14 @@ int getactive(char ret[16])
 		if (strncmp(ret, "J", 1) == 0)
 		{
 			ret[8] = '\0';
+
+                        /* コールサインが入力された場合、一旦接続解除する */
+                        sendcmd("dim=10");
+                        system("sudo killall -q -2 dmonitor");
+                        system("sudo rm -f /var/run/dmonitor.pid");
+                        system("sudo killall -q -9 sleep");
+                        system("sudo killall -q -9 repeater_scan");
+                        sendcmd("dim=dims");
 			break;
 		}
 
