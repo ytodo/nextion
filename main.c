@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
 						system("sudo killall -q -9 sleep");
 						system("sudo killall -q -2 dmonitor");
 						system("sudo rm -f /var/run/dmonitor.pid");
-						usleep(microsec * 400);
+						usleep(microsec * 800);
 
 						system("sudo systemctl stop rpt_conn");
 						system("sudo killall -q -9 repeater_scan");
@@ -266,8 +266,9 @@ int main(int argc, char *argv[])
 			system("sudo killall -q -9 sleep");
                         system("sudo killall -q -2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
-			usleep(microsec * 300);
+			usleep(microsec * 500);
 			system("sudo systemctl restart rpt_conn");
+			usleep(microsec * 100);
 			status[0] = '\0';
 		}
 
