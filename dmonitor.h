@@ -67,7 +67,7 @@ extern	char		ipaddress[CHARSIZE];
 extern	char		default_rpt[CHARSIZE];
 extern 	char		nextion_port[CHARSIZE];
 extern	char		rigtype[8];
-extern	char		chkpktnum[8];
+extern	char		chkline[CHARSIZE];
 extern	char		status[CHARSIZE];
 extern	char		statpre1[CHARSIZE];
 extern	char		statpre2[CHARSIZE];

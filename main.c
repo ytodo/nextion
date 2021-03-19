@@ -222,7 +222,6 @@ int main(int argc, char *argv[])
 
 				/* 指定リピータに接続する */
 				i = 0;
-				num = getlinkdata();
 				for (i = 0; i < num; i++)
 				{
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
@@ -264,6 +263,7 @@ int main(int argc, char *argv[])
 		/* 無線機からのコマンドを接続解除の間受け取る準備 */
 		if (strcmp(status, "UNLINK FROM RIG") == 0)
 		{
+			system("sudo killall -q -9 sleep");
                         system("sudo killall -q -2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
 			usleep(microsec * 300);

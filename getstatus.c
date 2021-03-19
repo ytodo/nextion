@@ -7,15 +7,12 @@ int getstatus()
 {
 	FILE	*fp;
 	char	*tmpptr;
-//	char	*tmpptr2;
-	char	*getstatus	= "tail -n3 /var/log/dmonitor.log | egrep -v 'inet|jitter|drop'";
+	char	*getstatus	= "tail -f -n3 /var/log/dmonitor.log | grep --line-buffered -v 'inet'";
 	char	line[128]	= {'\0'};
 	char	tmpstr[32]	= {'\0'};
-	char	mycall[8]	= {'\0'};
-	char	mycallpre[8]	= {'\0'};
+	char	mycall[9]	= {'\0'};
+	char	mycallpre[9]	= {'\0'};
 	char	stat[5]		= {'\0'};
-//	char	pktnum[]	= {'\0'};
-//	int	length		= 0;
 
 
 	/* コマンドの標準出力オープン */
@@ -36,15 +33,8 @@ int getstatus()
 		if ((tmpptr = strstr(line, "Connected")) != NULL)
 		{
 			rptcall[0] = '\0';
-//			pktnum[0]  = '\0';
 			strncpy(rptcall, tmpptr + 13, 8);
 			disp_rpt();
-
-//			tmpptr  = strstr(line, "dmonitor[");
-//			tmpptr2 = strstr(line, "]: ");
-//			length  = strlen(tmpptr) - strlen(tmpptr2) - 9;
-
-//			strncpy(chkpktnum, tmpptr + 9, length);
 		}
 
 		/* <2>dmonitorの開始とバージョンを取得 */
@@ -147,7 +137,6 @@ int getstatus()
 			disp_rpt();
 			strcpy(status, "Disconnected");
 			disp_stat();
-			chkpktnum[0] = '\0';
 		}
 
 		/* <10>ドロップパケット比の表示 */
