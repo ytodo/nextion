@@ -1,19 +1,18 @@
 #include "dmonitor.h"
 
-/**************************************************************************
+/*********************************************************************
  dmonitor のログファイルよりラストハード及び状況を取得し変数status に入れる
- **************************************************************************/
+ *********************************************************************/
 int getstatus()
 {
 	FILE	*fp;
 	char	*tmpptr;
-	char	*getstatus	= "tail -f -n3 /var/log/dmonitor.log | grep --line-buffered -v 'inet'";
+	char	*getstatus	= "tail /var/log/dmonitor.log | grep -v 'inet' --line-buffered ";
 	char	line[128]	= {'\0'};
 	char	tmpstr[32]	= {'\0'};
 	char	mycall[9]	= {'\0'};
 	char	mycallpre[9]	= {'\0'};
-	char	stat[5]		= {'\0'};
-
+	int	i		= 0;
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL)
@@ -25,6 +24,14 @@ int getstatus()
 	/* ファイル内容を配列に取得 */
 	while (fgets(line, sizeof(line), fp) != NULL)
 	{
+
+		if (i == 0)
+		{
+			if (strcmp(chkline, line) == 0) break;
+			strcpy(chkline, line);
+			i++;
+		}
+
 		/* 過去のデータをクリアする  */
 		memset(status, '\0', sizeof(status));
 		memset(tmpstr, '\0', sizeof(tmpstr));
@@ -44,7 +51,7 @@ int getstatus()
 			disp_stat();
 		}
 
-		/* <3>dmonitorへの信号がZRからかGW側からかを判断して status に代入する */
+		/* <3>dmonitorへの信号がZRからかGW側からかを判断して status 代入の準備のみする */
 		if ((tmpptr = strstr(line, "from ZR")) != NULL || (tmpptr = strstr(line, "from GW")) != NULL)
 		{
 			/* MyCallsignの取得 */
@@ -123,11 +130,11 @@ int getstatus()
 		}
 
 		/* <8>UNLINKコマンドの処理 */
-		if ((strstr(line, "my2:UNLK") != NULL) || (strstr(line, "UNLINK   from Rig") != NULL))
-		{
-			strcpy(status, "UNLINK FROM RIG");
-			disp_stat();
-		}
+//		if ((strstr(line, "my2:UNLK") != NULL) || (strstr(line, "UNLINK   from Rig") != NULL))
+//		{
+//			strcpy(status, "UNLINK FROM RIG");
+//			disp_stat();
+//		}
 
 		/* <9>接続解除を取得 */
 		if (strstr(line, "dmonitor end") != NULL)

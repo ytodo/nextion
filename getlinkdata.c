@@ -17,11 +17,6 @@ int getlinkdata()
 	FILE	*fp;
 
 	/* d-star.info からリピータリストを取得してテーブルを作成する */
-
-        /* リピータリストの更新 */
-	system("sudo /var/www/cgi-bin/repUpd");
-	usleep(microsec * 200);
-
 	/* テーブルをオープンする */
 	if ((fp = fopen(RPTLISTTBL, "r")) == NULL)
 	{

@@ -49,8 +49,7 @@
 #define	VERSION		1
 #define	VERSUB		6
 #define RELEASE		6
-#define AUTOREPMON		"auto_repmon_light"
-//#define AUTOREPMON		"auto_repmon"
+#define AUTOREPMON	"auto_repmon_light"
 
 /* Variables */
 typedef struct {                  			// 構造体の宣言
@@ -62,12 +61,12 @@ typedef struct {                  			// 構造体の宣言
 }	repeater_t;
 extern	repeater_t	linkdata[LISTSIZE];		// 構造体配列の宣言(リピータリスト）
 
-extern	char		station[CHARSIZE];		// 
+extern	char		station[CHARSIZE];
 extern	char		ipaddress[CHARSIZE];
 extern	char		default_rpt[CHARSIZE];
 extern 	char		nextion_port[CHARSIZE];
 extern	char		rigtype[8];
-extern	char		chkline[CHARSIZE];
+extern	char		chkline[128];
 extern	char		status[CHARSIZE];
 extern	char		statpre1[CHARSIZE];
 extern	char		statpre2[CHARSIZE];

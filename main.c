@@ -45,13 +45,9 @@ int main(int argc, char *argv[])
 	getipaddr();
 
 	/* 関連するサービスのコントロール */
-	if (AUTOREPMON == "auto_repmon_light")
-	{
-		system("sudo systemctl stop auto_repmon");
-		system("sudo systemctl disable auto_repmon");
-	}
 	sprintf(command, "sudo systemctl restart %s", AUTOREPMON);
 	system(command);
+//	system("sudo systemctl restart rpt_conn");
 
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
@@ -152,6 +148,7 @@ int main(int argc, char *argv[])
 				system("sudo rm -f /var/run/dmonitor.pid");
 				system("sudo killall -q -9 sleep");
 				system("sudo killall -q -9 repeater_scan");
+				system("sudo /var/www/cgi-bin/repUpd");
 				system("sudo systemctl restart nextion");
 				break;
 
@@ -219,26 +216,27 @@ int main(int argc, char *argv[])
 				break;
 
 			default:
-
 				/* 指定リピータに接続する */
 				i = 0;
+				num = getlinkdata();
 				for (i = 0; i < num; i++)
 				{
 					if (strncmp(linkdata[i].call, concall, 8) == 0)
 					{
 						/* 接続コマンド実行前処理 */
-						system("sudo killall -q -9 sleep");
-						system("sudo killall -q -2 dmonitor");
-						system("sudo rm -f /var/run/dmonitor.pid");
-						usleep(microsec * 800);
-
 						system("sudo systemctl stop rpt_conn");
-						system("sudo killall -q -9 repeater_scan");
-						system("sudo killall -q -9 rpt_conn");
+						system("sudo killall -q -s 9 repeater_scan");
+						system("sudo killall -q -s 9 dmonitor");
+						system("sudo rm -f /var/run/dmonitor.pid");
+						system("sudo killall -q -s 9 rpt_conn");
 						system("sudo rm -f /var/run/rpt_conn.pid");
 
-						/* 前処理終了を待ってポートチェック */
 						system("sudo rig_port_check");
+						system("sudo cp /dev/null /var/tmp/update.log");
+						system("sudo cp /var/www/html/error_msg.html.save /var/tmp/error_msg.html");
+						system("sudo touch /var/tmp/error_msg.html");
+						system("sudo cp /var/www/html/short_msg.html.save /var/tmp/short_msg.html");
+						system("sudo touch /var/tmp/short_msg.html");
 						system ("ulimit -c unlimited");
 
 						/* 接続コマンドの実行 */
@@ -263,12 +261,10 @@ int main(int argc, char *argv[])
 		/* 無線機からのコマンドを接続解除の間受け取る準備 */
 		if (strcmp(status, "UNLINK FROM RIG") == 0)
 		{
-			system("sudo killall -q -9 sleep");
                         system("sudo killall -q -2 dmonitor");
                         system("sudo rm -f /var/nun/dmonitor.pid");
-			usleep(microsec * 500);
+			usleep(microsec * 10);
 			system("sudo systemctl restart rpt_conn");
-			usleep(microsec * 100);
 			status[0] = '\0';
 		}
 
