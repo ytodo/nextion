@@ -49,7 +49,9 @@
 #define	VERSION		1
 #define	VERSUB		6
 #define RELEASE		6
-#define AUTOREPMON	"auto_repmon_light"
+//#define AUTOREPMON	"auto_repmon_light"
+#define AUTOREPMON	"auto_repmon"
+
 
 /* Variables */
 typedef struct {                  			// 構造体の宣言

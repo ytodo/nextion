@@ -149,6 +149,7 @@ int main(int argc, char *argv[])
 				system("sudo killall -q -9 sleep");
 				system("sudo killall -q -9 repeater_scan");
 				system("sudo /var/www/cgi-bin/repUpd");
+				usleep(microsec * 100);
 				system("sudo systemctl restart nextion");
 				break;
 
@@ -269,7 +270,7 @@ int main(int argc, char *argv[])
 		}
 
 		/* CPUの速さによるループ調整（nextion.ini:SLEEPTIME）*/
-	        usleep(microsec * 5);
+//	        usleep(microsec * 5);
 
 	}	// Loop
 

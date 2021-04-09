@@ -7,12 +7,16 @@ int getstatus()
 {
 	FILE	*fp;
 	char	*tmpptr;
-	char	*getstatus	= "tail /var/log/dmonitor.log | grep -v 'inet' --line-buffered ";
+	char	*getstatus	= "tail /var/log/dmonitor.log | grep -v 'inet' --line-buffered";
+//	char	*getstatus	= "tail -n3 /tmp/tmplog.txt";
+//	char	command[128]	= "tail /var/log/dmonitor.log | grep -v 'inet' --line-buffered  > /tmp/tmplog.txt";	// test
 	char	line[128]	= {'\0'};
 	char	tmpstr[32]	= {'\0'};
 	char	mycall[9]	= {'\0'};
 	char	mycallpre[9]	= {'\0'};
 	int	i		= 0;
+
+//	system(command);						// test
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL)
@@ -31,6 +35,8 @@ int getstatus()
 			strcpy(chkline, line);
 			i++;
 		}
+
+printf("%s", line);
 
 		/* 過去のデータをクリアする  */
 		memset(status, '\0', sizeof(status));
@@ -165,6 +171,7 @@ int getstatus()
 
 	/* 標準出力クローズ */
 	pclose(fp);
+
 	return (EXIT_SUCCESS);
 }
 
