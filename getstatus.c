@@ -8,15 +8,11 @@ int getstatus()
 	FILE	*fp;
 	char	*tmpptr;
 	char	*getstatus	= "tail /var/log/dmonitor.log | grep -v 'inet' --line-buffered";
-//	char	*getstatus	= "tail -n3 /tmp/tmplog.txt";
-//	char	command[128]	= "tail /var/log/dmonitor.log | grep -v 'inet' --line-buffered  > /tmp/tmplog.txt";	// test
 	char	line[128]	= {'\0'};
 	char	tmpstr[32]	= {'\0'};
 	char	mycall[9]	= {'\0'};
 	char	mycallpre[9]	= {'\0'};
 	int	i		= 0;
-
-//	system(command);						// test
 
 	/* コマンドの標準出力オープン */
 	if ((fp = popen(getstatus, "r")) == NULL)
@@ -35,8 +31,6 @@ int getstatus()
 			strcpy(chkline, line);
 			i++;
 		}
-
-printf("%s", line);
 
 		/* 過去のデータをクリアする  */
 		memset(status, '\0', sizeof(status));
@@ -137,20 +131,21 @@ printf("%s", line);
 
 		/* <8>UNLINKコマンドの処理 */
 //		if ((strstr(line, "my2:UNLK") != NULL) || (strstr(line, "UNLINK   from Rig") != NULL))
-//		{
-//			strcpy(status, "UNLINK FROM RIG");
-//			disp_stat();
-//		}
-
-		/* <9>接続解除を取得 */
-		if (strstr(line, "dmonitor end") != NULL)
+		if (strstr(line, "UNLINK   from Rig") != NULL)
 		{
-			rptcall[0] = '\0';
-			strcpy(rptcall, "NONE");
-			disp_rpt();
-			strcpy(status, "Disconnected");
+			strcpy(status, "UNLINK FROM RIG");
 			disp_stat();
 		}
+
+		/* <9>接続解除を取得 */
+//		if (strstr(line, "dmonitor end") != NULL)
+//		{
+//			rptcall[0] = '\0';
+//			strcpy(rptcall, "NONE");
+//			disp_rpt();
+//			strcpy(status, "Disconnected");
+//			disp_stat();
+//		}
 
 		/* <10>ドロップパケット比の表示 */
 		if ((debug == 1) && ((tmpptr = strstr(line, "drop packet")) != NULL))
@@ -204,11 +199,12 @@ int disp_stat()
 {
 	char command[64] = {'\0'};
 
-	if ((strcmp(status, statpre1) != 0) && (strcmp(status, statpre2) != 0) && (strcmp(status, statpre3) != 0))
-	{
-		strcpy(statpre3, statpre2);
-		strcpy(statpre2, statpre1);
-		strcpy(statpre1, status);
+//	if ((strcmp(status, statpre1) != 0) && (strcmp(status, statpre2) != 0) && (strcmp(status, statpre3) != 0))
+//	if (strcmp(status, statpre1) != 0)
+//	{
+//		strcpy(statpre3, statpre2);
+//		strcpy(statpre2, statpre1);
+//		strcpy(statpre1, status);
 
 		/* STATUS1 => STATUS2 */
 		sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
@@ -221,6 +217,6 @@ int disp_stat()
 		sendcmd("MAIN.t3.txt=MAIN.stat2.txt");
 		sendcmd("USERS.t8.txt=DMON.stat1.txt");
 		sendcmd("USERS.t9.txt=DMON.stat2.txt");
-	}
+//	}
 	return(0);
 }

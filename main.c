@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
 	/* 関連するサービスのコントロール */
 	sprintf(command, "sudo systemctl restart %s", AUTOREPMON);
 	system(command);
-//	system("sudo systemctl restart rpt_conn");
 
 	/* 現在利用可能なリピータリストの取得*/
 	num = getlinkdata();
@@ -213,6 +212,7 @@ int main(int argc, char *argv[])
 				if ((strncmp(concall, "J", 1) != 0) && (strncmp(concall, "Retrun", 6) != 0))
 				{
 					strncpy(concall, "Return", 6);
+					concall[6] = '\0';
 				}
 				break;
 
@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
 		}
 
 		/* CPUの速さによるループ調整（nextion.ini:SLEEPTIME）*/
-//	        usleep(microsec * 5);
+	        usleep(microsec * 5);
 
 	}	// Loop
 

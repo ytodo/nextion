@@ -5,9 +5,9 @@ int getactive(char ret[16])
 	FILE    *fp;
 	char    *active_tbl  = "/var/tmp/repeater_active.html";
 	char    *tmpptr;
-	char    line[64]    = {'\0'};
-	char    tmpstr[32]  = {'\0'};
-	char    command[32] = {'\0'};
+	char    line[128]   = {'\0'};
+	char    tmpstr[64]  = {'\0'};
+	char    command[64] = {'\0'};
 	char    statpre[32] = {'\0'};
 	int     i           = 0;
 	int     j           = 0;
