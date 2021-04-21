@@ -27,8 +27,8 @@ int getstatus()
 
 		if (i == 0)
 		{
-			if (strcmp(chkline, line) == 0) break;
-			strcpy(chkline, line);
+			if (strncmp(chkline, line, strlen(line) - 1) == 0) break;
+			strncpy(chkline, line, strlen(line) - 1);
 			i++;
 		}
 
@@ -199,12 +199,12 @@ int disp_stat()
 {
 	char command[64] = {'\0'};
 
-//	if ((strcmp(status, statpre1) != 0) && (strcmp(status, statpre2) != 0) && (strcmp(status, statpre3) != 0))
+	if ((strcmp(status, statpre1) != 0) && (strcmp(status, statpre2) != 0) && (strcmp(status, statpre3) != 0))
 //	if (strcmp(status, statpre1) != 0)
-//	{
-//		strcpy(statpre3, statpre2);
-//		strcpy(statpre2, statpre1);
-//		strcpy(statpre1, status);
+	{
+		strcpy(statpre3, statpre2);
+		strcpy(statpre2, statpre1);
+		strcpy(statpre1, status);
 
 		/* STATUS1 => STATUS2 */
 		sendcmd("MAIN.stat2.txt=MAIN.stat1.txt");
@@ -217,6 +217,6 @@ int disp_stat()
 		sendcmd("MAIN.t3.txt=MAIN.stat2.txt");
 		sendcmd("USERS.t8.txt=DMON.stat1.txt");
 		sendcmd("USERS.t9.txt=DMON.stat2.txt");
-//	}
+	}
 	return(0);
 }
